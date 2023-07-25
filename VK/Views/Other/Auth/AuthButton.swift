@@ -49,7 +49,7 @@ class AuthButton: UIButton {
             backgroundColor = .white
             setTitleColor(.black, for: .normal)
             titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-            layer.cornerRadius = 25
+            layer.cornerRadius = 20
             layer.masksToBounds = true
         }
         }

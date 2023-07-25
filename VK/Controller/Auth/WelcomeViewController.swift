@@ -9,8 +9,9 @@ import Foundation
 import UIKit
 
 class WelcomeViewController: UIViewController {
+
     public var completion: (() -> Void)?
-    
+
     private let welcomeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -19,42 +20,62 @@ class WelcomeViewController: UIViewController {
         return imageView
     }()
 
-    private let signInButton = AuthButton(type: .signIn, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
-    private let alreadySignUp = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт")
-    
+    private let signInButton: AuthButton = {
+        let button = AuthButton(type: .signIn, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+        button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        return button
+    }()
+
+    private let alreadySignUp: AuthButton = {
+        let button = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт")
+        button.addTarget(self, action: #selector(didTapAlreadySignUp), for: .touchUpInside)
+        return button
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
-        configureButtons()
+        configureConstraints()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let imageSize: CGFloat = 350
-        welcomeImageView.frame = CGRect(x: (view.width - imageSize)/2, y: view.safeAreaInsets.top + 100, width: imageSize, height: imageSize)
-        signInButton.frame = CGRect(x: 60, y: welcomeImageView.bottom+20, width: view.width-120, height: 55)
-        alreadySignUp.frame = CGRect(x: 70, y: signInButton.bottom+20,width: view.width-150, height: 35 )
 
-    }
     func addSubviews() {
         view.addSubview(welcomeImageView)
         view.addSubview(signInButton)
         view.addSubview(alreadySignUp)
     }
-    func configureButtons() {
-        signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
-        alreadySignUp.addTarget(self, action: #selector(didTapAlreadySignUp), for: .touchUpInside)
+
+    func configureConstraints() {
+        welcomeImageView.translatesAutoresizingMaskIntoConstraints = false
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        alreadySignUp.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            welcomeImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            welcomeImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100),
+            welcomeImageView.widthAnchor.constraint(equalToConstant: 350),
+            welcomeImageView.heightAnchor.constraint(equalToConstant: 350),
+
+
+            signInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            signInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            signInButton.topAnchor.constraint(equalTo: welcomeImageView.bottomAnchor, constant: 20),
+            signInButton.heightAnchor.constraint(equalToConstant: 55),
+
+            alreadySignUp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
+            alreadySignUp.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
+            alreadySignUp.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20),
+            alreadySignUp.heightAnchor.constraint(equalToConstant: 35)
+        ])
     }
+
     @objc func didTapSignIn() {
         let vc = SignInViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+
     @objc func didTapAlreadySignUp() {
         let vc = SignUpViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-
-    
 }

@@ -5,15 +5,19 @@
 //  Created by Эля Корельская on 23.07.2023.
 //
 
+
 import UIKit
+import FirebaseAuth
 
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
+    var verificationID: String!
     private let signInButton = AuthButton(type: .signIn, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
     private let smsCodeField: AuthField = {
-            let field = AuthField(type: .smsCode)
-            return field
-        }()
+        let field = AuthField(type: .smsCode)
+        return field
+    }()
     var phoneNumber: String?
+    var verification: String?
     private let confirmLabel: UILabel = {
         let label = UILabel()
         label.text = "Подтверждение регистрации"
@@ -27,7 +31,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         label.text = "Мы отправили SMS с кодом на номер"
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         return label
     }()
     private let detailsLabel2: UILabel = {
@@ -40,7 +44,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     private let detailsLabel3: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Gray")
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.text = "Введите код из SMS"
         label.font = .systemFont(ofSize: 14, weight: .regular)
         return label
@@ -52,6 +56,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         imageView.image = UIImage(named: "checkmark")
         return imageView
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsLabel2.text = phoneNumber ?? "Phone number not provided"
@@ -61,6 +66,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         configureFields()
         configureButtons()
     }
+    
     func addSubview() {
         view.addSubview(signInButton)
         view.addSubview(confirmLabel)
@@ -69,7 +75,60 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(iconImageView)
         view.addSubview(detailsLabel3)
         view.addSubview(smsCodeField)
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        confirmLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel1.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel2.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel3.translatesAutoresizingMaskIntoConstraints = false
+        smsCodeField.translatesAutoresizingMaskIntoConstraints = false
+        
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            
+            confirmLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 70),
+            confirmLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            confirmLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            confirmLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            
+            detailsLabel1.topAnchor.constraint(equalTo: confirmLabel.bottomAnchor, constant: 10),
+            detailsLabel1.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 30),
+            detailsLabel1.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -30),
+            detailsLabel1.heightAnchor.constraint(equalToConstant: 30),
+            
+            
+            detailsLabel2.topAnchor.constraint(equalTo: detailsLabel1.bottomAnchor),
+            detailsLabel2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            detailsLabel2.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            detailsLabel2.heightAnchor.constraint(equalToConstant: 40),
+            
+            
+            detailsLabel3.topAnchor.constraint(equalTo: detailsLabel2.bottomAnchor, constant: 15),
+            detailsLabel3.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 70),
+            detailsLabel3.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -20),
+            detailsLabel3.heightAnchor.constraint(equalToConstant: 30),
+            
+            
+            signInButton.topAnchor.constraint(equalTo: detailsLabel3.bottomAnchor, constant: 140),
+            signInButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            signInButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            signInButton.heightAnchor.constraint(equalToConstant: 55),
+            
+            
+            iconImageView.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 80),
+            iconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            iconImageView.widthAnchor.constraint(equalToConstant: 100),
+            iconImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            
+            smsCodeField.topAnchor.constraint(equalTo: detailsLabel3.bottomAnchor),
+            smsCodeField.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 60),
+            smsCodeField.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -60),
+            smsCodeField.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+    
     func customizeBackButton() {
         let backButton = UIButton(type: .custom)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
@@ -78,41 +137,51 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         let customBackButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = customBackButton
     }
+    
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        confirmLabel.frame = CGRect(x: 40, y: view.top + 200, width: view.width - 80, height: 30)
-        detailsLabel1.frame = CGRect(x: 40, y: confirmLabel.bottom + 30, width: view.width - 80, height: 20)
-        detailsLabel2.frame = CGRect(x: 40, y: detailsLabel1.bottom, width: view.width - 80, height: 40)
-        detailsLabel3.frame = CGRect(x: 20, y: detailsLabel2.bottom + 15, width: view.width - 200, height: 50)
-        signInButton.frame = CGRect(x: 40, y: detailsLabel3.bottom + 110, width: view.width-80, height: 55)
-        iconImageView.frame = CGRect(x: 150, y: view.bottom - 220, width: 100, height: 100)
-        smsCodeField.frame = CGRect(x: 60, y: detailsLabel3.bottom, width: view.width - 120, height: 50)
-        
-    }
+    
     func configureFields() {
         smsCodeField.delegate = self
-
+        
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Закрыть", style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         smsCodeField.inputAccessoryView = toolBar
     }
+    
     @objc func didTapKeyboardDone() {
         smsCodeField.resignFirstResponder()
     }
+    
     func configureButtons() {
         signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
     }
+    
     @objc func didTapSignIn() {
         didTapKeyboardDone()
+
+        guard let code = smsCodeField.text else { return }
+        AuthManager.shared.verifyPhoneNumber(with: verificationID, verificationCode: code)  { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    HapticsManager.shared.vibrate(for: .success)
+                    self?.dismiss(animated: true, completion: nil)
+
+                case .failure:
+                    HapticsManager.shared.vibrate(for: .error)
+                    let alert = UIAlertController(
+                        title: "Sign In Failed",
+                        message: "Please check your code to try again.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+                    self?.present(alert, animated: true)
+                }
+            }
+        }
     }
-
-  
-
 }

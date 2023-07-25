@@ -9,11 +9,17 @@ import Foundation
 import UIKit
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
-    private let signUpButton = AuthButton(type: .signUp, title: "Подтвердить")
+    private let signUpButton: AuthButton = {
+        let button = AuthButton(type: .signUp, title: "Подтвердить")
+        button.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
+        return button
+    }()
+
     private let phoneField: AuthField = {
         let field = AuthField(type: .phone)
         return field
     }()
+
     private let returnLabel: UILabel = {
         let label = UILabel()
         label.text = "С возвращением"
@@ -22,6 +28,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
+
     private let detailsLabel: UILabel = {
         let label = UILabel()
         label.text = "Введите номер телефона для входа в приложение"
@@ -31,34 +38,62 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         label.numberOfLines = 0
         return label
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-       // title = "Sign up"
         view.backgroundColor = .systemBackground
         addSubviews()
+        configureConstraints()
         configureFields()
         configureButtons()
         customizeBackButton()
     }
+
     func addSubviews() {
         view.addSubview(signUpButton)
         view.addSubview(phoneField)
         view.addSubview(returnLabel)
         view.addSubview(detailsLabel)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        signUpButton.frame = CGRect(x: 60, y: view.bottom-250, width: view.width-120, height: 55)
-        returnLabel.frame = CGRect(x: 100, y: view.top + 300, width: view.width - 200, height: 30)
-        detailsLabel.frame = CGRect(x: 100, y: returnLabel.bottom + 10, width: view.width - 200, height: 50)
-        phoneField.frame = CGRect(x: 60, y: detailsLabel.bottom + 20, width: view.width - 120, height: 50)
+
+    func configureConstraints() {
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+        phoneField.translatesAutoresizingMaskIntoConstraints = false
+        returnLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            // Sign Up Button constraints
+            signUpButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            signUpButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            signUpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
+            signUpButton.heightAnchor.constraint(equalToConstant: 55),
+
+            // Return Label constraints
+            returnLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            returnLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
+            returnLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -200),
+            returnLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            // Details Label constraints
+            detailsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            detailsLabel.topAnchor.constraint(equalTo: returnLabel.bottomAnchor, constant: 10),
+            detailsLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -200),
+            detailsLabel.heightAnchor.constraint(equalToConstant: 50),
+
+            // Phone Field constraints
+            phoneField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            phoneField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            phoneField.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: 20),
+            phoneField.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phoneField.becomeFirstResponder()
     }
+
     func customizeBackButton() {
         let backButton = UIButton(type: .custom)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
@@ -67,6 +102,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let customBackButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = customBackButton
     }
+
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
@@ -82,14 +118,17 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
     }
+
     @objc func didTapKeyboardDone() {
         phoneField.resignFirstResponder()
     }
+
     func configureButtons() {
         signUpButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
     }
+
     @objc func didTapSignUp() {
         didTapKeyboardDone()
+        // здесь будет проверка на существующего пользователя
     }
-    
 }

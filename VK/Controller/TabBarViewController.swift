@@ -14,16 +14,17 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpControllers()
+        customizeTabBarAppearance()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !signInPresented {
-            presentSignInIfNeeded()
+            presentSignIn()
         }
     }
 
-    private func presentSignInIfNeeded() {
+    private func presentSignIn() {
         if !AuthManager.shared.isSignedIn {
             signInPresented = true
             let vc = WelcomeViewController()
@@ -34,6 +35,15 @@ class TabBarViewController: UITabBarController {
             navVC.modalPresentationStyle = .fullScreen
             present(navVC, animated: false, completion: nil)
         }
+    }
+    private func customizeTabBarAppearance() {
+        let orangeColor = UIColor(named: "Orange")
+        let selectedAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: orangeColor!]
+        let normalAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.gray]
+
+        UITabBarItem.appearance().setTitleTextAttributes(selectedAttributes, for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes(normalAttributes, for: .normal)
+        UITabBar.appearance().tintColor = orangeColor
     }
     private func setUpControllers() {
         let home = HomeViewController()
@@ -49,9 +59,17 @@ class TabBarViewController: UITabBarController {
         let nav3 = UINavigationController(rootViewController: saved)
         
         
-        nav1.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 1)
-        nav2.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.circle"), tag: 2)
-        nav3.tabBarItem = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 3)
+        let tabBarItem1 = UITabBarItem(title: "Главная", image: UIImage(systemName: "house"), tag: 1)
+        let tabBarItem2 = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 2)
+        let tabBarItem3 = UITabBarItem(title: "Сохраненные", image: UIImage(systemName: "heart"), tag: 3)
+
+        tabBarItem1.selectedImage = UIImage(systemName: "house.fill")
+        tabBarItem2.selectedImage = UIImage(systemName: "person.crop.circle.fill")
+        tabBarItem3.selectedImage = UIImage(systemName: "heart.fill")
+
+        nav1.tabBarItem = tabBarItem1
+        nav2.tabBarItem = tabBarItem2
+        nav3.tabBarItem = tabBarItem3
         
         setViewControllers([nav1,nav2,nav3], animated: false)
     }

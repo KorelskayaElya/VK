@@ -6,14 +6,21 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SignInViewController: UIViewController, UITextFieldDelegate {
-   
-    private let nextButton = AuthButton(type: .signIn, title: "ДАЛЕЕ")
+    
+    private let nextButton: AuthButton = {
+        let button = AuthButton(type: .signIn, title: "ДАЛЕЕ")
+        button.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
+        return button
+    }()
+
     private let phoneField: AuthField = {
         let field = AuthField(type: .phone)
         return field
     }()
+
     private let signInLabel: UILabel = {
         let label = UILabel()
         label.text = "ЗАРЕГИСТРИРОВАТЬСЯ"
@@ -22,14 +29,17 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
+
     private let detailsLabel1: UILabel = {
         let label = UILabel()
         label.text = "Введите номер"
         label.textColor = .systemGray2
         label.textAlignment = .center
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
+
     private let detailsLabel2: UILabel = {
         let label = UILabel()
         label.text = "Ваш номер будет использоваться для входа в аккаунт"
@@ -39,6 +49,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         label.numberOfLines = 0
         return label
     }()
+
     private let detailsLabel3: UILabel = {
         let label = UILabel()
         label.text = "Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности"
@@ -51,26 +62,15 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       // title = "Sign in"
+        // title = "Sign in"
         view.backgroundColor = .systemBackground
-        addSubview()
+        addSubviews()
         customizeBackButton()
         configureFields()
-        configureButtons()
-        
+        configureLayout()
     }
-    func customizeBackButton() {
-        let backButton = UIButton(type: .custom)
-        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        let customBackButton = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = customBackButton
-    }
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    func addSubview() {
+
+    func addSubviews() {
         view.addSubview(signInLabel)
         view.addSubview(detailsLabel1)
         view.addSubview(detailsLabel2)
@@ -78,16 +78,61 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(detailsLabel3)
         view.addSubview(phoneField)
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        signInLabel.frame = CGRect(x: 40, y: view.top + 200, width: view.width - 80, height: 30)
-        detailsLabel1.frame = CGRect(x: 35, y: signInLabel.bottom + 30, width: view.width - 80, height: 50)
-        detailsLabel2.frame = CGRect(x: 70, y: detailsLabel1.bottom + 2, width: view.width - 140, height: 50)
-        nextButton.frame = CGRect(x: 40, y: view.bottom-250, width: view.width-80, height: 55)
-        detailsLabel3.frame = CGRect(x: 40, y: nextButton.bottom + 15, width: view.width - 80, height: 50)
-        phoneField.frame = CGRect(x: 60, y: detailsLabel2.bottom + 20, width: view.width - 120, height: 50)
-        
+
+    func configureLayout() {
+        let margins = view.layoutMarginsGuide
+
+        signInLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel1.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel2.translatesAutoresizingMaskIntoConstraints = false
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel3.translatesAutoresizingMaskIntoConstraints = false
+        phoneField.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            signInLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 70),
+            signInLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            signInLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            signInLabel.heightAnchor.constraint(equalToConstant: 30),
+
+            detailsLabel1.topAnchor.constraint(equalTo: signInLabel.bottomAnchor, constant: 30),
+            detailsLabel1.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 35),
+            detailsLabel1.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -35),
+            detailsLabel1.heightAnchor.constraint(equalToConstant: 50),
+
+            detailsLabel2.topAnchor.constraint(equalTo: detailsLabel1.bottomAnchor, constant: 2),
+            detailsLabel2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 60),
+            detailsLabel2.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -60),
+            detailsLabel2.heightAnchor.constraint(greaterThanOrEqualToConstant: 60),
+
+            nextButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -300),
+            nextButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            nextButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            nextButton.heightAnchor.constraint(equalToConstant: 55),
+
+            detailsLabel3.topAnchor.constraint(equalTo: nextButton.bottomAnchor, constant: 15),
+            detailsLabel3.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            detailsLabel3.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            detailsLabel3.heightAnchor.constraint(equalToConstant: 50),
+
+            phoneField.topAnchor.constraint(equalTo: detailsLabel2.bottomAnchor, constant: 20),
+            phoneField.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 60),
+            phoneField.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -60),
+            phoneField.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+    func customizeBackButton() {
+           let backButton = UIButton(type: .custom)
+           backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+           backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+           backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+           let customBackButton = UIBarButtonItem(customView: backButton)
+           navigationItem.leftBarButtonItem = customBackButton
+   }
+   @objc func backButtonTapped() {
+       navigationController?.popViewController(animated: true)
+   }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phoneField.becomeFirstResponder()
@@ -98,7 +143,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Закрыть", style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
@@ -106,16 +151,25 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     @objc func didTapKeyboardDone() {
         phoneField.resignFirstResponder()
     }
-    func configureButtons() {
-        nextButton.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
-    }
     @objc func didTapNext() {
         didTapKeyboardDone()
-        let vc = ConfirmViewController()
-        vc.phoneNumber = phoneField.text
-        navigationController?.pushViewController(vc, animated: true)
+        AuthManager.shared.verifyPhoneNumber(phoneField.text!) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let verificationID):
+                    print("код должен быть отправлен")
+                    let vc = ConfirmViewController()
+                    vc.phoneNumber = self?.phoneField.text
+                    vc.verification = verificationID
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                case .failure:
+                    let alert = UIAlertController(
+                        title: "CAPCHA Failed",
+                        message: "Something wrong", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                    self?.present(alert, animated: true)
+                }
+            }
+        }
     }
-    
-    
-
 }

@@ -5,35 +5,50 @@
 //  Created by Эля Корельская on 23.07.2023.
 //
 
-import Foundation
 import UIKit
 import FirebaseAuth
 
-class AuthManager {
+
+final class AuthManager {
     
     public static let shared = AuthManager()
+    
     private init() {}
     
-    enum SignInMethod {
-        case phone
+    enum AuthError: Error {
+        case signInFailed
     }
     
     public var isSignedIn: Bool {
         return Auth.auth().currentUser != nil
     }
-    
-    private func signIn(with method: SignInMethod) {
-        
-    }
-    
-    public func signOut(completion: (Bool) -> Void) {
-        do {
-            try Auth.auth().signOut()
-            completion(true)
-        } catch {
-            print(error)
-            completion(false)
+    // капча
+    public func verifyPhoneNumber(_ phoneNumber: String, completion: @escaping (Result<String, Error>) -> Void) {
+        PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
+            if let error = error {
+                completion(.failure(error))
+                return 
+            }
+            print("\(String(describing: verificationID))")
+            completion(.success(verificationID ?? "is empty"))
         }
     }
-
+    // проверка кода
+    public func verifyPhoneNumber(with verificationID: String, verificationCode: String, completion: @escaping (Result<String, Error>) -> Void) {
+        
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: verificationCode)
+        
+        Auth.auth().signIn(with: credential) { authResult, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            if let phoneNumber = Auth.auth().currentUser?.phoneNumber {
+                completion(.success(phoneNumber))
+            } else {
+                completion(.failure(AuthError.signInFailed))
+            }
+        }
+    }
+    
 }
