@@ -16,8 +16,8 @@ class AuthField: UITextField {
 
         var placeholder: String {
             switch self {
-            case .phone: return "+7 ___ -___-__-__"
-            case .smsCode: return "___-___-___"
+            case .phone: return "+1-650-555-1234"
+            case .smsCode: return "123-456"
             }
         }
     }

@@ -1,17 +1,18 @@
 //
-//  SignUpViewController.swift
+//  SignInViewController.swift
 //  VK
 //
 //  Created by Эля Корельская on 23.07.2023.
 //
 
-import Foundation
 import UIKit
+import FirebaseAuth
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
-    private let signUpButton: AuthButton = {
-        let button = AuthButton(type: .signUp, title: "Подтвердить")
-        button.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
+    
+    private let nextButton: AuthButton = {
+        let button = AuthButton(type: .signUp, title: "ДАЛЕЕ")
+        button.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         return button
     }()
 
@@ -20,115 +21,162 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         return field
     }()
 
-    private let returnLabel: UILabel = {
+    private let signInLabel: UILabel = {
         let label = UILabel()
-        label.text = "С возвращением"
-        label.textColor = UIColor(named: "Orange")
+        label.text = "ЗАРЕГИСТРИРОВАТЬСЯ"
+        label.textColor = UIColor(named: "Black")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
 
-    private let detailsLabel: UILabel = {
+    private let detailsLabel1: UILabel = {
         let label = UILabel()
-        label.text = "Введите номер телефона для входа в приложение"
+        label.text = "Введите номер"
+        label.textColor = .systemGray2
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        return label
+    }()
+
+    private let detailsLabel2: UILabel = {
+        let label = UILabel()
+        label.text = "Ваш номер будет использоваться для входа в аккаунт"
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.numberOfLines = 0
+        return label
+    }()
+
+    private let detailsLabel3: UILabel = {
+        let label = UILabel()
+        label.text = "Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности"
+        label.textColor = UIColor(named: "Gray")
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 11, weight: .regular)
         label.numberOfLines = 0
         return label
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // title = "Sign in"
         view.backgroundColor = .systemBackground
         addSubviews()
-        configureConstraints()
-        configureFields()
-        configureButtons()
         customizeBackButton()
+        configureFields()
+        configureLayout()
     }
 
     func addSubviews() {
-        view.addSubview(signUpButton)
+        view.addSubview(signInLabel)
+        view.addSubview(detailsLabel1)
+        view.addSubview(detailsLabel2)
+        view.addSubview(nextButton)
+        view.addSubview(detailsLabel3)
         view.addSubview(phoneField)
-        view.addSubview(returnLabel)
-        view.addSubview(detailsLabel)
     }
 
-    func configureConstraints() {
-        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+    func configureLayout() {
+        let margins = view.layoutMarginsGuide
+
+        signInLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel1.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel2.translatesAutoresizingMaskIntoConstraints = false
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        detailsLabel3.translatesAutoresizingMaskIntoConstraints = false
         phoneField.translatesAutoresizingMaskIntoConstraints = false
-        returnLabel.translatesAutoresizingMaskIntoConstraints = false
-        detailsLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            // Sign Up Button constraints
-            signUpButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            signUpButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            signUpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
-            signUpButton.heightAnchor.constraint(equalToConstant: 55),
+            signInLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 70),
+            signInLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            signInLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            signInLabel.heightAnchor.constraint(equalToConstant: 30),
 
-            // Return Label constraints
-            returnLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            returnLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
-            returnLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -200),
-            returnLabel.heightAnchor.constraint(equalToConstant: 30),
+            detailsLabel1.topAnchor.constraint(equalTo: signInLabel.bottomAnchor, constant: 30),
+            detailsLabel1.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 35),
+            detailsLabel1.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -35),
+            detailsLabel1.heightAnchor.constraint(equalToConstant: 50),
 
-            // Details Label constraints
-            detailsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            detailsLabel.topAnchor.constraint(equalTo: returnLabel.bottomAnchor, constant: 10),
-            detailsLabel.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -200),
-            detailsLabel.heightAnchor.constraint(equalToConstant: 50),
+            detailsLabel2.topAnchor.constraint(equalTo: detailsLabel1.bottomAnchor, constant: 2),
+            detailsLabel2.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 60),
+            detailsLabel2.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -60),
+            detailsLabel2.heightAnchor.constraint(greaterThanOrEqualToConstant: 60),
 
-            // Phone Field constraints
-            phoneField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            phoneField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            phoneField.topAnchor.constraint(equalTo: detailsLabel.bottomAnchor, constant: 20),
+            nextButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -300),
+            nextButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            nextButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            nextButton.heightAnchor.constraint(equalToConstant: 55),
+
+            detailsLabel3.topAnchor.constraint(equalTo: nextButton.bottomAnchor, constant: 15),
+            detailsLabel3.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            detailsLabel3.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            detailsLabel3.heightAnchor.constraint(equalToConstant: 50),
+
+            phoneField.topAnchor.constraint(equalTo: detailsLabel2.bottomAnchor, constant: 20),
+            phoneField.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 60),
+            phoneField.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -60),
             phoneField.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    func customizeBackButton() {
+           let backButton = UIButton(type: .custom)
+           backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+           backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+           backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+           let customBackButton = UIBarButtonItem(customView: backButton)
+           navigationItem.leftBarButtonItem = customBackButton
+   }
+   @objc func backButtonTapped() {
+       navigationController?.popViewController(animated: true)
+   }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         phoneField.becomeFirstResponder()
     }
-
-    func customizeBackButton() {
-        let backButton = UIButton(type: .custom)
-        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        let customBackButton = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = customBackButton
-    }
-
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-
     func configureFields() {
         phoneField.delegate = self
 
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Закрыть", style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
     }
-
     @objc func didTapKeyboardDone() {
         phoneField.resignFirstResponder()
     }
-
-    func configureButtons() {
-        signUpButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
-    }
-
-    @objc func didTapSignUp() {
+    
+    @objc func didTapNext() {
         didTapKeyboardDone()
-        // здесь будет проверка на существующего пользователя
+        if let phone = phoneField.text, !phone.isEmpty {
+            AuthManager.shared.startAuth(phoneNumber: phone) { [weak self] success, errorMessage in
+                if success {
+                    DispatchQueue.main.async {
+                        let vc = ConfirmViewController()
+                        vc.phoneNumber = phone
+                        self?.navigationController?.pushViewController(vc, animated: true)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        if let errorMessage = errorMessage, errorMessage.contains("already in use") {
+                            if let weakSelf = self {
+                                AlertManager.showAlert(on: weakSelf, with: "Authentication Failed", message: "Phone number is already registered. Please sign in instead.")
+                            }
+                        } else {
+                            if let weakSelf = self {
+                                AlertManager.showAlert(on: weakSelf, with: "Authentication Failed", message: errorMessage ?? "Unknown error occurred.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+
 }

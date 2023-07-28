@@ -15,40 +15,78 @@ final class AuthManager {
     
     private init() {}
     
-    enum AuthError: Error {
-        case signInFailed
-    }
+    private var verificationId: String?
+    
+    
+    // + 16505551234/ + 16505551111 - 123456 есть в системе
+    // + 16505552222/ +16505554321 - 123456 тестовые - их еще нет в базе
+    
     
     public var isSignedIn: Bool {
         return Auth.auth().currentUser != nil
     }
+    
     // капча
-    public func verifyPhoneNumber(_ phoneNumber: String, completion: @escaping (Result<String, Error>) -> Void) {
-        PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
+    public func startAuth(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
+        PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { [weak self] verificationID, error in
             if let error = error {
-                completion(.failure(error))
-                return 
-            }
-            print("\(String(describing: verificationID))")
-            completion(.success(verificationID ?? "is empty"))
-        }
-    }
-    // проверка кода
-    public func verifyPhoneNumber(with verificationID: String, verificationCode: String, completion: @escaping (Result<String, Error>) -> Void) {
-        
-        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: verificationCode)
-        
-        Auth.auth().signIn(with: credential) { authResult, error in
-            if let error = error {
-                completion(.failure(error))
+                completion(false, error.localizedDescription)
                 return
             }
-            if let phoneNumber = Auth.auth().currentUser?.phoneNumber {
-                completion(.success(phoneNumber))
-            } else {
-                completion(.failure(AuthError.signInFailed))
+            guard let verificationId = verificationID else {
+                completion(false, "Verification ID not found.")
+                return
+            }
+            self?.verificationId = verificationId
+            completion(true, nil)
+        }
+    }
+   
+    
+    // проверка кода
+    public func verifyCode(phoneNumber: String, smsCode: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let verificationId = self.verificationId else {
+            completion(false, "Verification ID not found.")
+            return
+        }
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationId, verificationCode: smsCode)
+        
+        Auth.auth().signIn(with: credential) { [weak self] result, error in
+            if let error = error {
+                completion(false, error.localizedDescription)
+                return
+            }
+            self?.signUp(with: phoneNumber) { success, errorMessage in
+                if success {
+                    completion(true, nil)
+                } else {
+                    completion(false, errorMessage ?? "Error saving user in the database.")
+                }
             }
         }
     }
-    
+    // вход в систему
+    public func signUp(with phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
+        DatabaseManager.shared.getPhone(for: phoneNumber) { existingPhoneNumber in
+            if let existingPhoneNumber = existingPhoneNumber {
+                completion(false, "The phone number \(existingPhoneNumber) is already registered.")
+            } else {
+                DatabaseManager.shared.insertUser(with: phoneNumber) { success in
+                    completion(success, nil)
+                }
+            }
+        }
+    }
+    // выход из системы
+    public func signOut(completion: (Bool) -> Void) {
+        do {
+            try Auth.auth().signOut()
+            completion(true)
+        } catch {
+            print(error)
+            completion(false)
+        }
+    }
+        
+        
 }

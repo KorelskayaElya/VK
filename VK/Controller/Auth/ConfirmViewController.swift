@@ -10,14 +10,12 @@ import UIKit
 import FirebaseAuth
 
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
-    var verificationID: String!
-    private let signInButton = AuthButton(type: .signIn, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+    private let signInButton = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
     private let smsCodeField: AuthField = {
         let field = AuthField(type: .smsCode)
         return field
     }()
     var phoneNumber: String?
-    var verification: String?
     private let confirmLabel: UILabel = {
         let label = UILabel()
         label.text = "Подтверждение регистрации"
@@ -159,29 +157,34 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     }
     
     func configureButtons() {
-        signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        signInButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
     }
     
-    @objc func didTapSignIn() {
+    @objc func didTapSignUp() {
         didTapKeyboardDone()
 
-        guard let code = smsCodeField.text else { return }
-        AuthManager.shared.verifyPhoneNumber(with: verificationID, verificationCode: code)  { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    HapticsManager.shared.vibrate(for: .success)
-                    self?.dismiss(animated: true, completion: nil)
-
-                case .failure:
-                    HapticsManager.shared.vibrate(for: .error)
-                    let alert = UIAlertController(
-                        title: "Sign In Failed",
-                        message: "Please check your code to try again.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-                    self?.present(alert, animated: true)
+        if let code = smsCodeField.text, !code.isEmpty {
+            AuthManager.shared.verifyCode(phoneNumber: phoneNumber ?? "user", smsCode: code) { [weak self] success, errorMessage in
+                if success {
+                    DispatchQueue.main.async { [self] in
+                        HapticsManager.shared.vibrate(for: .success)
+                        UserDefaults.standard.setValue(self?.phoneNumber, forKey: "phoneNumber")
+                        self?.dismiss(animated: true, completion: nil)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        HapticsManager.shared.vibrate(for: .error)
+                        if let weakSelf = self {
+                            if let errorMessage = errorMessage {
+                                AlertManager.showAlert(on: weakSelf, with: "Sign In Failed", message: errorMessage)
+                            } else {
+                                AlertManager.showAlert(on: weakSelf, with: "Sign In Failed", message: "Unknown error occurred.")
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
 }

@@ -21,8 +21,8 @@ class WelcomeViewController: UIViewController {
     }()
 
     private let signInButton: AuthButton = {
-        let button = AuthButton(type: .signIn, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
-        button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        let button = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+        button.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
         return button
     }()
 
@@ -69,13 +69,13 @@ class WelcomeViewController: UIViewController {
         ])
     }
 
-    @objc func didTapSignIn() {
-        let vc = SignInViewController()
+    @objc func didTapSignUp() {
+        let vc = SignUpViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc func didTapAlreadySignUp() {
-        let vc = SignUpViewController()
+        let vc = SignInViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
