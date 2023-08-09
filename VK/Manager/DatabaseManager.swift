@@ -8,12 +8,19 @@
 import UIKit
 import FirebaseDatabase
 
+enum DatabaseError: Error {
+    case noData
+    case phoneNumberNotFound
+}
+
 final class DatabaseManager {
+    
     public static let shared = DatabaseManager()
-    // private потом сделать
+    
     public let database = Database.database().reference()
     
     init() {}
+    
     // добавление нового пользователя в базу данных
     public func insertUser(with phoneNumber: String, completion: @escaping (Bool) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { [weak self] snapshot in
@@ -33,7 +40,6 @@ final class DatabaseManager {
                 }
                 return
             }
-
             usersDictionary[phoneNumber] = ["phoneNumber": phoneNumber]
             // save new users object
             self?.database.child("users").setValue(usersDictionary, withCompletionBlock: { error, _ in
@@ -45,21 +51,23 @@ final class DatabaseManager {
             })
         }
     }
-    // получение номера телефона из базы
-    public func getPhone(for phoneNumber: String, completion: @escaping (String?) -> Void) {
+    // проверка номера тлф в базе
+    public func getPhone(for phoneNumber: String, completion: @escaping (Result<String, Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let users = snapshot.value as? [String: [String: Any]] else {
-                completion(nil)
+                completion(.failure(DatabaseError.noData))
                 return
             }
-            for (phoneNumber, value) in users {
-                if value["phoneNumber"] as? String == phoneNumber {
-                    completion(phoneNumber)
-                    break
+            for (key, value) in users {
+                if let valuePhoneNumber = value["phoneNumber"] as? String, valuePhoneNumber == phoneNumber {
+                    completion(.success(key))
+                    return
                 }
             }
+            completion(.failure(DatabaseError.phoneNumberNotFound))
         }
     }
+    
 
     
 }

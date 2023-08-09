@@ -7,8 +7,11 @@
 
 import Foundation
 import UIKit
+import KeychainAccess
 
 class SignInViewController: UIViewController, UITextFieldDelegate {
+    var urlString: String?
+    
     private let signUpButton: AuthButton = {
         let button = AuthButton(type: .signIn, title: "Подтвердить")
         button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
@@ -126,41 +129,32 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     func configureButtons() {
         signUpButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
     }
-    @objc func didTapSignIn() {
+    // вход в аккаунт
+    @objc public func didTapSignIn() {
         didTapKeyboardDone()
         if let phoneNumber = phoneField.text, !phoneNumber.isEmpty {
-            DatabaseManager.shared.getPhone(for: phoneNumber) { existingPhoneNumber in
-                if existingPhoneNumber != nil {
-                    // +16505551234
-                    print(existingPhoneNumber)
-                    // не понимаю как сравнить все зарегистрированные номера
-                    if existingPhoneNumber == phoneNumber {
-                        // User is already signed in, show the success alert
-                        DispatchQueue.main.async {
-                            UserDefaults.standard.setValue(phoneNumber, forKey: "phoneNumber")
-                            let alert = UIAlertController(
-                                title: "Вход",
-                                message: "Заходим в аккаунт.",
-                                preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "ОК", style: .cancel, handler: { _ in
-                                self.dismiss(animated: true, completion: nil)
-                            }))
-                            self.present(alert, animated: true)
+            AuthManager.shared.signIn(with: phoneNumber) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        HapticsManager.shared.vibrate(for: .success)
+                        KeychainManager.shared.saveSignInFlag(true)
+                        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                            appDelegate.switchToTabBarController()
                         }
-                    } else {
-                        DispatchQueue.main.async {
-                            HapticsManager.shared.vibrate(for: .error)
-                            let alert = UIAlertController(
-                                title: "Ошибка авторизации",
-                                message: "Пользователь с указанным номером телефона не зарегистрирован.",
-                                preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "ОК", style: .cancel, handler: nil))
-                            self.present(alert, animated: true)
-                        }
+                    case .failure:
+                        HapticsManager.shared.vibrate(for: .error)
+                        let alert = UIAlertController(
+                            title: "Sign In Failed",
+                            message: "Please check your phone number and try again.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+                        self?.present(alert, animated: true)
+                        self?.phoneField.text = nil
                     }
                 }
             }
         }
-        
     }
+
+
 }

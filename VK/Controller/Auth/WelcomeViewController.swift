@@ -74,6 +74,7 @@ class WelcomeViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
+    
     @objc func didTapAlreadySignUp() {
         let vc = SignInViewController()
         navigationController?.pushViewController(vc, animated: true)

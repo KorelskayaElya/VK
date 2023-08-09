@@ -23,7 +23,7 @@ class AuthButton: UIButton {
     }
     
     let type: ButtonType
-    
+
     init(type: ButtonType, title: String?) {
         self.type = type
         super.init(frame: .zero)

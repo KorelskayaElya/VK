@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
+    var urlString: String?
     private let signInButton = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
     private let smsCodeField: AuthField = {
         let field = AuthField(type: .smsCode)
@@ -160,6 +161,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         signInButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
     }
     
+    // регистрация и вход в tabbarcpntroller
     @objc func didTapSignUp() {
         didTapKeyboardDone()
 
@@ -168,8 +170,9 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
                 if success {
                     DispatchQueue.main.async { [self] in
                         HapticsManager.shared.vibrate(for: .success)
+                        KeychainManager.shared.saveSignInFlag(true)
                         UserDefaults.standard.setValue(self?.phoneNumber, forKey: "phoneNumber")
-                        self?.dismiss(animated: true, completion: nil)
+                        self?.presentTabBarController()
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -185,6 +188,11 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
+    }
+    private func presentTabBarController() {
+        let tabBarVC = TabBarViewController()
+        tabBarVC.modalPresentationStyle = .fullScreen
+        present(tabBarVC, animated: true, completion: nil)
     }
 
 }

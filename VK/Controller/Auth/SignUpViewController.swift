@@ -152,6 +152,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         phoneField.resignFirstResponder()
     }
     
+    // переход на капчу и последующий ввод кода
     @objc func didTapNext() {
         didTapKeyboardDone()
         if let phone = phoneField.text, !phone.isEmpty {

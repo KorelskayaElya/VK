@@ -17,14 +17,8 @@ final class AuthManager {
     
     private var verificationId: String?
     
-    
     // + 16505551234/ + 16505551111 - 123456 есть в системе
     // + 16505552222/ +16505554321 - 123456 тестовые - их еще нет в базе
-    
-    
-    public var isSignedIn: Bool {
-        return Auth.auth().currentUser != nil
-    }
     
     // капча
     public func startAuth(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
@@ -41,8 +35,6 @@ final class AuthManager {
             completion(true, nil)
         }
     }
-   
-    
     // проверка кода
     public func verifyCode(phoneNumber: String, smsCode: String, completion: @escaping (Bool, String?) -> Void) {
         guard let verificationId = self.verificationId else {
@@ -58,6 +50,7 @@ final class AuthManager {
             }
             self?.signUp(with: phoneNumber) { success, errorMessage in
                 if success {
+                    UserDefaults.standard.setValue(phoneNumber, forKey: "phoneNumber") // Здесь сохраняется номер телефона
                     completion(true, nil)
                 } else {
                     completion(false, errorMessage ?? "Error saving user in the database.")
@@ -65,19 +58,41 @@ final class AuthManager {
             }
         }
     }
-    // вход в систему
+    // регистрация
     public func signUp(with phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
-        DatabaseManager.shared.getPhone(for: phoneNumber) { existingPhoneNumber in
-            if let existingPhoneNumber = existingPhoneNumber {
-                completion(false, "The phone number \(existingPhoneNumber) is already registered.")
-            } else {
+        DatabaseManager.shared.getPhone(for: phoneNumber) { result in
+            switch result {
+            case .success:
+
+                completion(false, "The phone number \(phoneNumber) is already registered.")
+            case .failure(DatabaseError.phoneNumberNotFound):
+            
                 DatabaseManager.shared.insertUser(with: phoneNumber) { success in
-                    completion(success, nil)
+                    if success {
+                        completion(true, nil)
+                    } else {
+                        completion(false, "Error saving user in the database.")
+                    }
                 }
+            case .failure(let error):
+
+                completion(false, error.localizedDescription)
             }
         }
     }
-    // выход из системы
+    // вход
+    public func signIn(with phone: String, completion: @escaping (Result<String, Error>) -> Void) {
+        DatabaseManager.shared.getPhone(for: phone) { result in
+            switch result {
+            case .success(let userId):
+                completion(.success(userId))
+                
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    // выход из аккаунта
     public func signOut(completion: (Bool) -> Void) {
         do {
             try Auth.auth().signOut()
@@ -87,6 +102,4 @@ final class AuthManager {
             completion(false)
         }
     }
-        
-        
 }

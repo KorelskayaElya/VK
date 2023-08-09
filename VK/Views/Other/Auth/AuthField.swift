@@ -23,7 +23,6 @@ class AuthField: UITextField {
     }
 
     private let type: FieldType
-
     init(type: FieldType) {
         self.type = type
         super.init(frame: .zero)

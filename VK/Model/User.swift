@@ -8,8 +8,9 @@
 import UIKit
 
 struct User {
-    let login: String
-    let fullName: String
-    let avatarImage: UIImage
+    // пока без доп информации
+    let identifier: String
+    let username: String
+    let profilePictureURL: URL?
     let status: String
 }

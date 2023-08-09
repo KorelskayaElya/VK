@@ -9,5 +9,6 @@ target 'VK' do
   pod 'Firebase/Auth'
   pod 'Firebase/Analytics'
   pod 'Firebase/Crashlytics'
+  pod 'SDWebImage'
 
 end
