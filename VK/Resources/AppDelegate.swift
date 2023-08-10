@@ -14,21 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
         
-        let welcomeVC = WelcomeViewController()
-        let navVC = UINavigationController(rootViewController: welcomeVC)
-        navVC.modalPresentationStyle = .fullScreen
-        window?.rootViewController = navVC
-        window?.makeKeyAndVisible()
-        
-        return true
-    }
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = TabBarViewController()
+        self.window = window
+        self.window?.makeKeyAndVisible()
 
-    func switchToTabBarController() {
-        let tabBarVC = TabBarViewController()
-        tabBarVC.modalPresentationStyle = .fullScreen
-        window?.rootViewController = tabBarVC
+        FirebaseApp.configure()
+
+        return true
     }
 }
 

@@ -65,7 +65,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
-            cell.configure(with: UIImage(named: "picture\(indexPath.row+1)"))
+            cell.configure(with: UIImage(named: "picture\(indexPath.row+1)"), user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
             return cell
         }
     }
@@ -76,7 +76,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else if indexPath.section == 2 {
             return 60
         } else {
-            return 120
+            return 500
         }
     }
 
@@ -156,12 +156,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                         UserDefaults.standard.setValue(nil, forKey: "phoneNumber")
                         KeychainManager.shared.saveSignInFlag(false)
                         
-                        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                            let welcomeVC = WelcomeViewController()
-                            let navVC = UINavigationController(rootViewController: welcomeVC)
-                            navVC.modalPresentationStyle = .fullScreen
-                            appDelegate.window?.rootViewController = navVC
-                        }
+                        // здесь должен быть преход на welcomevc
+                        
                     } else {
                         // failed
                         let alert = UIAlertController(title: "Woops",

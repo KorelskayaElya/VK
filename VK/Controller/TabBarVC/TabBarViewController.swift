@@ -19,11 +19,11 @@ class TabBarViewController: UITabBarController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if KeychainManager.shared.getSignInFlag() == false {
-            presentWelcomeVC()
-        } else {
-            presentTabBarController()
-        }
+//        if KeychainManager.shared.getSignInFlag() == false {
+//            presentWelcomeVC()
+//        } else {
+//            presentTabBarController()
+//        }
     }
 
     private func presentWelcomeVC() {
@@ -35,11 +35,14 @@ class TabBarViewController: UITabBarController {
         navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: false, completion: nil)
     }
-
+    // как открыть tab bar чтобы он был на время главным контроллером
+    // для tab bar нет completion
+    // запускается криво
     private func presentTabBarController() {
-        let tabBarVC = TabBarViewController()
-        tabBarVC.modalPresentationStyle = .fullScreen
-        present(tabBarVC, animated: true, completion: nil)
+        let tabbarVC = TabBarViewController()
+        let navVC = UINavigationController(rootViewController: tabbarVC)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: false, completion: nil)
     }
 
     private func customizeTabBarAppearance() {
@@ -55,7 +58,7 @@ class TabBarViewController: UITabBarController {
     private func setUpControllers() {
         var urlString: String?
         let home = HomeViewController()
-        let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePictureURL: URL(string: urlString ?? ""), status: "дизайнер"))
+        let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
         let saved = SavedViewController()
 
         home.title = "Главная"

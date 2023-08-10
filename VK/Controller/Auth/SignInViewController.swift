@@ -139,9 +139,9 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                     case .success:
                         HapticsManager.shared.vibrate(for: .success)
                         KeychainManager.shared.saveSignInFlag(true)
-                        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                            appDelegate.switchToTabBarController()
-                        }
+                        // здесь должен быть переход на tabbar
+                        //self?.dismiss(animated: true)
+                        self?.presentTabBarController()
                     case .failure:
                         HapticsManager.shared.vibrate(for: .error)
                         let alert = UIAlertController(
@@ -155,6 +155,10 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-
+    private func presentTabBarController() {
+        let tabBarVC = TabBarViewController()
+        tabBarVC.modalPresentationStyle = .fullScreen
+        present(tabBarVC, animated: true, completion: nil)
+    }
 
 }

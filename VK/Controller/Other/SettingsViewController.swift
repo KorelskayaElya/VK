@@ -36,7 +36,7 @@ class SettingsViewController: UIViewController, UIViewControllerTransitioningDel
 }
 extension SettingsViewController: HalfScreenPresentationControllerDelegate {
     func didTapSettings() {
-        let settingsVC = SettingsViewController(user: User(identifier: "", username: "", profilePictureURL: URL(string: ""), status: ""))
+        let settingsVC = SettingsViewController(user: User(identifier: "", username: "", profilePicture: UIImage(named: "header1"), status: ""))
         let navigationController = UINavigationController(rootViewController: settingsVC)
         present(navigationController, animated: true, completion: nil)
     }

@@ -257,14 +257,14 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         buttonSquare.widthAnchor.constraint(equalToConstant: 35),
         buttonSquare.heightAnchor.constraint(equalToConstant: 35),
         // button camera
-        buttonCamera.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 18),
+        buttonCamera.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 17),
         buttonCamera.trailingAnchor.constraint(equalTo: self.buttonSquare.trailingAnchor, constant: 130),
         buttonCamera.widthAnchor.constraint(equalToConstant: 40),
         buttonCamera.heightAnchor.constraint(equalToConstant: 35),
         // button photo
         buttonPhoto.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 16),
         buttonPhoto.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -55),
-        buttonPhoto.widthAnchor.constraint(equalToConstant: 35),
+        buttonPhoto.widthAnchor.constraint(equalToConstant: 40),
         buttonPhoto.heightAnchor.constraint(equalToConstant: 35),
         // square label
         squareLabel.topAnchor.constraint(equalTo: self.buttonSquare.bottomAnchor, constant: 10),
@@ -278,7 +278,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         cameraLabel.heightAnchor.constraint(equalToConstant: 20),
         // photo label
         photoLabel.topAnchor.constraint(equalTo: self.buttonPhoto.bottomAnchor, constant: 10),
-        photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -55),
+        photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -57),
         photoLabel.widthAnchor.constraint(equalToConstant: 35),
         photoLabel.heightAnchor.constraint(equalToConstant: 20),
         ])

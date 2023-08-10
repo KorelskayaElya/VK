@@ -11,6 +11,6 @@ struct User {
     // пока без доп информации
     let identifier: String
     let username: String
-    let profilePictureURL: URL?
+    let profilePicture: UIImage?
     let status: String
 }
