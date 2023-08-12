@@ -59,7 +59,7 @@ class PhotosTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    private lazy var ImagePerson1: UIImageView = {
+    private lazy var Image1: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -67,7 +67,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
-    private lazy var ImagePerson2: UIImageView = {
+    private lazy var Image2: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -75,7 +75,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
-    private lazy var ImagePerson3: UIImageView = {
+    private lazy var Image3: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -83,7 +83,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
-    private lazy var ImagePerson4: UIImageView = {
+    private lazy var Image4: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -91,7 +91,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
-    private lazy var ImagePerson5: UIImageView = {
+    private lazy var Image5: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -108,11 +108,11 @@ class PhotosTableViewCell: UITableViewCell {
     func setup(with viewModel: ViewModel) {
         self.titleLabel.text = "Фотографии"
         self.countPhotosLabel.text = "10"
-        self.ImagePerson1.image = UIImage(named: "picture1")
-        self.ImagePerson2.image = UIImage(named: "picture2")
-        self.ImagePerson3.image = UIImage(named: "picture3")
-        self.ImagePerson4.image = UIImage(named: "picture4")
-        self.ImagePerson5.image = UIImage(named: "picture5")
+        self.Image1.image = UIImage(named: "picture1")
+        self.Image2.image = UIImage(named: "picture2")
+        self.Image3.image = UIImage(named: "picture3")
+        self.Image4.image = UIImage(named: "picture4")
+        self.Image5.image = UIImage(named: "picture5")
     }
     
     required init?(coder: NSCoder) {
@@ -123,11 +123,11 @@ class PhotosTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.stackWithPersons)
         self.addSubview(self.titleLabel)
         self.addSubview(self.countPhotosLabel)
-        self.stackWithPersons.addArrangedSubview(self.ImagePerson1)
-        self.stackWithPersons.addArrangedSubview(self.ImagePerson2)
-        self.stackWithPersons.addArrangedSubview(self.ImagePerson3)
-        self.stackWithPersons.addArrangedSubview(self.ImagePerson4)
-        self.stackWithPersons.addArrangedSubview(self.ImagePerson5)
+        self.stackWithPersons.addArrangedSubview(self.Image1)
+        self.stackWithPersons.addArrangedSubview(self.Image2)
+        self.stackWithPersons.addArrangedSubview(self.Image3)
+        self.stackWithPersons.addArrangedSubview(self.Image4)
+        self.stackWithPersons.addArrangedSubview(self.Image5)
         self.addSubview(self.button_photos)
         NSLayoutConstraint.activate([
             

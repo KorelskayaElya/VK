@@ -7,9 +7,7 @@
 
 import UIKit
 
-
 class PhotosViewController: UIViewController {
-    // обновление информации
     var viewModel: PhotoViewModel! {
         didSet {
             self.viewModel.photoChange = { [weak self] viewModel in
@@ -22,67 +20,125 @@ class PhotosViewController: UIViewController {
             }
         }
     }
-
-    // создаем пустой массив
-    private var recivedImages: [UIImage] = []
-
-    // Function to convert image file names to UIImage objects
     private func setupImages(from photoNames: [String]) {
         recivedImages = photoNames.compactMap { UIImage(named: $0) }
     }
+
     
-    private lazy var flowLayout : UICollectionViewFlowLayout = {
+    private var recivedImages: [UIImage] = []
+    
+    private lazy var flowLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: (self.view.frame.size.width - 40) / 3, height: (self.view.frame.size.width - 40) / 3)
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 8
         layout.minimumLineSpacing = 8
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 8, bottom: 16, right: 8)
         return layout
     }()
+    
+    
     private lazy var collection: UICollectionView = {
         let myCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: flowLayout)
-        myCollectionView.backgroundColor = .black
+        myCollectionView.backgroundColor = .systemBackground
         myCollectionView.translatesAutoresizingMaskIntoConstraints = false
         myCollectionView.dataSource = self
         myCollectionView.delegate = self
-        myCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCell")
         myCollectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: "PhotosCollectionViewCell")
         return myCollectionView
     }()
     
+    private lazy var headerLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Comic Sans MS", size: 18)
+        label.text = "Альбомы  \(viewModel?.photoArr.count ?? 0)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let lineView1 = LineView()
+    let lineView2 = LineView()
+
+    
+    private lazy var allPhotosLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Comic Sans MS", size: 18)
+        label.text = "Все фотографии  \(viewModel?.photoArr.count ?? 0)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupView()
-        self.setupNavigationBar()
+        setupView()
+        setupNavigationBar()
         viewModel?.photoAdd()
     }
-    private func setupView() {
-        self.view.backgroundColor = .systemBackground
-        self.view.addSubview(self.collection)
     
+    private func setupView() {
+        view.backgroundColor = .systemBackground
+        view.addSubview(headerLabel)
+        view.addSubview(lineView2)
+        view.addSubview(lineView1)
+        view.addSubview(allPhotosLabel)
+        view.addSubview(collection)
+        
         NSLayoutConstraint.activate([
-            self.collection.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.collection.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.collection.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.collection.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            ])
+            
+            lineView1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            lineView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            lineView1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            headerLabel.topAnchor.constraint(equalTo: lineView1.topAnchor, constant: 10),
+            headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            headerLabel.widthAnchor.constraint(equalToConstant: 200),
+            headerLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            lineView2.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 100),
+            lineView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            lineView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            allPhotosLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            allPhotosLabel.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 10),
+            allPhotosLabel.widthAnchor.constraint(equalToConstant: 200),
+            allPhotosLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            collection.topAnchor.constraint(equalTo: allPhotosLabel.bottomAnchor, constant: 10),
+            collection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
     
     private func setupNavigationBar() {
-        self.navigationItem.title = "Photo Gallery"
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        let addIcon = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addPhoto))
+        addIcon.tintColor = UIColor(named: "Orange")
+        navigationItem.rightBarButtonItem = addIcon
+        navigationItem.title = "Фотографии"
+    }
+    @objc func addPhoto() {
+        print("add")
+    }
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
     
-    }
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.isHidden = false
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
     }
-
 }
-extension PhotosViewController: UICollectionViewDataSource,  UICollectionViewDelegate {
-   
+
+extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return recivedImages.count
     }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell else {
             let mycell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
@@ -92,8 +148,10 @@ extension PhotosViewController: UICollectionViewDataSource,  UICollectionViewDel
         myCell.setupCell(with: imageName)
         return myCell
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User tapped on item \(indexPath.row)")
     }
 }
+
     

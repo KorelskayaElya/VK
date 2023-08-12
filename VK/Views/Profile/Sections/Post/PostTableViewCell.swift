@@ -7,10 +7,31 @@
 
 import UIKit
 
+protocol PostTableViewCellDelegate: AnyObject {
+    func postTableViewCellDidTapLike(_ cell: PostTableViewCell)
+}
+
+
 class PostTableViewCell: UITableViewCell {
     
-   
+    weak var delegate: PostTableViewCellDelegate?
     private var isFullTextShown = false
+    
+//    var model: Post
+//
+//    init(model: Post, reuseIdentifier: String?) {
+//        self.model = model
+//        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+//        setupView()
+//    }
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -46,22 +67,21 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    private lazy var detailsIcon: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "info.circle.fill")
-        button.setImage(image, for: .normal)
-        button.tintColor = UIColor(named: "Orange")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     private lazy var likeIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "heart")
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         return button
     }()
+    @objc private func didTapLike() {
+        //model.isLikedByCurrentUser = !model.isLikedByCurrentUser
+        //likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : UIColor(named: "Orange")
+        delegate?.postTableViewCellDidTapLike(self)
+    }
+
     private lazy var likeCountLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -98,67 +118,43 @@ class PostTableViewCell: UITableViewCell {
     }()
     
     private let lineView = LineVerticalView()
-    private let lineViewGorizontal = LineView()
    
     private lazy var textPostLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
-        label.text = "With prototyping in Figma, you can create multiple flows for your prototype in one page to preview a user's full journey and experience through your designs. A flow is a path users take through the network of connected frames that make up your prototype. For example, you can create a prototype for a shopping app that includes a flow for account creation, another for browsing items, and another for the checkout process–all in one page.When you add a connection between two frames with no existing connections in your prototype, a flow starting point is created. You can create multiple flows using the same network of connected frames by adding different flow starting points."
         label.textAlignment = .left
         label.numberOfLines = 0
         label.font = UIFont(name: "Arial", size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    private lazy var fullbutton: UILabel = {
-        let label = UILabel()
-        label.textColor = .blue
-        label.text = "Показать полностью..."
-        label.textAlignment = .left
-        label.font = UIFont(name: "Arial", size: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullText))
-        label.isUserInteractionEnabled = true
-        label.addGestureRecognizer(tapGesture)
-        
-        return label
-    }()
+//    private lazy var fullbutton: UILabel = {
+//        let label = UILabel()
+//        label.textColor = .blue
+//        label.text = "Показать полностью..."
+//        label.textAlignment = .left
+//        label.font = UIFont(name: "Arial", size: 14)
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullText))
+//        label.isUserInteractionEnabled = true
+//        label.addGestureRecognizer(tapGesture)
+//
+//        return label
+//    }()
 
     @objc private func showFullText() {
         isFullTextShown.toggle()
-        updateTextPostLabel()
-    }
-    private func updateTextPostLabel() {
-        if isFullTextShown {
-            textPostLabel.text = "With prototyping in Figma, you can create multiple flows for your prototype in one page to preview a user's full journey and experience through your designs. A flow is a path users take through the network of connected frames that make up your prototype. For example, you can create a prototype for a shopping app that includes a flow for account creation, another for browsing items, and another for the checkout process–all in one page.When you add a connection between two frames with no existing connections in your prototype, a flow starting point is created. You can create multiple flows using the same network of connected frames by adding different flow starting points."
-        } else {
-            let shortText = "With prototyping in Figma, you can create multiple flows for your prototype in one page to preview a user's full journey and experience through your designs. A flow is a path users take through the network of connected frames that make up your prototype."
-            textPostLabel.text = shortText
-        }
-    }
-    
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupView() {
-        lineViewGorizontal.tintColor = .lightGray
         contentView.addSubview(postImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(avatarImageView)
         contentView.addSubview(descriptionLabel)
-        contentView.addSubview(detailsIcon)
-        contentView.addSubview(lineView)
+        //contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
-        contentView.addSubview(fullbutton)
-        contentView.addSubview(lineViewGorizontal)
+        //contentView.addSubview(fullbutton)
         contentView.addSubview(likeIcon)
         contentView.addSubview(likeCountLabel)
         contentView.addSubview(CommentIcon)
@@ -182,60 +178,49 @@ class PostTableViewCell: UITableViewCell {
             descriptionLabel.widthAnchor.constraint(equalToConstant: 80),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            detailsIcon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            detailsIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            detailsIcon.widthAnchor.constraint(equalToConstant: 45),
-            detailsIcon.heightAnchor.constraint(equalToConstant: 45),
-            
-            lineView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 75),
-            lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            lineView.heightAnchor.constraint(equalToConstant: 5),
-            lineView.bottomAnchor.constraint(equalTo: lineViewGorizontal.topAnchor, constant: -20),
+//            lineView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 75),
+//            lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+//            lineView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -60),
 
             
-            textPostLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
-            textPostLabel.leadingAnchor.constraint(equalTo: lineView.trailingAnchor, constant: 10),
+            textPostLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
+            textPostLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
             textPostLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            textPostLabel.heightAnchor.constraint(equalToConstant: 100),
+            textPostLabel.heightAnchor.constraint(equalToConstant: 50),
             
             
-            postImageView.topAnchor.constraint(equalTo: fullbutton.bottomAnchor, constant: 5),
-            postImageView.leadingAnchor.constraint(equalTo: lineView.trailingAnchor, constant: 10),
+            postImageView.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor),
+            postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            postImageView.bottomAnchor.constraint(equalTo: lineViewGorizontal.topAnchor, constant: -30),
+            postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -55),
         
             
-            fullbutton.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor, constant: 1),
-            fullbutton.leadingAnchor.constraint(equalTo: lineView.trailingAnchor, constant: 10),
-            fullbutton.widthAnchor.constraint(equalToConstant: 180),
-            fullbutton.heightAnchor.constraint(equalToConstant: 20),
+//            fullbutton.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor, constant: 1),
+//            fullbutton.leadingAnchor.constraint(equalTo: lineView.trailingAnchor, constant: 10),
+//            fullbutton.widthAnchor.constraint(equalToConstant: 180),
+//            fullbutton.heightAnchor.constraint(equalToConstant: 20),
             
-            lineViewGorizontal.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            lineViewGorizontal.heightAnchor.constraint(equalToConstant: 1),
-            lineViewGorizontal.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            lineViewGorizontal.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -60),
-            
-            likeIcon.topAnchor.constraint(equalTo: lineViewGorizontal.bottomAnchor, constant: 3),
+            likeIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             likeIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 45),
             likeIcon.widthAnchor.constraint(equalToConstant: 45),
             likeIcon.heightAnchor.constraint(equalToConstant: 45),
             
-            likeCountLabel.topAnchor.constraint(equalTo: lineViewGorizontal.bottomAnchor, constant: 15),
+            likeCountLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 23),
             likeCountLabel.leadingAnchor.constraint(equalTo: likeIcon.trailingAnchor),
             likeCountLabel.widthAnchor.constraint(equalToConstant: 45),
             likeCountLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            CommentIcon.topAnchor.constraint(equalTo: lineViewGorizontal.bottomAnchor, constant: 5),
+            CommentIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
             CommentIcon.leadingAnchor.constraint(equalTo: likeCountLabel.trailingAnchor, constant: 20),
-            CommentIcon.widthAnchor.constraint(equalToConstant: 45),
-            CommentIcon.heightAnchor.constraint(equalToConstant: 45),
+            CommentIcon.widthAnchor.constraint(equalToConstant: 40),
+            CommentIcon.heightAnchor.constraint(equalToConstant: 40),
             
-            CommentCountLabel.topAnchor.constraint(equalTo: lineViewGorizontal.bottomAnchor, constant: 15),
+            CommentCountLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 22),
             CommentCountLabel.leadingAnchor.constraint(equalTo: CommentIcon.trailingAnchor),
             CommentCountLabel.widthAnchor.constraint(equalToConstant: 45),
             CommentCountLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            BookmarkIcon.topAnchor.constraint(equalTo: lineViewGorizontal.bottomAnchor, constant: 5),
+            BookmarkIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             BookmarkIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             BookmarkIcon.widthAnchor.constraint(equalToConstant: 45),
             BookmarkIcon.heightAnchor.constraint(equalToConstant: 45),
@@ -245,12 +230,12 @@ class PostTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with image: UIImage?, user: User) {
-        postImageView.image = image
-        avatarImageView.image = user.profilePicture 
-        descriptionLabel.text = user.status
-        nameLabel.text = user.username
-        
+    func configure(with post: Post) {
+        postImageView.image = post.imagePost
+        avatarImageView.image = post.user.profilePicture
+        descriptionLabel.text = post.user.status
+        nameLabel.text = post.user.username
+        textPostLabel.text = post.textPost
     }
 }
 

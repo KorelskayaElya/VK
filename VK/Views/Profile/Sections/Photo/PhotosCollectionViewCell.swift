@@ -8,11 +8,12 @@
 import UIKit
 
 class PhotosCollectionViewCell: UICollectionViewCell {
-
+    
     private var photosItems: UIImageView = {
         let images = UIImageView()
         images.contentMode = .scaleAspectFill
         images.clipsToBounds = true
+        images.layer.cornerRadius = 25
         images.translatesAutoresizingMaskIntoConstraints = false
         return images
     }()

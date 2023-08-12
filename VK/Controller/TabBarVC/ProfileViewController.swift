@@ -8,20 +8,29 @@
 import UIKit
 import KeychainAccess
 
-class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ButtonDelegate {
-
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate, PostAddViewControllerDelegate{
     
+    var isFiltering: Bool = false
     var user: User
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
+    }
+    
+    var allPosts: [Post] = []
+    var filteredPosts: [Post] = []
+
+    func didTapCreatePost() {
+        let vc = PostAddViewController()
+        vc.delegate = self // Set the delegate
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -32,8 +41,12 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else if section == 2 {
             return 1
         } else {
-            return 5
+            return isFiltering ? filteredPosts.count : allPosts.count
         }
+    }
+    func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
+        allPosts.append(post)
+        tableView.reloadData()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -43,10 +56,23 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
     }
+    func didTapCreatePost(image: UIImage, text: String) {
+       // Create a new Post object with the provided image and text
+       let user = User(identifier: "annaux_desiner", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер")
+       let newPost = Post(user: user, textPost: text, imagePost: image)
+
+       // Add the new post to your data source (e.g., allPosts)
+       allPosts.append(newPost)
+
+       // Reload the table view to reflect the changes
+       tableView.reloadData()
+   }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 390
+        } else if section == 2 {
+            return 0
         } else {
             return 0
         }
@@ -61,13 +87,30 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return cell
         } else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SearchBarCell", for: indexPath) as! SearchBarTableViewCell
+            cell.searchBarDelegate = self
             cell.configure(with: SearchBarModel(placeholder: "Мои записи"))
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
-            cell.configure(with: UIImage(named: "picture\(indexPath.row+1)"), user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
+            let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
+            cell.configure(with: post)
             return cell
         }
+    }
+    func searchBarDidChange(_ searchText: String) {
+        if searchText.isEmpty {
+            isFiltering = false
+            tableView.reloadData()
+        } else {
+            isFiltering = true
+            filteredPosts = allPosts.filter { post in
+                return post.textPost.lowercased().contains(searchText.lowercased())
+            }
+            tableView.reloadData()
+        }
+    }
+    func searchBarSearchButtonTapped() {
+        dismissKeyboard()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -76,17 +119,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else if indexPath.section == 2 {
             return 60
         } else {
-            return 500
+            return 400
         }
     }
 
     func didTapButton(sender: UIButton) {
-        let vc = PhotosViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let viewModel = PhotoViewModel(model: Photo.photos)
+        let photosViewController = PhotosViewController()
+        photosViewController.viewModel = viewModel
+        navigationController?.pushViewController(photosViewController, animated: true)
     }
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        //tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
@@ -101,18 +146,21 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let headerView = ProfileTableHeaderView()
         headerView.nameLabel.text = user.username
         headerView.descriptionLabel.text = "дизайнер"
+        headerView.delegate = self
         let containerView = UIView()
         containerView.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: containerView.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             headerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
-        
+
         return containerView
     }
+
     private func setupView() {
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -142,6 +190,35 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         setupView()
         tableView.separatorStyle = .none
         tableView.separatorInset = UIEdgeInsets.zero
+        allPosts = loadPostsFromStringsFile()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    func loadPostsFromStringsFile() -> [Post] {
+        guard let path = Bundle.main.path(forResource: "postfile", ofType: "strings"),
+          let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+          let dictionary = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
+          let postArray = dictionary["post"] as? [[String: Any]] else {
+        return []
+        }
+
+        var posts: [Post] = []
+
+        for postDict in postArray {
+            if let textPost = postDict["textPost"] as? String,
+               let imagePostName = postDict["imagePost"] as? String,
+               let imagePost = UIImage(named: imagePostName) {
+                let user = User(identifier: "annaux_desiner", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер")
+                let post = Post(user: user, textPost: textPost, imagePost: imagePost)
+                posts.append(post)
+            }
+        }
+        print(posts)
+
+        return posts
     }
 
     @objc func didOut() {
@@ -171,11 +248,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }))
         present(actionSheet, animated: true)
     }
-
-
-
-
-
 
     @objc func openMenu() {
         let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4

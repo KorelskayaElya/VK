@@ -6,9 +6,11 @@
 //
 
 import UIKit
-import SDWebImage
-
+protocol ProfileTableHeaderViewDelegate: AnyObject {
+    func didTapCreatePost()
+}
 class ProfileTableHeaderView: UITableViewHeaderFooterView {
+    weak var delegate: ProfileTableHeaderViewDelegate?
     //var viewModel: ProfileHeaderViewModel?
     
     
@@ -174,12 +176,6 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    func setup(with viewModel: ProfileHeaderViewModel) {
-//        nameLabel.text = fullName
-//        avatarImageView.image = avatarImage
-//        descriptionLabel.text = status
-//    }
-    
     private func setupView() {
         self.addSubview(self.avatarImageView)
         self.addSubview(self.button)
@@ -218,7 +214,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
         nameLabel.heightAnchor.constraint(equalToConstant: 20),
         // status
-        descriptionLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor,constant: 10),
+        descriptionLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor,constant: 5 ),
         descriptionLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
         descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
         descriptionLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -278,7 +274,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         cameraLabel.heightAnchor.constraint(equalToConstant: 20),
         // photo label
         photoLabel.topAnchor.constraint(equalTo: self.buttonPhoto.bottomAnchor, constant: 10),
-        photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -57),
+        photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -58),
         photoLabel.widthAnchor.constraint(equalToConstant: 35),
         photoLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
@@ -289,7 +285,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         // но пока не понятно как использовать два present controller  в одном profile vc
     }
     @objc func buttonTapSquare() {
-        print("hi its button square")
+        delegate?.didTapCreatePost()
     }
     @objc func buttonTapCamera() {
         print("hi its button camera")
@@ -300,5 +296,4 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
 
        
 }
-
 

@@ -59,10 +59,10 @@ class TabBarViewController: UITabBarController {
         var urlString: String?
         let home = HomeViewController()
         let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
-        let saved = SavedViewController()
+        let saved = LikeViewController()
 
         home.title = "Главная"
-        saved.title = "Сохраненные"
+        saved.title = "Понравившиеся посты"
 
         let nav1 = UINavigationController(rootViewController: home)
         let nav2 = UINavigationController(rootViewController: profile)

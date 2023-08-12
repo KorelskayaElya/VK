@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct ViewModel {
+struct Photo {
     static let photos: [String] = [
         "picture1",
         "picture2",
