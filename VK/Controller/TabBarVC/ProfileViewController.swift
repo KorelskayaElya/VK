@@ -7,11 +7,33 @@
 
 import UIKit
 import KeychainAccess
-
-class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate, PostAddViewControllerDelegate{
+protocol ProfileAddPhotoViewControllerDelegate: AnyObject {
+    func profileAddPhotoViewController(_ selectedImage: UIImage)
+}
+class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
+                                ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
+                             PostAddViewControllerDelegate, ProfileCameraDelegate, ProfileEditDelegate,
+                             ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
+    weak var profileAddPhotoDelegate: ProfileAddPhotoViewControllerDelegate?
+    var selectedImage: UIImage = UIImage()
+    var isOpenEdit = false
+    var isOpenDetails = false
+    func didAddPhoto() {
+        ImagePicker.defaultPicker.getImage(in: self)
+        print("select image", selectedImage)
+        let viewModel = PhotoViewModel(model: Photo.photos)
+        let photosViewController = PhotosViewController()
+        photosViewController.viewModel = viewModel
+        photosViewController.profileAddPhotoViewController(selectedImage)
+        navigationController?.pushViewController(photosViewController, animated: true)
+    }
+    // фильтрация
     var isFiltering: Bool = false
     var user: User
+    var allPosts: [Post] = []
+    var filteredPosts: [Post] = []
+    
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
@@ -20,19 +42,133 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     required init?(coder: NSCoder) {
         fatalError()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        let profileId = UILabel()
+        profileId.text = user.identifier
+        profileId.font = UIFont.boldSystemFont(ofSize: 17.0)
+        profileId.textColor = UIColor.black
+        let outIcon = UIBarButtonItem(image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
+                                      style: .done, target: self, action: #selector(didOut))
+        outIcon.tintColor = UIColor.black
+        navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: profileId),outIcon]
+
+        let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
+                                       style: .done, target: self, action: #selector(openMenu))
+        menuIcon.tintColor = UIColor(named: "Orange")
+        navigationItem.rightBarButtonItem = menuIcon
+        setupView()
+        allPosts = loadPostsFromStringsFile()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        //tableView.backgroundColor = .systemBackground
+        //tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(ProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
+        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: "PhotosCell")
+        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
+        tableView.register(SearchBarTableViewCell.self, forCellReuseIdentifier: "SearchBarCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+
+    private func createHeaderView() -> UIView {
+        let headerView = ProfileTableHeaderView()
+        headerView.nameLabel.text = user.username
+        headerView.descriptionLabel.text = "дизайнер"
+        headerView.delegate = self
+        headerView.cameraDelegate = self
+        headerView.editProfileDelegate = self
+        headerView.addPhotoDelegate = self
+        let containerView = UIView()
+        containerView.addSubview(headerView)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            headerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+        ])
+
+        return containerView
+    }
+
+    private func setupView() {
+        self.view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+        ])
+    }
+    // переход на вью изображения
+//    func didTapButton(sender: UIButton) {
+//        let viewModel = PhotoViewModel(model: Photo.photos)
+//        let photosViewController = PhotosViewController()
+//        photosViewController.viewModel = viewModel
+//        photosViewController.profileAddPhotoViewController(selectedImage)
+//        navigationController?.pushViewController(photosViewController, animated: true)
+//    }
+    func didTapButton(sender: UIButton) {
+        let viewModel = PhotoViewModel(model: Photo.photos)
+        let photosViewController = PhotosViewController()
+        photosViewController.viewModel = viewModel
+        navigationController?.pushViewController(photosViewController, animated: true)
+    }
+
+    // создать новый пост из postAddvc
+    func didTapCreatePost() {
+        let vc = PostAddViewController()
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func didTapCamera() {
+        let vc = CameraViewController()
+        print("didtapcamera")
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL) {
+         
+    }
+    // переход на редактирование профиля / должен открываться один из модальных экранов
+    // в соответствии с флагом - EditProfilePresentationController
+    func didEditProfile() {
+        isOpenDetails = false
+        isOpenEdit = true
+        let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4
+        let halfScreenViewController = UIViewController()
+        halfScreenViewController.view.backgroundColor = .white
+        halfScreenViewController.modalPresentationStyle = .custom
+        halfScreenViewController.transitioningDelegate = self
+        halfScreenViewController.preferredContentSize = CGSize(width: halfScreenWidth, height: UIScreen.main.bounds.height)
+        present(halfScreenViewController, animated: true, completion: nil)
+    }
+    // обновить таблицу после нового поста
+    func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
+        // добавление поста сверху
+        allPosts.insert(post, at: 0)
+        tableView.reloadData()
+    }
+    func didTapCreatePost(image: UIImage, text: String) {
+       let user = User(identifier: "annaux_desiner", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер")
+       let newPost = Post(user: user, textPost: text, imagePost: image)
+       allPosts.append(newPost)
+       tableView.reloadData()
+   }
+    
+    // количество секций
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
-    
-    var allPosts: [Post] = []
-    var filteredPosts: [Post] = []
-
-    func didTapCreatePost() {
-        let vc = PostAddViewController()
-        vc.delegate = self // Set the delegate
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
+    // количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 0
@@ -44,11 +180,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return isFiltering ? filteredPosts.count : allPosts.count
         }
     }
-    func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
-        allPosts.append(post)
-        tableView.reloadData()
-    }
-
+    // header
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             return createHeaderView()
@@ -56,18 +188,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
     }
-    func didTapCreatePost(image: UIImage, text: String) {
-       // Create a new Post object with the provided image and text
-       let user = User(identifier: "annaux_desiner", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер")
-       let newPost = Post(user: user, textPost: text, imagePost: image)
-
-       // Add the new post to your data source (e.g., allPosts)
-       allPosts.append(newPost)
-
-       // Reload the table view to reflect the changes
-       tableView.reloadData()
-   }
-
+    
+    // размер секции
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 390
@@ -97,6 +219,16 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return cell
         }
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 {
+            return 120
+        } else if indexPath.section == 2 {
+            return 60
+        } else {
+            return 400
+        }
+    }
+    // поиск по словам в посте
     func searchBarDidChange(_ searchText: String) {
         if searchText.isEmpty {
             isFiltering = false
@@ -109,94 +241,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.reloadData()
         }
     }
+    // убрать клавиатуру
     func searchBarSearchButtonTapped() {
         dismissKeyboard()
     }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 1 {
-            return 120
-        } else if indexPath.section == 2 {
-            return 60
-        } else {
-            return 400
-        }
-    }
-
-    func didTapButton(sender: UIButton) {
-        let viewModel = PhotoViewModel(model: Photo.photos)
-        let photosViewController = PhotosViewController()
-        photosViewController.viewModel = viewModel
-        navigationController?.pushViewController(photosViewController, animated: true)
-    }
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(ProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
-        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: "PhotosCell")
-        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
-        tableView.register(SearchBarTableViewCell.self, forCellReuseIdentifier: "SearchBarCell")
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-
-    private func createHeaderView() -> UIView {
-        let headerView = ProfileTableHeaderView()
-        headerView.nameLabel.text = user.username
-        headerView.descriptionLabel.text = "дизайнер"
-        headerView.delegate = self
-        let containerView = UIView()
-        containerView.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            headerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-        ])
-
-        return containerView
-    }
-
-    private func setupView() {
-        self.view.addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-        ])
-    }
-
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        let profileId = UILabel()
-        profileId.text = user.identifier
-        profileId.font = UIFont.boldSystemFont(ofSize: 17.0)
-        profileId.textColor = UIColor.black
-        //navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileId)
-        let outIcon = UIBarButtonItem(image: UIImage(systemName: "rectangle.portrait.and.arrow.right"), style: .done, target: self, action: #selector(didOut))
-        outIcon.tintColor = UIColor.black
-        navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: profileId),outIcon]
-
-        let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), style: .done, target: self, action: #selector(openMenu))
-        menuIcon.tintColor = UIColor(named: "Orange")
-        navigationItem.rightBarButtonItem = menuIcon
-        setupView()
-        tableView.separatorStyle = .none
-        tableView.separatorInset = UIEdgeInsets.zero
-        allPosts = loadPostsFromStringsFile()
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
-    }
+    // отмена клавиатуры
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
+    // локальные посты из postfile
     func loadPostsFromStringsFile() -> [Post] {
         guard let path = Bundle.main.path(forResource: "postfile", ofType: "strings"),
           let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
@@ -220,7 +273,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
         return posts
     }
-
+    // кнопка выхода
     @objc func didOut() {
         let actionSheet = UIAlertController(title: "Sign Out",
                                             message: "Would you like to sign out?",
@@ -248,8 +301,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }))
         present(actionSheet, animated: true)
     }
-
+    // переход на редактирование профиля / должен открываться один из модальных экранов
+    // в соответствии с флагом - HalfScreenPresentationController
     @objc func openMenu() {
+        isOpenEdit = false
+        isOpenDetails = true
         let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4
         let halfScreenViewController = UIViewController()
         halfScreenViewController.view.backgroundColor = .white
@@ -261,16 +317,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
 }
-// не понятно как два presentation vc использвать в одном profile vc и как переходить из presentationvc в новый vc
+
 extension ProfileViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-//        if presented is EditProfilePresentationViewController {
+        if isOpenEdit == true && isOpenDetails == false {
+            return EditProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
+        } else if isOpenEdit == false && isOpenDetails == true {
             return HalfScreenPresentationController(presentedViewController: presented, presenting: presenting, user: user)
-//        } else if presented is HalfScreenPresentationViewController {
-//            return HalfScreenPresentationController(presentedViewController: presented, presenting: presenting, user: user)
-//        }
-//        return nil
+        } else {
+            return nil
+        }
     }
 }
-
-

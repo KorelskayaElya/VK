@@ -7,7 +7,17 @@
 
 import UIKit
 
-class PhotosViewController: UIViewController {
+class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDelegate {
+
+    func profileAddPhotoViewController(_ selectedImage: UIImage) {
+        print("photos select image", selectedImage)
+        recivedImages.append(selectedImage)
+        print("count images", recivedImages.count)
+        DispatchQueue.main.async {
+            self.collection.reloadData()
+        }
+    }
+    
     var viewModel: PhotoViewModel! {
         didSet {
             self.viewModel.photoChange = { [weak self] viewModel in
@@ -29,17 +39,17 @@ class PhotosViewController: UIViewController {
     
     private lazy var flowLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (self.view.frame.size.width - 40) / 3, height: (self.view.frame.size.width - 40) / 3)
-        layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 8
-        layout.minimumLineSpacing = 8
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 8, bottom: 16, right: 8)
+        layout.itemSize = CGSize(width: (self.view.frame.size.width-15) / 2, height: (self.view.frame.size.width-15) / 2)
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return layout
     }()
-    
+
     
     private lazy var collection: UICollectionView = {
-        let myCollectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: flowLayout)
+        let myCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         myCollectionView.backgroundColor = .systemBackground
         myCollectionView.translatesAutoresizingMaskIntoConstraints = false
         myCollectionView.dataSource = self
@@ -48,21 +58,21 @@ class PhotosViewController: UIViewController {
         return myCollectionView
     }()
     
-    private lazy var headerLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "Comic Sans MS", size: 18)
-        label.text = "Альбомы  \(viewModel?.photoArr.count ?? 0)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let lineView1 = LineView()
-    let lineView2 = LineView()
+//    private lazy var headerLabel: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont(name: "Comic Sans MS", size: 18)
+//        label.text = "Альбомы  \(viewModel?.photoArr.count ?? 0)"
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
+//
+//    let lineView1 = LineView()
+//    let lineView2 = LineView()
 
     
     private lazy var allPhotosLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Comic Sans MS", size: 18)
+        label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
         label.text = "Все фотографии  \(viewModel?.photoArr.count ?? 0)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -77,36 +87,36 @@ class PhotosViewController: UIViewController {
     
     private func setupView() {
         view.backgroundColor = .systemBackground
-        view.addSubview(headerLabel)
-        view.addSubview(lineView2)
-        view.addSubview(lineView1)
+//        view.addSubview(headerLabel)
+//        view.addSubview(lineView2)
+//        view.addSubview(lineView1)
         view.addSubview(allPhotosLabel)
         view.addSubview(collection)
         
         NSLayoutConstraint.activate([
             
-            lineView1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            lineView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            lineView1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            headerLabel.topAnchor.constraint(equalTo: lineView1.topAnchor, constant: 10),
-            headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            headerLabel.widthAnchor.constraint(equalToConstant: 200),
-            headerLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            lineView2.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 100),
-            lineView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            lineView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
+//            lineView1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+//            lineView1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            lineView1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//
+//            headerLabel.topAnchor.constraint(equalTo: lineView1.topAnchor, constant: 10),
+//            headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+//            headerLabel.widthAnchor.constraint(equalToConstant: 200),
+//            headerLabel.heightAnchor.constraint(equalToConstant: 20),
+//
+//            lineView2.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 100),
+//            lineView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+//            lineView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+//
             allPhotosLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            allPhotosLabel.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 10),
+            allPhotosLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             allPhotosLabel.widthAnchor.constraint(equalToConstant: 200),
             allPhotosLabel.heightAnchor.constraint(equalToConstant: 20),
             
             collection.topAnchor.constraint(equalTo: allPhotosLabel.bottomAnchor, constant: 10),
-            collection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            collection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            collection.heightAnchor.constraint(equalToConstant: 400),
         ])
     }
     

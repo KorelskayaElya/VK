@@ -100,6 +100,21 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        let currentDate = Date()
+        let formattedDate = String.date(with: currentDate)
+        label.text = formattedDate
+        label.textAlignment = .center
+        label.font = UIFont(name: "Arial", size: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.borderColor = UIColor.lightGray.cgColor
+        label.layer.borderWidth = 1
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        return label
+    }()
     private lazy var CommentIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "text.bubble")
@@ -117,7 +132,8 @@ class PostTableViewCell: UITableViewCell {
         return button
     }()
     
-    private let lineView = LineVerticalView()
+    private let lineView = LineView()
+    private let lineView2 = LineView()
    
     private lazy var textPostLabel: UILabel = {
         let label = UILabel()
@@ -148,11 +164,13 @@ class PostTableViewCell: UITableViewCell {
     }
     
     private func setupView() {
+        lineView.tintColor = .lightGray
+        lineView2.tintColor = .lightGray
         contentView.addSubview(postImageView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(avatarImageView)
         contentView.addSubview(descriptionLabel)
-        //contentView.addSubview(lineView)
+        contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
         //contentView.addSubview(fullbutton)
         contentView.addSubview(likeIcon)
@@ -160,15 +178,16 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(CommentIcon)
         contentView.addSubview(CommentCountLabel)
         contentView.addSubview(BookmarkIcon)
-        
+        contentView.addSubview(timeLabel)
+        contentView.addSubview(lineView2)
         
         NSLayoutConstraint.activate([
-            avatarImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+            avatarImageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 5),
             avatarImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             avatarImageView.widthAnchor.constraint(equalToConstant: 50),
             avatarImageView.heightAnchor.constraint(equalToConstant: 50),
             
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            nameLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 10),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 8),
             nameLabel.widthAnchor.constraint(equalToConstant: 180),
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -178,15 +197,19 @@ class PostTableViewCell: UITableViewCell {
             descriptionLabel.widthAnchor.constraint(equalToConstant: 80),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 20),
             
-//            lineView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 75),
-//            lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-//            lineView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -60),
+            lineView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            lineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            lineView.trailingAnchor.constraint(equalTo: timeLabel.leadingAnchor),
+            
+            lineView2.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            lineView2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            lineView2.leadingAnchor.constraint(equalTo: timeLabel.trailingAnchor),
 
             
             textPostLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
             textPostLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
-            textPostLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            textPostLabel.heightAnchor.constraint(equalToConstant: 50),
+            textPostLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            textPostLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
             
             
             postImageView.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor),
@@ -225,7 +248,10 @@ class PostTableViewCell: UITableViewCell {
             BookmarkIcon.widthAnchor.constraint(equalToConstant: 45),
             BookmarkIcon.heightAnchor.constraint(equalToConstant: 45),
             
-            
+            timeLabel.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 10),
+            timeLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            timeLabel.widthAnchor.constraint(equalToConstant: 100),
+            timeLabel.heightAnchor.constraint(equalToConstant: 20),
             
         ])
     }

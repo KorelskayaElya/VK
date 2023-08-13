@@ -28,6 +28,9 @@
 		6DB099842A86C28000C42E5F /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099832A86C28000C42E5F /* PostComment.swift */; };
 		6DB099882A87BC6E00C42E5F /* postfile.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB099872A87BC6E00C42E5F /* postfile.strings */; };
 		6DB0998A2A87E0C400C42E5F /* PostAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099892A87E0C400C42E5F /* PostAddViewController.swift */; };
+		6DB0998C2A88BACA00C42E5F /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */; };
+		6DB0998E2A88BB7900C42E5F /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998D2A88BB7900C42E5F /* RecordButton.swift */; };
+		6DB099902A89184A00C42E5F /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998F2A89184A00C42E5F /* ImagePicker.swift */; };
 		6DB6CE9C2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */; };
 		6DCAF37D2A6C759A00877579 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37C2A6C759A00877579 /* AppDelegate.swift */; };
 		6DCAF37F2A6C759A00877579 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37E2A6C759A00877579 /* SceneDelegate.swift */; };
@@ -78,6 +81,9 @@
 		6DB099832A86C28000C42E5F /* PostComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComment.swift; sourceTree = "<group>"; };
 		6DB099872A87BC6E00C42E5F /* postfile.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = postfile.strings; sourceTree = "<group>"; };
 		6DB099892A87E0C400C42E5F /* PostAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAddViewController.swift; sourceTree = "<group>"; };
+		6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		6DB0998D2A88BB7900C42E5F /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		6DB0998F2A89184A00C42E5F /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
 		6DCAF3792A6C759A00877579 /* VK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DCAF37C2A6C759A00877579 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -187,6 +193,7 @@
 		6DB0995B2A8069C700C42E5F /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */,
 				6DB099412A7C187700C42E5F /* PhotosViewController.swift */,
 				6DCD2A362A768A8F001CED59 /* SettingsViewController.swift */,
 				6DB099892A87E0C400C42E5F /* PostAddViewController.swift */,
@@ -298,6 +305,8 @@
 				6DCD2A2D2A754F53001CED59 /* LabelField.swift */,
 				6DCD2A312A7550C2001CED59 /* LineView.swift */,
 				6DB0997F2A85984600C42E5F /* LineVerticalView.swift */,
+				6DB0998D2A88BB7900C42E5F /* RecordButton.swift */,
+				6DB0998F2A89184A00C42E5F /* ImagePicker.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -497,6 +506,7 @@
 				6DB099402A7C185600C42E5F /* PhotosCollectionViewCell.swift in Sources */,
 				6DB0998A2A87E0C400C42E5F /* PostAddViewController.swift in Sources */,
 				6DB0994A2A7F15A000C42E5F /* EditProfilePresentationController.swift in Sources */,
+				6DB0998E2A88BB7900C42E5F /* RecordButton.swift in Sources */,
 				6DCAF3B22A6D4DD500877579 /* AuthField.swift in Sources */,
 				6DCAF3972A6C767900877579 /* ProfileViewController.swift in Sources */,
 				6DCD2A2C2A754F36001CED59 /* IconImage.swift in Sources */,
@@ -504,6 +514,7 @@
 				6DCAF3A62A6C899600877579 /* AuthenticationManager.swift in Sources */,
 				6D6837782A753D70005E40C1 /* HalfScreenPresentationController.swift in Sources */,
 				6DCAF3BA2A6EBE4900877579 /* HapticsManager.swift in Sources */,
+				6DB0998C2A88BACA00C42E5F /* CameraViewController.swift in Sources */,
 				6DB0997B2A814E7A00C42E5F /* KeychainManager.swift in Sources */,
 				6DB099802A85984600C42E5F /* LineVerticalView.swift in Sources */,
 				6DCAF3992A6C768600877579 /* LikeViewController.swift in Sources */,
@@ -519,6 +530,7 @@
 				6DB099482A7C2DE700C42E5F /* AlbumsTableViewCell.swift in Sources */,
 				6DCAF3AA2A6C8B3000877579 /* SignInViewController.swift in Sources */,
 				6DB099462A7C192C00C42E5F /* Photos.swift in Sources */,
+				6DB099902A89184A00C42E5F /* ImagePicker.swift in Sources */,
 				6DCAF37D2A6C759A00877579 /* AppDelegate.swift in Sources */,
 				6DCAF3B02A6D430E00877579 /* AuthButton.swift in Sources */,
 				6DCAF3A82A6C8B2300877579 /* WelcomeViewController.swift in Sources */,

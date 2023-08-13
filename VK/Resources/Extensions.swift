@@ -33,8 +33,7 @@ extension DateFormatter {
         let formatter = DateFormatter()
         formatter.timeZone = .current
         formatter.locale = .current
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
+        formatter.dateFormat = "d MMMM"
         return formatter
     }()
 }

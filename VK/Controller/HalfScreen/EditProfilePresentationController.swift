@@ -101,19 +101,19 @@ class EditProfilePresentationController: UIPresentationController {
         lineView1.trailingAnchor.constraint(equalTo: presentedViewController.view.trailingAnchor, constant: -16),
         // лейбл основная информация
         customLabel2.topAnchor.constraint(equalTo: lineView1.bottomAnchor, constant: 14),
-        customLabel2.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 6),
+        customLabel2.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         // лейбл контакты
         customLabel3.topAnchor.constraint(equalTo: customLabel2.bottomAnchor, constant: 15),
-        customLabel3.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 6),
+        customLabel3.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         // лейбл интересы
         customLabel4.topAnchor.constraint(equalTo: customLabel3.bottomAnchor, constant: 16),
-        customLabel4.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 6),
+        customLabel4.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         // лейбл образование
         customLabel5.topAnchor.constraint(equalTo: customLabel4.bottomAnchor, constant: 17),
-        customLabel5.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 6),
+        customLabel5.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         // лейбл карьера
         customLabel6.topAnchor.constraint(equalTo: customLabel5.bottomAnchor, constant: 15),
-        customLabel6.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 6),
+        customLabel6.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         
         ])
         if let presentedView = presentedView {

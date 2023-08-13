@@ -9,8 +9,22 @@ import UIKit
 protocol ProfileTableHeaderViewDelegate: AnyObject {
     func didTapCreatePost()
 }
+protocol ProfileCameraDelegate: AnyObject {
+    func didTapCamera()
+}
+protocol ProfileEditDelegate: AnyObject {
+    func didEditProfile()
+}
+protocol ProfileAddPhotoDelegate: AnyObject {
+    func didAddPhoto()
+}
 class ProfileTableHeaderView: UITableViewHeaderFooterView {
+    
     weak var delegate: ProfileTableHeaderViewDelegate?
+    weak var cameraDelegate: ProfileCameraDelegate?
+    weak var editProfileDelegate: ProfileEditDelegate?
+    weak var addPhotoDelegate: ProfileAddPhotoDelegate?
+    
     //var viewModel: ProfileHeaderViewModel?
     
     
@@ -281,17 +295,19 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
     }
 
     @objc func buttonPressed() {
-        // тут должен быть переход на edit present view controller
-        // но пока не понятно как использовать два present controller  в одном profile vc
+        print("edit press")
+        editProfileDelegate?.didEditProfile()
     }
     @objc func buttonTapSquare() {
         delegate?.didTapCreatePost()
     }
     @objc func buttonTapCamera() {
-        print("hi its button camera")
+        print("camera tap")
+        print("delegate: \(String(describing: delegate))")
+        cameraDelegate?.didTapCamera()
     }
     @objc func buttonTapPhoto() {
-        print("hi its button photo")
+        addPhotoDelegate?.didAddPhoto()
     }
 
        

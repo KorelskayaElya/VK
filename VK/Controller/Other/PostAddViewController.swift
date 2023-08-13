@@ -21,6 +21,14 @@ class PostAddViewController: UIViewController {
         view.addSubview(textLabel)
         view.addSubview(buttonSend)
         constraints()
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    }
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
     private lazy var textPostField: UITextView = {
         let textView = UITextView()
@@ -46,12 +54,17 @@ class PostAddViewController: UIViewController {
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
         label.text = "Добавьте изображение"
-        label.textColor = .blue
+        label.textColor = UIColor(named: "Orange")
         label.font = UIFont(name: "Arial", size: 15)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addPhoto))
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(tapGesture)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.borderColor = UIColor.black.cgColor
+        label.layer.borderWidth = 1
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        label.textAlignment = .center
         
         return label
     }()
@@ -75,7 +88,7 @@ class PostAddViewController: UIViewController {
     }
     func constraints() {
         NSLayoutConstraint.activate([
-            self.textLabel.topAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            self.textLabel.topAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
             self.textLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
             self.textLabel.widthAnchor.constraint(equalToConstant: 200),
             self.textLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -85,14 +98,14 @@ class PostAddViewController: UIViewController {
             self.textPostField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             self.textPostField.heightAnchor.constraint(equalToConstant: 200),
             
-            self.photoLabel.topAnchor.constraint(equalTo: self.textPostField.bottomAnchor, constant: 5),
-            self.photoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
-            self.photoLabel.widthAnchor.constraint(equalToConstant: 200),
+            self.photoLabel.topAnchor.constraint(equalTo: self.textPostField.bottomAnchor, constant: 15),
+            self.photoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            self.photoLabel.widthAnchor.constraint(equalToConstant: 185),
             self.photoLabel.heightAnchor.constraint(equalToConstant: 20),
             
             self.buttonSend.topAnchor.constraint(equalTo: self.photoLabel.bottomAnchor, constant: 20),
             self.buttonSend.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
-            self.buttonSend.widthAnchor.constraint(equalToConstant: 100),
+            self.buttonSend.widthAnchor.constraint(equalToConstant: 120),
             self.buttonSend.heightAnchor.constraint(equalToConstant: 50),
 
         ])
@@ -110,7 +123,6 @@ class PostAddViewController: UIViewController {
 extension PostAddViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let pickedImage = info[.originalImage] as? UIImage {
-            // Set the selected image
             selectedImage = pickedImage
         }
         picker.dismiss(animated: true, completion: nil)
@@ -126,6 +138,6 @@ extension PostAddViewController: UITextViewDelegate {
         }
         
         let newText = currentText.replacingCharacters(in: range, with: text)
-        return newText.count <= 400
+        return newText.count <= 300
     }
 }
