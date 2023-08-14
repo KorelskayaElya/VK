@@ -126,9 +126,9 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         backButton.tintColor = UIColor(named: "Orange")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        let addIcon = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addPhoto))
-        addIcon.tintColor = UIColor(named: "Orange")
-        navigationItem.rightBarButtonItem = addIcon
+//        let addIcon = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .done, target: self, action: #selector(addPhoto))
+//        addIcon.tintColor = UIColor(named: "Orange")
+//        navigationItem.rightBarButtonItem = addIcon
         navigationItem.title = "Фотографии"
     }
     @objc func addPhoto() {
