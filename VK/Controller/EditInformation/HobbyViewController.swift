@@ -8,22 +8,73 @@
 import UIKit
 
 class HobbyViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "Место работы"
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        let doneBtn = UIButton(type: .system)
+        doneBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        doneBtn.tintColor = UIColor(named: "Orange")
+        doneBtn.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
+        setupView()
+        constraints()
+        
     }
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc func nextButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    private lazy var hobbyLabel = LabelField()
+    private lazy var hobbyField: UITextField = {
+        let field = UITextField()
+        field.placeholder = "хобби"
+        field.tintColor = .lightGray
+        field.delegate = self
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
+        field.leftView = paddingView
+        field.leftViewMode = .always
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.cornerRadius = 15
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.lightGray.cgColor
+        return field
+    }()
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    private func setupView() {
+        hobbyLabel.text = "Хобби"
+        view.addSubview(hobbyLabel)
+        view.addSubview(hobbyField)
+        hobbyLabel.translatesAutoresizingMaskIntoConstraints = false
     }
-    */
 
+    private func constraints() {
+        NSLayoutConstraint.activate([
+            hobbyLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            hobbyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            hobbyLabel.widthAnchor.constraint(equalToConstant: 100),
+            hobbyLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            hobbyField.topAnchor.constraint(equalTo: hobbyLabel.bottomAnchor, constant: 5),
+            hobbyField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            hobbyField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+            hobbyField.heightAnchor.constraint(equalToConstant: 30),
+    ])
+    }
+}
+extension HobbyViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        let newLength = text.count + string.count - range.length
+        return newLength <= 40
+    }
 }
