@@ -7,8 +7,9 @@
 import UIKit
 
 class RoundButtonWithDot: UIButton {
+    // MARK: - UI
     private let dotView: UIView
-    
+    // MARK: - Init
     override init(frame: CGRect) {
         dotView = UIView()
         super.init(frame: frame)
@@ -20,7 +21,7 @@ class RoundButtonWithDot: UIButton {
         super.init(coder: aDecoder)
         setupButton()
     }
-    
+    // MARK: - Private
     private func setupButton() {
         backgroundColor = .clear
         layer.cornerRadius = 10
@@ -38,7 +39,7 @@ class RoundButtonWithDot: UIButton {
         dotView.heightAnchor.constraint(equalToConstant: 8).isActive = true
         dotView.layer.cornerRadius = 4
     }
-    
+    // MARK: - Methods
     func showDot() {
         dotView.isHidden = false
     }

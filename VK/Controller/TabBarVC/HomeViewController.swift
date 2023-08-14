@@ -9,9 +9,9 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
-    
+    // MARK: Properties
     let cellReuseIdentifier = "StoryCell"
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -45,6 +45,7 @@ class HomeViewController: UIViewController {
         collectionView?.scrollToItem(at: indexPath, at: .right, animated: true)
     }
 }
+
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 10

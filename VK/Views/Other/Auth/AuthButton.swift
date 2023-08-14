@@ -8,6 +8,7 @@
 import UIKit
 
 class AuthButton: UIButton {
+    // MARK: - Enum
     enum ButtonType {
         case signIn
         case signUp
@@ -21,9 +22,9 @@ class AuthButton: UIButton {
             }
         }
     }
-    
+    // MARK: - Properties
     let type: ButtonType
-
+    // MARK: - Init
     init(type: ButtonType, title: String?) {
         self.type = type
         super.init(frame: .zero)
@@ -36,7 +37,7 @@ class AuthButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
+    // MARK: - Private
     private func configure() {
         switch type {
         case .signIn, .signUp:

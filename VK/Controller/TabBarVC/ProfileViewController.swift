@@ -7,72 +7,21 @@
 
 import UIKit
 import KeychainAccess
+
 protocol ProfileAddPhotoViewControllerDelegate: AnyObject {
     func profileAddPhotoViewController(_ selectedImage: UIImage)
 }
+
+protocol ProfileViewControllerDelegate: AnyObject {
+    func welcomeViewControllerSignOutTapped()
+}
+
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
-                                ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
+                                ProfileTableViewCellDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
                              PostAddViewControllerDelegate, ProfileCameraDelegate, ProfileEditDelegate,
                              ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate,
                              EditMainInformationDelegate, ProfileFurtherInformationDelegate{
-   
-    
-    func editMainInformation() {
-        print("info__________________")
-        let vc = InformationViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    
-    weak var profileAddPhotoDelegate: ProfileAddPhotoViewControllerDelegate?
-    var selectedImage: UIImage = UIImage()
-    var isOpenEdit = false
-    var isOpenDetails = false
-    func didAddPhoto() {
-        ImagePicker.defaultPicker.getImage(in: self)
-        print("select image", selectedImage)
-        let viewModel = PhotoViewModel(model: Photo.photos)
-        let photosViewController = PhotosViewController()
-        photosViewController.viewModel = viewModel
-        photosViewController.profileAddPhotoViewController(selectedImage)
-        navigationController?.pushViewController(photosViewController, animated: true)
-    }
-    // фильтрация
-    var isFiltering: Bool = false
-    var user: User
-    var allPosts: [Post] = []
-    var filteredPosts: [Post] = []
-    
-    init(user: User) {
-        self.user = user
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        let profileId = UILabel()
-        profileId.text = user.identifier
-        profileId.font = UIFont.boldSystemFont(ofSize: 17.0)
-        profileId.textColor = UIColor.black
-        let outIcon = UIBarButtonItem(image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
-                                      style: .done, target: self, action: #selector(didOut))
-        outIcon.tintColor = UIColor.black
-        navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: profileId),outIcon]
-
-        let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
-                                       style: .done, target: self, action: #selector(openMenu))
-        menuIcon.tintColor = UIColor(named: "Orange")
-        navigationItem.rightBarButtonItem = menuIcon
-        setupView()
-        allPosts = loadPostsFromStringsFile()
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
-    }
+   // MARK: UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         //tableView.backgroundColor = .systemBackground
@@ -110,7 +59,54 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
         return containerView
     }
+   
+    
+    // MARK: Properties
+    weak var profileAddPhotoDelegate: ProfileAddPhotoViewControllerDelegate?
+    weak var delegate: ProfileViewControllerDelegate?
+    var selectedImage: UIImage = UIImage()
+    var isOpenEdit = false
+    var isOpenDetails = false
+    var isFiltering: Bool = false
+    var user: User
+    var allPosts: [Post] = []
+    var filteredPosts: [Post] = []
+    
+    
+    
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        let profileId = UILabel()
+        profileId.text = user.identifier
+        profileId.font = UIFont.boldSystemFont(ofSize: 17.0)
+        profileId.textColor = UIColor.black
+        let outIcon = UIBarButtonItem(image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
+                                      style: .done, target: self, action: #selector(didOut))
+        outIcon.tintColor = UIColor.black
+        navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: profileId),outIcon]
 
+        let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
+                                       style: .done, target: self, action: #selector(openMenu))
+        menuIcon.tintColor = UIColor(named: "Orange")
+        navigationItem.rightBarButtonItem = menuIcon
+        setupView()
+        allPosts = loadPostsFromStringsFile()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+   
+    // MARK: - Private
     private func setupView() {
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -120,21 +116,22 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
     }
-    // переход на вью изображения
-//    func didTapButton(sender: UIButton) {
-//        let viewModel = PhotoViewModel(model: Photo.photos)
-//        let photosViewController = PhotosViewController()
-//        photosViewController.viewModel = viewModel
-//        photosViewController.profileAddPhotoViewController(selectedImage)
-//        navigationController?.pushViewController(photosViewController, animated: true)
-//    }
+    // MARK: - Methods
     func didTapButton(sender: UIButton) {
         let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
         photosViewController.viewModel = viewModel
         navigationController?.pushViewController(photosViewController, animated: true)
     }
-
+    func didAddPhoto() {
+        ImagePicker.defaultPicker.getImage(in: self)
+        print("select image", selectedImage)
+        let viewModel = PhotoViewModel(model: Photo.photos)
+        let photosViewController = PhotosViewController()
+        photosViewController.viewModel = viewModel
+        photosViewController.profileAddPhotoViewController(selectedImage)
+        navigationController?.pushViewController(photosViewController, animated: true)
+    }
     // создать новый пост из postAddvc
     func didTapCreatePost() {
         let vc = PostAddViewController()
@@ -152,9 +149,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let vc = FurtherInformationViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    // передать видео 
+    // передать видео
     func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL) {
          
+    }
+    func editMainInformation() {
+        print("info__________________")
+        let vc = InformationViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     // переход на редактирование профиля / должен открываться один из модальных экранов
     // в соответствии с флагом - EditProfilePresentationController
@@ -303,9 +305,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                     if success {
                         UserDefaults.standard.setValue(nil, forKey: "phoneNumber")
                         KeychainManager.shared.saveSignInFlag(false)
-                        
-                        // здесь должен быть преход на welcomevc
-                        
+                        self?.delegate?.welcomeViewControllerSignOutTapped()
+                        print("### You have to get out")
                     } else {
                         // failed
                         let alert = UIAlertController(title: "Woops",
@@ -341,7 +342,7 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate {
         if isOpenEdit == true && isOpenDetails == false {
             return EditProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
         } else if isOpenEdit == false && isOpenDetails == true {
-            return HalfScreenPresentationController(presentedViewController: presented, presenting: presenting, user: user)
+            return DetailsProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
         } else {
             return nil
         }

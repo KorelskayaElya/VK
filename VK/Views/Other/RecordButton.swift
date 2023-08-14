@@ -8,7 +8,12 @@
 import UIKit
 
 class RecordButton: UIButton {
-
+    // MARK: Enum
+    enum State {
+        case recording
+        case notRecording
+    }
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = nil
@@ -25,12 +30,7 @@ class RecordButton: UIButton {
         super.layoutSubviews()
         layer.cornerRadius = height/2
     }
-
-    enum State {
-        case recording
-        case notRecording
-    }
-
+    // MARK: - Methods
     public func toggle(for state: State) {
         switch state {
         case .recording:

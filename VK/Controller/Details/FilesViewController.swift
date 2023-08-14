@@ -7,17 +7,10 @@
 
 import UIKit
 
-
+// добавлять файлы
 class FilesViewController: UIViewController{ //UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+    // MARK: - Properties
     var isSorted = true
-    // получаем флаг сортировки
-    func settingsViewControllerDidUpdateSortOrder(isSorted: Bool) {
-        self.isSorted = isSorted
-        // медленно обновляется
-        self.table.reloadData()
-
-    }
     // создаем путь
     var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     var initialPath: String?
@@ -35,7 +28,7 @@ class FilesViewController: UIViewController{ //UITableViewDataSource, UITableVie
             return []
         }
     }
-   
+   // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -49,7 +42,7 @@ class FilesViewController: UIViewController{ //UITableViewDataSource, UITableVie
         return table
     }()
     
-    func setupView() {
+    private func setupView() {
         // прикрепление таблицы
         view.addSubview(self.table)
         //table.dataSource = self
@@ -61,6 +54,15 @@ class FilesViewController: UIViewController{ //UITableViewDataSource, UITableVie
             self.table.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
         ])
+    }
+    // MARK: - Private
+    // получаем флаг сортировки
+    private func settingsViewControllerDidUpdateSortOrder(isSorted: Bool) {
+        self.isSorted = isSorted
+        // медленно обновляется
+        self.table.reloadData()
+
+    }
         // Последний компонент пути приемника - будет отображаться при переходе
 //        title = NSString(string: path).lastPathComponent
         
@@ -172,7 +174,6 @@ class FilesViewController: UIViewController{ //UITableViewDataSource, UITableVie
 //
 //        // Показываем алерт
 //        present(alert, animated: true, completion: nil)
-    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
         //let cell = table.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)

@@ -9,14 +9,19 @@
 import UIKit
 import FirebaseAuth
 
+protocol ConfirmViewControllerDelegate: AnyObject {
+    func confirmViewControllerTabbarTapped()
+}
+
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
-    var urlString: String?
+    // MARK: - UI
     private let signInButton = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+    
     private let smsCodeField: AuthField = {
         let field = AuthField(type: .smsCode)
         return field
     }()
-    var phoneNumber: String?
+    
     private let confirmLabel: UILabel = {
         let label = UILabel()
         label.text = "Подтверждение регистрации"
@@ -25,6 +30,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
+    
     private let detailsLabel1: UILabel = {
         let label = UILabel()
         label.text = "Мы отправили SMS с кодом на номер"
@@ -33,6 +39,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 15, weight: .regular)
         return label
     }()
+    
     private let detailsLabel2: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Gray")
@@ -40,6 +47,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 17, weight: .semibold)
         return label
     }()
+    
     private let detailsLabel3: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Gray")
@@ -48,6 +56,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 14, weight: .regular)
         return label
     }()
+    
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -56,6 +65,13 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         return imageView
     }()
     
+    // MARK: - Properties
+    var urlString: String?
+    var phoneNumber: String?
+    
+    weak var delegate: ConfirmViewControllerDelegate?
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsLabel2.text = phoneNumber ?? "Phone number not provided"
@@ -127,8 +143,9 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
             smsCodeField.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
+    // MARK: - Private
     
-    func customizeBackButton() {
+    private func customizeBackButton() {
         let backButton = UIButton(type: .custom)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
@@ -137,11 +154,11 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         navigationItem.leftBarButtonItem = customBackButton
     }
     
-    @objc func backButtonTapped() {
+    @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
     
-    func configureFields() {
+    private func configureFields() {
         smsCodeField.delegate = self
         
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
@@ -153,16 +170,16 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         smsCodeField.inputAccessoryView = toolBar
     }
     
-    @objc func didTapKeyboardDone() {
+    @objc private func didTapKeyboardDone() {
         smsCodeField.resignFirstResponder()
     }
     
-    func configureButtons() {
+    private func configureButtons() {
         signInButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
     }
     
-    // регистрация и вход в tabbarcpntroller
-    @objc func didTapSignUp() {
+    // регистрация и вход в tabbarcontroller
+    @objc private func didTapSignUp() {
         didTapKeyboardDone()
 
         if let code = smsCodeField.text, !code.isEmpty {
@@ -172,7 +189,8 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
                         HapticsManager.shared.vibrate(for: .success)
                         KeychainManager.shared.saveSignInFlag(true)
                         UserDefaults.standard.setValue(self?.phoneNumber, forKey: "phoneNumber")
-                        self?.presentTabBarController()
+                        
+                        self?.delegate?.confirmViewControllerTabbarTapped()
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -189,10 +207,4 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    private func presentTabBarController() {
-        let tabBarVC = TabBarViewController()
-        tabBarVC.modalPresentationStyle = .fullScreen
-        present(tabBarVC, animated: true, completion: nil)
-    }
-
 }

@@ -6,9 +6,9 @@
 //
 
 import UIKit
-
-class SavedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
+// закладки
+class SavedViewController: UIViewController {
+    // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.dataSource = self
@@ -17,15 +17,15 @@ class SavedViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    
+    // MARK: - Properties
     var savedPosts: [Post] = []
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
     }
-
+    // MARK: - Private
     private func setupView() {
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -35,7 +35,9 @@ class SavedViewController: UIViewController, UITableViewDataSource, UITableViewD
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
     }
-
+}
+extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return savedPosts.count
     }
@@ -45,7 +47,7 @@ class SavedViewController: UIViewController, UITableViewDataSource, UITableViewD
             fatalError("Could not dequeue a SavedPostTableViewCell")
         }
         
-        let post = savedPosts[indexPath.row]
+        let post = self.savedPosts[indexPath.row]
         //cell.configure(with: post.imagePost)
         //cell.delegate = self
         

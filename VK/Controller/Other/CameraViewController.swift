@@ -7,14 +7,15 @@
 
 import AVFoundation
 import UIKit
+
 protocol CameraViewControllerDelegate: AnyObject {
     func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL)
 }
+// добавлять истории
 class CameraViewController: UIViewController {
-    weak var delegateCamera: CameraViewControllerDelegate?
-
     
-
+    // MARK: - Properties
+    weak var delegateCamera: CameraViewControllerDelegate?
     // Capture Session
     var captureSession = AVCaptureSession()
 
@@ -26,7 +27,13 @@ class CameraViewController: UIViewController {
 
     // Capture Preview
     var capturePreviewLayer: AVCaptureVideoPreviewLayer?
+    private let recordButton = RecordButton()
 
+    private var previewLayer: AVPlayerLayer?
+
+    var recordedVideoURL: URL?
+
+    // MARK: - UI
     private let cameraView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
@@ -35,11 +42,7 @@ class CameraViewController: UIViewController {
         return view
     }()
 
-    private let recordButton = RecordButton()
-
-    private var previewLayer: AVPlayerLayer?
-
-    var recordedVideoURL: URL?
+    
 
     // MARK: - Lifecycle
 
@@ -69,31 +72,25 @@ class CameraViewController: UIViewController {
             recordButton.heightAnchor.constraint(equalToConstant: 70)
         ])
     }
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+    // MARK: - Private
     private func setupNavigationBar() {
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        
-//        let saveButton = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(didTapSave))
-//        saveButton.tintColor = UIColor(named: "Orange")
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-//        navigationItem.rightBarButtonItem = saveButton
     }
-    @objc func backButtonTapped() {
+    @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    @objc func didTapSave() {
+    @objc private func didTapSave() {
         // передать видео
         navigationController?.popViewController(animated: true)
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        tabBarController?.tabBar.isHidden = true
-    }
-
     @objc private func didTapRecord() {
         if captureOutput.isRecording {
             recordButton.toggle(for: .notRecording)

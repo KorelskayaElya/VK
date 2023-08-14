@@ -6,9 +6,26 @@
 //
 
 import UIKit
-
+// текущее место работы
 class WorkViewController: UIViewController {
     
+    // MARK: - UI
+    private lazy var workLabel = LabelField()
+    private lazy var workField: UITextField = {
+        let field = UITextField()
+        field.placeholder = "работа"
+        field.tintColor = .lightGray
+        field.delegate = self
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
+        field.leftView = paddingView
+        field.leftViewMode = .always
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.cornerRadius = 15
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.lightGray.cgColor
+        return field
+    }()
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -27,29 +44,13 @@ class WorkViewController: UIViewController {
         constraints()
         
     }
-    @objc func backButtonTapped() {
+    // MARK: - Private
+    @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    @objc func nextButtonTapped() {
+    @objc private func nextButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    private lazy var workLabel = LabelField()
-    private lazy var workField: UITextField = {
-        let field = UITextField()
-        field.placeholder = "работа"
-        field.tintColor = .lightGray
-        field.delegate = self
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
-        field.leftView = paddingView
-        field.leftViewMode = .always
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.layer.cornerRadius = 15
-        field.layer.borderWidth = 2
-        field.layer.borderColor = UIColor.lightGray.cgColor
-        return field
-    }()
-    
-    
     private func setupView() {
         workLabel.text = "Работа"
         view.addSubview(workLabel)

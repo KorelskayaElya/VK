@@ -6,24 +6,10 @@
 //
 
 import UIKit
-
+// подробная информация
 class FurtherInformationViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.tintColor = UIColor(named: "Orange")
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "Подробная информация"
-        setupView()
-        constraints()
-    }
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+    // MARK: - UI
     private lazy var nameLabel = LabelField()
     private lazy var nameLabel1 = LabelField()
     private lazy var surnameLabel = LabelField()
@@ -43,7 +29,22 @@ class FurtherInformationViewController: UIViewController {
     private lazy var workLabel = LabelField()
     private lazy var workLabel1 = LabelField()
     
-    func setupView() {
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "Подробная информация"
+        setupView()
+        constraints()
+    }
+    
+    // MARK: - Private
+    private func setupView() {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel1.translatesAutoresizingMaskIntoConstraints = false
         nameLabel1.font = UIFont.boldSystemFont(ofSize: 15)
@@ -108,7 +109,7 @@ class FurtherInformationViewController: UIViewController {
         view.addSubview(univercityLabel1)
         view.addSubview(workLabel1)
     }
-    func constraints() {
+    private func constraints() {
         NSLayoutConstraint.activate([
             nameLabel1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             nameLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -203,5 +204,8 @@ class FurtherInformationViewController: UIViewController {
             
             
         ])
+    }
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

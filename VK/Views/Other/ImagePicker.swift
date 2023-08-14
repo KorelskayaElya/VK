@@ -8,11 +8,12 @@
 import UIKit
 
 class ImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    // MARK: - Properties
     static let defaultPicker = ImagePicker()
 
     private weak var viewController: ProfileViewController?
     
+    // MARK: - Methods
     func getImage(in viewController: ProfileViewController) {
         self.viewController = viewController
 

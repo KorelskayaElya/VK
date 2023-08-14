@@ -7,9 +7,10 @@
 
 import UIKit
 
-
-class LikeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
+// liked publications
+class LikeViewController: UIViewController {
     
+    // MARK: UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.dataSource = self
@@ -18,16 +19,16 @@ class LikeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    
+    // MARK: Properties
     var likedPosts: [Post] = []
     var savedPosts: [Post] = []
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
     }
-
+   // MARK: Private
     private func setupView() {
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -38,8 +39,12 @@ class LikeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         ])
     }
 
+}
+extension LikeViewController: UITableViewDataSource, UITableViewDelegate, PostTableViewCellDelegate {
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return likedPosts.count
+        return self.likedPosts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -47,7 +52,7 @@ class LikeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             fatalError("Could not dequeue a LikePostTableViewCell")
         }
         
-        let post = likedPosts[indexPath.row]
+        let post = self.likedPosts[indexPath.row]
         //cell.configure(with: post.imagePost)
         cell.delegate = self
         
@@ -56,16 +61,15 @@ class LikeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func postTableViewCellDidTapLike(_ cell: PostTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        var post = likedPosts[indexPath.row]
+        var post = self.likedPosts[indexPath.row]
         post.isLikedByCurrentUser.toggle()
-        likedPosts[indexPath.row] = post
+        self.likedPosts[indexPath.row] = post
         
         if post.isLikedByCurrentUser {
-            likedPosts.remove(at: indexPath.row)
-            savedPosts.append(post)
+            self.likedPosts.remove(at: indexPath.row)
+            self.savedPosts.append(post)
             
         }
         tableView.reloadData()
     }
 }
-

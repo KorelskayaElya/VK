@@ -8,6 +8,7 @@
 import UIKit
 
 final class LineVerticalView: UIView {
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -17,7 +18,7 @@ final class LineVerticalView: UIView {
         super.init(coder: coder)
         commonInit()
     }
-    
+    // MARK: - Private
     private func commonInit() {
         self.backgroundColor = .gray
         self.translatesAutoresizingMaskIntoConstraints = false

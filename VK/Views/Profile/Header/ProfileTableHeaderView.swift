@@ -22,16 +22,7 @@ protocol ProfileFurtherInformationDelegate: AnyObject {
     func didFurtherInformation()
 }
 class ProfileTableHeaderView: UITableViewHeaderFooterView {
-    
-    weak var delegate: ProfileTableHeaderViewDelegate?
-    weak var cameraDelegate: ProfileCameraDelegate?
-    weak var editProfileDelegate: ProfileEditDelegate?
-    weak var addPhotoDelegate: ProfileAddPhotoDelegate?
-    weak var furtherInformation: ProfileFurtherInformationDelegate?
-    
-    //var viewModel: ProfileHeaderViewModel?
-    
-    
+    // MARK: - UI
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -93,9 +84,6 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         label.addGestureRecognizer(tapGesture)
         return label
     }()
-    @objc func addFurtherInformation() {
-        furtherInformation?.didFurtherInformation()
-    }
 
     private lazy var followers: UILabel = {
         let label = UILabel()
@@ -188,7 +176,13 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+    // MARK: - Properties
+    weak var delegate: ProfileTableHeaderViewDelegate?
+    weak var cameraDelegate: ProfileCameraDelegate?
+    weak var editProfileDelegate: ProfileEditDelegate?
+    weak var addPhotoDelegate: ProfileAddPhotoDelegate?
+    weak var furtherInformation: ProfileFurtherInformationDelegate?
+    // MARK:  - Init
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -199,7 +193,7 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    // MARK: - Private
     private func setupView() {
         self.addSubview(self.avatarImageView)
         self.addSubview(self.button)
@@ -221,7 +215,6 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
     private func contraints() {
         NSLayoutConstraint.activate([
         // image avatar
-        // 100
         avatarImageView.topAnchor.constraint(equalTo: self.topAnchor,constant: 20),
         avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
         avatarImageView.widthAnchor.constraint(equalToConstant: 110),
@@ -232,7 +225,6 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         button.heightAnchor.constraint(equalToConstant: 50),
         button.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
         // username
-        // 115
         nameLabel.topAnchor.constraint(equalTo: self.topAnchor,constant: 35),
         nameLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
         nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
@@ -304,20 +296,23 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         ])
     }
 
-    @objc func buttonPressed() {
+    @objc private func buttonPressed() {
         print("edit press")
         editProfileDelegate?.didEditProfile()
     }
-    @objc func buttonTapSquare() {
+    @objc private func buttonTapSquare() {
         delegate?.didTapCreatePost()
     }
-    @objc func buttonTapCamera() {
+    @objc private func buttonTapCamera() {
         print("camera tap")
         print("delegate: \(String(describing: delegate))")
         cameraDelegate?.didTapCamera()
     }
-    @objc func buttonTapPhoto() {
+    @objc private func buttonTapPhoto() {
         addPhotoDelegate?.didAddPhoto()
+    }
+    @objc private func addFurtherInformation() {
+        furtherInformation?.didFurtherInformation()
     }
 
        

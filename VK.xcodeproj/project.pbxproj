@@ -9,13 +9,12 @@
 /* Begin PBXBuildFile section */
 		6D639C6F2A73F521002EB654 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D639C6E2A73F521002EB654 /* AlertManager.swift */; };
 		6D639C712A752CFD002EB654 /* ProfileTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D639C702A752CFD002EB654 /* ProfileTableHeaderView.swift */; };
-		6D6837782A753D70005E40C1 /* HalfScreenPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6837772A753D70005E40C1 /* HalfScreenPresentationController.swift */; };
+		6D6837782A753D70005E40C1 /* DetailsProfilePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6837772A753D70005E40C1 /* DetailsProfilePresentationController.swift */; };
 		6DB0993E2A7C17DC00C42E5F /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0993D2A7C17DC00C42E5F /* PhotosTableViewCell.swift */; };
 		6DB099402A7C185600C42E5F /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0993F2A7C185600C42E5F /* PhotosCollectionViewCell.swift */; };
 		6DB099422A7C187700C42E5F /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099412A7C187700C42E5F /* PhotosViewController.swift */; };
 		6DB099442A7C18FE00C42E5F /* PhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099432A7C18FE00C42E5F /* PhotoViewModel.swift */; };
 		6DB099462A7C192C00C42E5F /* Photos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099452A7C192C00C42E5F /* Photos.swift */; };
-		6DB099482A7C2DE700C42E5F /* AlbumsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099472A7C2DE700C42E5F /* AlbumsTableViewCell.swift */; };
 		6DB0994A2A7F15A000C42E5F /* EditProfilePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099492A7F15A000C42E5F /* EditProfilePresentationController.swift */; };
 		6DB0994C2A8054B700C42E5F /* StoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0994B2A8054B700C42E5F /* StoryCollectionViewCell.swift */; };
 		6DB0994E2A805BEC00C42E5F /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0994D2A805BEC00C42E5F /* PostTableViewCell.swift */; };
@@ -39,6 +38,7 @@
 		6DB0999F2A8A4D7400C42E5F /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0999E2A8A4D7400C42E5F /* FilesViewController.swift */; };
 		6DB099A12A8A511700C42E5F /* RoundDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099A02A8A511700C42E5F /* RoundDot.swift */; };
 		6DB099A32A8A5F9100C42E5F /* FurtherInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099A22A8A5F9100C42E5F /* FurtherInformationViewController.swift */; };
+		6DB099A52A8A96A900C42E5F /* NavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099A42A8A96A900C42E5F /* NavigationRouter.swift */; };
 		6DB6CE9C2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */; };
 		6DCAF37D2A6C759A00877579 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37C2A6C759A00877579 /* AppDelegate.swift */; };
 		6DCAF37F2A6C759A00877579 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37E2A6C759A00877579 /* SceneDelegate.swift */; };
@@ -70,13 +70,12 @@
 		318D354CD2D25D88562FEC45 /* Pods-VK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK.debug.xcconfig"; path = "Target Support Files/Pods-VK/Pods-VK.debug.xcconfig"; sourceTree = "<group>"; };
 		6D639C6E2A73F521002EB654 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		6D639C702A752CFD002EB654 /* ProfileTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableHeaderView.swift; sourceTree = "<group>"; wrapsLines = 0; };
-		6D6837772A753D70005E40C1 /* HalfScreenPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfScreenPresentationController.swift; sourceTree = "<group>"; };
+		6D6837772A753D70005E40C1 /* DetailsProfilePresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsProfilePresentationController.swift; sourceTree = "<group>"; };
 		6DB0993D2A7C17DC00C42E5F /* PhotosTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewCell.swift; sourceTree = "<group>"; };
 		6DB0993F2A7C185600C42E5F /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		6DB099412A7C187700C42E5F /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		6DB099432A7C18FE00C42E5F /* PhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewModel.swift; sourceTree = "<group>"; };
 		6DB099452A7C192C00C42E5F /* Photos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos.swift; sourceTree = "<group>"; };
-		6DB099472A7C2DE700C42E5F /* AlbumsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsTableViewCell.swift; sourceTree = "<group>"; };
 		6DB099492A7F15A000C42E5F /* EditProfilePresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfilePresentationController.swift; sourceTree = "<group>"; };
 		6DB0994B2A8054B700C42E5F /* StoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		6DB0994D2A805BEC00C42E5F /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
@@ -99,6 +98,7 @@
 		6DB0999E2A8A4D7400C42E5F /* FilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
 		6DB099A02A8A511700C42E5F /* RoundDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDot.swift; sourceTree = "<group>"; };
 		6DB099A22A8A5F9100C42E5F /* FurtherInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FurtherInformationViewController.swift; sourceTree = "<group>"; };
+		6DB099A42A8A96A900C42E5F /* NavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouter.swift; sourceTree = "<group>"; };
 		6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
 		6DCAF3792A6C759A00877579 /* VK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DCAF37C2A6C759A00877579 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -181,7 +181,6 @@
 		6DB099582A80695400C42E5F /* Photo */ = {
 			isa = PBXGroup;
 			children = (
-				6DB099472A7C2DE700C42E5F /* AlbumsTableViewCell.swift */,
 				6DB0993D2A7C17DC00C42E5F /* PhotosTableViewCell.swift */,
 				6DB0993F2A7C185600C42E5F /* PhotosCollectionViewCell.swift */,
 			);
@@ -289,6 +288,7 @@
 				6DCAF37C2A6C759A00877579 /* AppDelegate.swift */,
 				6DCAF39C2A6C76DD00877579 /* Extensions.swift */,
 				6DB099872A87BC6E00C42E5F /* postfile.strings */,
+				6DB099A42A8A96A900C42E5F /* NavigationRouter.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -394,7 +394,7 @@
 		6DCD2A342A75514A001CED59 /* HalfScreen */ = {
 			isa = PBXGroup;
 			children = (
-				6D6837772A753D70005E40C1 /* HalfScreenPresentationController.swift */,
+				6D6837772A753D70005E40C1 /* DetailsProfilePresentationController.swift */,
 				6DB099492A7F15A000C42E5F /* EditProfilePresentationController.swift */,
 			);
 			path = HalfScreen;
@@ -548,11 +548,12 @@
 				6DCAF3B22A6D4DD500877579 /* AuthField.swift in Sources */,
 				6DB099942A8A4B1D00C42E5F /* HobbyViewController.swift in Sources */,
 				6DCAF3972A6C767900877579 /* ProfileViewController.swift in Sources */,
+				6DB099A52A8A96A900C42E5F /* NavigationRouter.swift in Sources */,
 				6DCD2A2C2A754F36001CED59 /* IconImage.swift in Sources */,
 				6DB099502A80611000C42E5F /* SearchBar.swift in Sources */,
 				6DCAF3A62A6C899600877579 /* AuthenticationManager.swift in Sources */,
 				6DB099962A8A4B2900C42E5F /* EducationViewController.swift in Sources */,
-				6D6837782A753D70005E40C1 /* HalfScreenPresentationController.swift in Sources */,
+				6D6837782A753D70005E40C1 /* DetailsProfilePresentationController.swift in Sources */,
 				6DCAF3BA2A6EBE4900877579 /* HapticsManager.swift in Sources */,
 				6DB0999F2A8A4D7400C42E5F /* FilesViewController.swift in Sources */,
 				6DB0998C2A88BACA00C42E5F /* CameraViewController.swift in Sources */,
@@ -570,7 +571,6 @@
 				6DCAF3B82A6DCC1100877579 /* ConfirmViewController.swift in Sources */,
 				6DCAF3B62A6DB67100877579 /* SignUpViewController.swift in Sources */,
 				6DB0994E2A805BEC00C42E5F /* PostTableViewCell.swift in Sources */,
-				6DB099482A7C2DE700C42E5F /* AlbumsTableViewCell.swift in Sources */,
 				6DCAF3AA2A6C8B3000877579 /* SignInViewController.swift in Sources */,
 				6DB099462A7C192C00C42E5F /* Photos.swift in Sources */,
 				6DB099902A89184A00C42E5F /* ImagePicker.swift in Sources */,

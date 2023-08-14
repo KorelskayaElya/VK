@@ -5,33 +5,9 @@
 //  Created by Эля Корельская on 14.08.2023.
 //
 import UIKit
-
+// образование
 class EducationViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "Образование"
-        let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        backButton.tintColor = UIColor(named: "Orange")
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        let doneBtn = UIButton(type: .system)
-        doneBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        doneBtn.tintColor = UIColor(named: "Orange")
-        doneBtn.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
-        setupView()
-        constraints()
-        
-    }
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+    // MARK: - UI
     private lazy var schoolLabel = LabelField()
     private lazy var univercityLabel = LabelField()
     private lazy var schoolField: UITextField = {
@@ -63,7 +39,32 @@ class EducationViewController: UIViewController {
         return field
     }()
     
-    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "Образование"
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        let doneBtn = UIButton(type: .system)
+        doneBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        doneBtn.tintColor = UIColor(named: "Orange")
+        doneBtn.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
+        setupView()
+        constraints()
+        
+    }
+    // MARK: - Private
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc private func nextButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
     private func setupView() {
         schoolLabel.text = "Школа"
         univercityLabel.text = "Университет"
@@ -97,13 +98,11 @@ class EducationViewController: UIViewController {
             unisercityField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
             unisercityField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
             unisercityField.heightAnchor.constraint(equalToConstant: 30),
-            
-            
-           
         
     ])
     }
 }
+
 extension EducationViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }

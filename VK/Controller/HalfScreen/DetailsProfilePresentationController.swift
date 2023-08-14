@@ -7,9 +7,26 @@
 
 import UIKit
 
-
-class HalfScreenPresentationController: UIPresentationController {
+// дополнительно в профиле
+class DetailsProfilePresentationController: UIPresentationController {
     
+    // MARK: - UI
+    // затемнение
+    private let dimmingView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private let arrowButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        button.tintColor = UIColor(named: "Orange")
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    // MARK: - Properties
     var user: User
     
     init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, user: User) {
@@ -20,23 +37,10 @@ class HalfScreenPresentationController: UIPresentationController {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    // затемнение
-    private let dimmingView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let arrowButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage(systemName: "arrow.left"), for: .normal)
-        button.tintColor = UIColor(named: "Orange")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     
+    
+    // MARK: - Lifecycle
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
         // цвет бокового окна
@@ -191,7 +195,7 @@ class HalfScreenPresentationController: UIPresentationController {
         }
             
     }
-    
+    // MARK: - Private
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else {
             return CGRect.zero
@@ -199,7 +203,7 @@ class HalfScreenPresentationController: UIPresentationController {
         return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
     }
     
-    @objc func dismissModalController() {
+    @objc private func dismissModalController() {
         presentingViewController.dismiss(animated: true, completion: nil)
     }
 }

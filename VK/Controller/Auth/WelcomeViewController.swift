@@ -8,10 +8,16 @@
 import Foundation
 import UIKit
 
+protocol WelcomeViewControllerSignUpDelegate: AnyObject {
+    func welcomeViewControllerSignUpTapped()
+}
+protocol WelcomeViewControllerSignInDelegate: AnyObject {
+    func welcomeViewControllerSignInTapped()
+}
+
 class WelcomeViewController: UIViewController {
-
-    public var completion: (() -> Void)?
-
+    
+    // MARK: - UI
     private let welcomeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -28,24 +34,30 @@ class WelcomeViewController: UIViewController {
 
     private let alreadySignUp: AuthButton = {
         let button = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт")
-        button.addTarget(self, action: #selector(didTapAlreadySignUp), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         return button
     }()
-
+    
+    // MARK: - Properties
+    weak var delegateSignIn: WelcomeViewControllerSignInDelegate?
+    weak var delegateSignUp: WelcomeViewControllerSignUpDelegate?
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         addSubviews()
         configureConstraints()
     }
-
-    func addSubviews() {
+    
+    // MARK: - Private
+    private func addSubviews() {
         view.addSubview(welcomeImageView)
         view.addSubview(signInButton)
         view.addSubview(alreadySignUp)
     }
 
-    func configureConstraints() {
+    private func configureConstraints() {
         welcomeImageView.translatesAutoresizingMaskIntoConstraints = false
         signInButton.translatesAutoresizingMaskIntoConstraints = false
         alreadySignUp.translatesAutoresizingMaskIntoConstraints = false
@@ -69,14 +81,11 @@ class WelcomeViewController: UIViewController {
         ])
     }
 
-    @objc func didTapSignUp() {
-        let vc = SignUpViewController()
-        navigationController?.pushViewController(vc, animated: true)
+    @objc private func didTapSignUp() {
+        delegateSignUp?.welcomeViewControllerSignUpTapped()
     }
-
     
-    @objc func didTapAlreadySignUp() {
-        let vc = SignInViewController()
-        navigationController?.pushViewController(vc, animated: true)
+    @objc private func didTapSignIn() {
+        delegateSignIn?.welcomeViewControllerSignInTapped()
     }
 }

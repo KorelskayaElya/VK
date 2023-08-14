@@ -8,11 +8,13 @@
 import Foundation
 import UIKit
 import KeychainAccess
-
+protocol SignInViewControllerDelegate: AnyObject {
+    func signInViewControllerTabbarTapped()
+}
 class SignInViewController: UIViewController, UITextFieldDelegate {
-    var urlString: String?
-    
-    private let signUpButton: AuthButton = {
+  
+    // MARK: - UI
+    private let signInButton: AuthButton = {
         let button = AuthButton(type: .signIn, title: "Подтвердить")
         button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         return button
@@ -41,7 +43,11 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         label.numberOfLines = 0
         return label
     }()
+    // MARK: Properties
+    var urlString: String?
+    weak var delegate: SignInViewControllerDelegate?
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -51,26 +57,31 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         configureButtons()
         customizeBackButton()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        phoneField.becomeFirstResponder()
+    }
     
-    func addSubviews() {
-        view.addSubview(signUpButton)
+    // MARK: - Private
+    private func addSubviews() {
+        view.addSubview(signInButton)
         view.addSubview(phoneField)
         view.addSubview(returnLabel)
         view.addSubview(detailsLabel)
     }
     
-    func configureConstraints() {
-        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+    private func configureConstraints() {
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
         phoneField.translatesAutoresizingMaskIntoConstraints = false
         returnLabel.translatesAutoresizingMaskIntoConstraints = false
         detailsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             // Sign Up Button constraints
-            signUpButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            signUpButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            signUpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
-            signUpButton.heightAnchor.constraint(equalToConstant: 55),
+            signInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            signInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            signInButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -300),
+            signInButton.heightAnchor.constraint(equalToConstant: 55),
             
             // Return Label constraints
             returnLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -92,10 +103,6 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        phoneField.becomeFirstResponder()
-    }
     
     func customizeBackButton() {
         let backButton = UIButton(type: .custom)
@@ -127,7 +134,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     }
     
     func configureButtons() {
-        signUpButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
     }
     // вход в аккаунт
     @objc public func didTapSignIn() {
@@ -139,9 +146,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                     case .success:
                         HapticsManager.shared.vibrate(for: .success)
                         KeychainManager.shared.saveSignInFlag(true)
-                        // здесь должен быть переход на tabbar
-                        //self?.dismiss(animated: true)
-                        self?.presentTabBarController()
+                        self?.delegate?.signInViewControllerTabbarTapped()
                     case .failure:
                         HapticsManager.shared.vibrate(for: .error)
                         let alert = UIAlertController(
@@ -154,11 +159,6 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-    }
-    private func presentTabBarController() {
-        let tabBarVC = TabBarViewController()
-        tabBarVC.modalPresentationStyle = .fullScreen
-        present(tabBarVC, animated: true, completion: nil)
     }
 
 }

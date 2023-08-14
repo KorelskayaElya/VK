@@ -6,33 +6,10 @@
 //
 
 import UIKit
-
+// основная информация 
 class InformationViewController: UIViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "Основная информация"
-        let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        backButton.tintColor = UIColor(named: "Orange")
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        let doneBtn = UIButton(type: .system)
-        doneBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        doneBtn.tintColor = UIColor(named: "Orange")
-        doneBtn.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
-        setupView()
-        constraints()
-        
-    }
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+    // MARK: - UI
     private lazy var nameLabel = LabelField()
     private lazy var surnameLabel = LabelField()
     private lazy var genderLabel = LabelField()
@@ -99,6 +76,33 @@ class InformationViewController: UIViewController {
         return field
     }()
     
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "Основная информация"
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        let doneBtn = UIButton(type: .system)
+        doneBtn.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        doneBtn.tintColor = UIColor(named: "Orange")
+        doneBtn.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
+        setupView()
+        constraints()
+        
+    }
+    // MARK: - Private
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc private func nextButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
     
     private func setupView() {
         nameLabel.text = "Имя"

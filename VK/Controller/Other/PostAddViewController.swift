@@ -6,30 +6,14 @@
 //
 
 import UIKit
+
 protocol PostAddViewControllerDelegate: AnyObject {
     func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post)
 }
+// добавить пост в profilevc
 class PostAddViewController: UIViewController {
-    weak var delegate: PostAddViewControllerDelegate?
-    private var selectedImage: UIImage?
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "Добавить пост"
-        view.addSubview(textPostField)
-        view.addSubview(photoLabel)
-        view.addSubview(textLabel)
-        view.addSubview(buttonSend)
-        constraints()
-        let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.tintColor = UIColor(named: "Orange")
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-    }
-    @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+    
+    // MARK: - UI
     private lazy var textPostField: UITextView = {
         let textView = UITextView()
         textView.textColor = UIColor(named: "Black")
@@ -79,14 +63,26 @@ class PostAddViewController: UIViewController {
         button.layer.cornerRadius = 20
         return button
     }()
-
-    @objc private func addPhoto() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
+    // MARK: - Properties
+    weak var delegate: PostAddViewControllerDelegate?
+    private var selectedImage: UIImage?
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "Добавить пост"
+        view.addSubview(textPostField)
+        view.addSubview(photoLabel)
+        view.addSubview(textLabel)
+        view.addSubview(buttonSend)
+        constraints()
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
-    func constraints() {
+    private func constraints() {
         NSLayoutConstraint.activate([
             self.textLabel.topAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
             self.textLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
@@ -110,7 +106,18 @@ class PostAddViewController: UIViewController {
 
         ])
     }
-    @objc func sendPost() {
+   
+    // MARK: - Private
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc private func addPhoto() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    @objc private func sendPost() {
         guard let text = textPostField.text else { return }
         let newPost = Post(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер"), textPost: text, imagePost: selectedImage)
         
@@ -118,8 +125,8 @@ class PostAddViewController: UIViewController {
 
         navigationController?.popViewController(animated: true)
     }
-
 }
+
 extension PostAddViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let pickedImage = info[.originalImage] as? UIImage {
@@ -131,6 +138,7 @@ extension PostAddViewController: UIImagePickerControllerDelegate & UINavigationC
         picker.dismiss(animated: true, completion: nil)
     }
 }
+
 extension PostAddViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard let currentText = textView.text, let range = Range(range, in: currentText) else {

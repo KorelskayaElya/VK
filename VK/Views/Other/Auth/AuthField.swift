@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class AuthField: UITextField {
-
+    // MARK: - Enum
     enum FieldType {
         case phone
         case smsCode
@@ -21,8 +21,9 @@ class AuthField: UITextField {
             }
         }
     }
-
+    // MARK: - Properties
     private let type: FieldType
+    // MARK: - Init
     init(type: FieldType) {
         self.type = type
         super.init(frame: .zero)
@@ -32,7 +33,7 @@ class AuthField: UITextField {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    // MARK: - Private
     private func configureUI() {
         autocapitalizationType = .none
         backgroundColor = .secondarySystemBackground

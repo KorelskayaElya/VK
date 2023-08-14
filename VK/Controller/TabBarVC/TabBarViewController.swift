@@ -10,41 +10,42 @@ import KeychainAccess
 
 class TabBarViewController: UITabBarController {
 
-
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpControllers()
         customizeTabBarAppearance()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        if KeychainManager.shared.getSignInFlag() == false {
-//            presentWelcomeVC()
-//        } else {
-//            presentTabBarController()
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+////        if KeychainManager.shared.getSignInFlag() == false {
+////            presentWelcomeVC()
+////        } else {
+////            presentTabBarController()
+////        }
+//    }
+//
+//    private func presentWelcomeVC() {
+//        let welcomeVC = WelcomeViewController()
+//        welcomeVC.completion = { [weak self] in
+//            self?.presentTabBarController()
 //        }
-    }
+//        let navVC = UINavigationController(rootViewController: welcomeVC)
+//        navVC.modalPresentationStyle = .fullScreen
+//        present(navVC, animated: false, completion: nil)
+//    }
+//    // как открыть tab bar чтобы он был на время главным контроллером
+//    // для tab bar нет completion
+//    // запускается криво
+//    private func presentTabBarController() {
+//        let tabbarVC = TabBarViewController()
+//        let navVC = UINavigationController(rootViewController: tabbarVC)
+//        navVC.modalPresentationStyle = .fullScreen
+//        present(navVC, animated: false, completion: nil)
+//    }
 
-    private func presentWelcomeVC() {
-        let welcomeVC = WelcomeViewController()
-        welcomeVC.completion = { [weak self] in
-            self?.presentTabBarController()
-        }
-        let navVC = UINavigationController(rootViewController: welcomeVC)
-        navVC.modalPresentationStyle = .fullScreen
-        present(navVC, animated: false, completion: nil)
-    }
-    // как открыть tab bar чтобы он был на время главным контроллером
-    // для tab bar нет completion
-    // запускается криво
-    private func presentTabBarController() {
-        let tabbarVC = TabBarViewController()
-        let navVC = UINavigationController(rootViewController: tabbarVC)
-        navVC.modalPresentationStyle = .fullScreen
-        present(navVC, animated: false, completion: nil)
-    }
-
+    // MARK: Private
     private func customizeTabBarAppearance() {
         let orangeColor = UIColor(named: "Orange")
         let selectedAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: orangeColor!]

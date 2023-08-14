@@ -9,16 +9,17 @@ protocol SearchBarDelegate: AnyObject {
     func searchBarDidChange(_ searchText: String)
     func searchBarSearchButtonTapped()
 }
+// поисковая строка
 class SearchBarTableViewCell: UITableViewCell, UISearchBarDelegate {
-
+    // MARK: - Properties
     weak var searchBarDelegate: SearchBarDelegate?
-
+    // MARK: - UI
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
-
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(searchBar)
@@ -33,17 +34,17 @@ class SearchBarTableViewCell: UITableViewCell, UISearchBarDelegate {
             searchBar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
-
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    // MARK: - Private
     @objc private func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
         let location = gestureRecognizer.location(in: self)
         if searchBar.frame.contains(location) {
-            // Tapped inside the search bar, do nothing
             return
         }
-        // Tapped outside the search bar, dismiss the keyboard
         searchBar.resignFirstResponder()
     }
-
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBarDelegate?.searchBarDidChange(searchText)
     }
@@ -52,11 +53,6 @@ class SearchBarTableViewCell: UITableViewCell, UISearchBarDelegate {
         searchBarDelegate?.searchBarSearchButtonTapped()
         searchBar.resignFirstResponder() // Dismiss the keyboard
     }
-
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-
     func configure(with model: SearchBarModel) {
         searchBar.placeholder = model.placeholder
     }

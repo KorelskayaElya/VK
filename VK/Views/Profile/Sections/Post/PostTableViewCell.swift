@@ -11,28 +11,10 @@ protocol PostTableViewCellDelegate: AnyObject {
     func postTableViewCellDidTapLike(_ cell: PostTableViewCell)
 }
 
-
+// структура поста
 class PostTableViewCell: UITableViewCell {
-    
-    weak var delegate: PostTableViewCellDelegate?
-    private var isFullTextShown = false
-    
-//    var model: Post
-//
-//    init(model: Post, reuseIdentifier: String?) {
-//        self.model = model
-//        super.init(style: .default, reuseIdentifier: reuseIdentifier)
-//        setupView()
-//    }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+   
+    // MARK: - UI
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -58,7 +40,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    // status
+
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -76,11 +58,6 @@ class PostTableViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         return button
     }()
-    @objc private func didTapLike() {
-        //model.isLikedByCurrentUser = !model.isLikedByCurrentUser
-        //likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : UIColor(named: "Orange")
-        delegate?.postTableViewCellDidTapLike(self)
-    }
 
     private lazy var likeCountLabel: UILabel = {
         let label = UILabel()
@@ -132,8 +109,6 @@ class PostTableViewCell: UITableViewCell {
         return button
     }()
     
-    private let lineView = LineView()
-    private let lineView2 = LineView()
    
     private lazy var textPostLabel: UILabel = {
         let label = UILabel()
@@ -158,11 +133,32 @@ class PostTableViewCell: UITableViewCell {
 //
 //        return label
 //    }()
-
-    @objc private func showFullText() {
-        isFullTextShown.toggle()
+    private let lineView = LineView()
+    private let lineView2 = LineView()
+   
+   
+    // MARK: - Properties
+    weak var delegate: PostTableViewCellDelegate?
+    private var isFullTextShown = false
+    
+    
+//    var model: Post
+//
+//    init(model: Post, reuseIdentifier: String?) {
+//        self.model = model
+//        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+//        setupView()
+//    }
+    // MARK: - Init
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    // MARK: - Private
     private func setupView() {
         lineView.tintColor = .lightGray
         lineView2.tintColor = .lightGray
@@ -254,6 +250,15 @@ class PostTableViewCell: UITableViewCell {
             timeLabel.heightAnchor.constraint(equalToConstant: 20),
             
         ])
+    }
+
+    @objc private func didTapLike() {
+        //model.isLikedByCurrentUser = !model.isLikedByCurrentUser
+        //likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : UIColor(named: "Orange")
+        delegate?.postTableViewCellDidTapLike(self)
+    }
+    @objc private func showFullText() {
+        isFullTextShown.toggle()
     }
     
     func configure(with post: Post) {

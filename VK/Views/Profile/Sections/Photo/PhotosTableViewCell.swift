@@ -7,18 +7,13 @@
 
 import UIKit
 
-protocol ButtonDelegate {
+protocol ProfileTableViewCellDelegate {
     func didTapButton(sender: UIButton)
 }
+// структура изображений в профиле в коллекции
 class PhotosTableViewCell: UITableViewCell {
-    
-    var delegate: ButtonDelegate?
-    
-    struct ViewModel {
-        let title: String
-        let image: UIImage?
-    }
-    
+
+    // MARK: - UI
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -35,7 +30,6 @@ class PhotosTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    // кнопка перехода
     private lazy var button_photos: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "next"), for: .normal)
@@ -45,10 +39,6 @@ class PhotosTableViewCell: UITableViewCell {
         button.tintColor = .black
         return button
     }()
-    @objc private func didTapButton() {
-        delegate?.didTapButton(sender: button_photos)
-    }
-    
     private lazy var stackWithPersons: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -99,26 +89,24 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
+    // MARK: - Properties
+    var delegate: ProfileTableViewCellDelegate?
     
+    struct ViewModel {
+        let title: String
+        let image: UIImage?
+    }
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupView()
     }
 
-    func setup(with viewModel: ViewModel) {
-        self.titleLabel.text = "Фотографии"
-        self.countPhotosLabel.text = "10"
-        self.Image1.image = UIImage(named: "picture1")
-        self.Image2.image = UIImage(named: "picture2")
-        self.Image3.image = UIImage(named: "picture3")
-        self.Image4.image = UIImage(named: "picture4")
-        self.Image5.image = UIImage(named: "picture5")
-    }
-    
+   
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    // MARK: - Private
     private func setupView() {
         self.contentView.addSubview(self.stackWithPersons)
         self.addSubview(self.titleLabel)
@@ -155,6 +143,19 @@ class PhotosTableViewCell: UITableViewCell {
 
         ])
     }
+    @objc private func didTapButton() {
+        delegate?.didTapButton(sender: button_photos)
+    }
+    func setup(with viewModel: ViewModel) {
+        self.titleLabel.text = "Фотографии"
+        self.countPhotosLabel.text = "10"
+        self.Image1.image = UIImage(named: "picture1")
+        self.Image2.image = UIImage(named: "picture2")
+        self.Image3.image = UIImage(named: "picture3")
+        self.Image4.image = UIImage(named: "picture4")
+        self.Image5.image = UIImage(named: "picture5")
+    }
+    
 }
 
 

@@ -6,9 +6,9 @@
 //
 
 import UIKit
-
+// коллекция изображений профиля
 class PhotosCollectionViewCell: UICollectionViewCell {
-    
+    // MARK: - UI
     private var photosItems: UIImageView = {
         let images = UIImageView()
         images.contentMode = .scaleAspectFill
@@ -17,19 +17,21 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         images.translatesAutoresizingMaskIntoConstraints = false
         return images
     }()
-    
-    func setupCell(with imageName: UIImage) {
-        photosItems.image = imageName
-    }
-    
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
+    }
+    // готовит ячейку к перееиспользованию
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        photosItems.image = nil
     }
     
     required init? (coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // MARK: - Private
     private func setupView() {
         self.addSubview(self.photosItems)
         NSLayoutConstraint.activate([
@@ -39,10 +41,9 @@ class PhotosCollectionViewCell: UICollectionViewCell {
             self.photosItems.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
-    // готовит ячейку к перееиспользованию
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        photosItems.image = nil
+    
+    func setupCell(with imageName: UIImage) {
+        photosItems.image = imageName
     }
         
    

@@ -5,21 +5,14 @@
 //  Created by Эля Корельская on 06.08.2023.
 //
 import UIKit
+
 protocol EditMainInformationDelegate: AnyObject {
     func editMainInformation()
 }
+// редактировать профиль
 class EditProfilePresentationController: UIPresentationController {
     
-    var user: User
-    weak var editMainInformationDelagete: EditMainInformationDelegate?
-    init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, user: User) {
-        self.user = user
-        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
+    // MARK: - UI
     // затемнение
     private let dimmingView: UIView = {
         let view = UIView()
@@ -36,7 +29,19 @@ class EditProfilePresentationController: UIPresentationController {
         return button
     }()
     
-    
+    // MARK: -  Properties
+    var user: User
+    weak var editMainInformationDelagete: EditMainInformationDelegate?
+    init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, user: User) {
+        self.user = user
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+   
+    // MARK: - Lifecycle
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
         // цвет бокового окна
@@ -129,7 +134,8 @@ class EditProfilePresentationController: UIPresentationController {
         }
             
     }
-    @objc func didaddInformation() {
+    // MARK: - Private
+    @objc private func didaddInformation() {
         editMainInformationDelagete?.editMainInformation()
         presentingViewController.dismiss(animated: true)
     }
@@ -141,7 +147,7 @@ class EditProfilePresentationController: UIPresentationController {
         return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
     }
     
-    @objc func dismissModalController() {
+    @objc private func dismissModalController() {
         presentingViewController.dismiss(animated: true, completion: nil)
     }
 }
