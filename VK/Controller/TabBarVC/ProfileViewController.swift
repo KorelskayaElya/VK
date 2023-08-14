@@ -13,7 +13,14 @@ protocol ProfileAddPhotoViewControllerDelegate: AnyObject {
 class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
                                 ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
                              PostAddViewControllerDelegate, ProfileCameraDelegate, ProfileEditDelegate,
-                             ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
+                             ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate,
+                             EditMainInformationDelegate{
+    func editMainInformation() {
+        print("info__________________")
+        let vc = InformationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     weak var profileAddPhotoDelegate: ProfileAddPhotoViewControllerDelegate?
     var selectedImage: UIImage = UIImage()
@@ -86,6 +93,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         headerView.cameraDelegate = self
         headerView.editProfileDelegate = self
         headerView.addPhotoDelegate = self
+        headerView.editProfileDelegate = self
         let containerView = UIView()
         containerView.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false

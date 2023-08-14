@@ -6,14 +6,11 @@
 //
 
 import UIKit
-protocol HalfScreenPresentationControllerDelegate: AnyObject {
-    func didTapSettings()
-}
+
 
 class HalfScreenPresentationController: UIPresentationController {
     
     var user: User
-    weak var halfScreenDelegate: HalfScreenPresentationControllerDelegate?
     
     init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, user: User) {
         self.user = user
@@ -54,7 +51,7 @@ class HalfScreenPresentationController: UIPresentationController {
         customLabel1.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         customLabel1.translatesAutoresizingMaskIntoConstraints = false
         let lineView1 = LineView()
-        let lineView2 = LineView()
+       // let lineView2 = LineView()
         let heartIconView = UIImageView(image: IconImageUtility.iconImage(named: "heart.fill", tintColor: .black))
         heartIconView.tintColor = .black
         heartIconView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,43 +76,43 @@ class HalfScreenPresentationController: UIPresentationController {
         customLabel2.text = "Закладки"
         customLabel2.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         customLabel2.translatesAutoresizingMaskIntoConstraints = false
+//        let customLabel3 = LabelField()
+//        customLabel3.text = "Понравилось"
+//        customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        customLabel3.translatesAutoresizingMaskIntoConstraints = false
         let customLabel3 = LabelField()
-        customLabel3.text = "Понравилось"
+        customLabel3.text = "Файлы"
         customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         customLabel3.translatesAutoresizingMaskIntoConstraints = false
-        let customLabel4 = LabelField()
-        customLabel4.text = "Файлы"
-        customLabel4.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        customLabel4.translatesAutoresizingMaskIntoConstraints = false
-        let customLabel5 = LabelField()
-        customLabel5.text = "Архивы"
-        customLabel5.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        customLabel5.translatesAutoresizingMaskIntoConstraints = false
-        let customLabel6 = LabelField()
-        customLabel6.text = "Настройки"
-        customLabel6.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        customLabel6.translatesAutoresizingMaskIntoConstraints = false
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSettingsTap))
-        customLabel6.isUserInteractionEnabled = true
-        customLabel6.addGestureRecognizer(tapGesture)
+//        let customLabel5 = LabelField()
+//        customLabel5.text = "Архивы"
+//        customLabel5.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        customLabel5.translatesAutoresizingMaskIntoConstraints = false
+//        let customLabel6 = LabelField()
+//        customLabel6.text = "Настройки"
+//        customLabel6.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        customLabel6.translatesAutoresizingMaskIntoConstraints = false
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSettingsTap))
+//        customLabel6.isUserInteractionEnabled = true
+//        customLabel6.addGestureRecognizer(tapGesture)
 
         
         
         containerView.addSubview(dimmingView)
         presentedViewController.view.addSubview(arrowButton)
         presentedViewController.view.addSubview(lineView1)
-        presentedViewController.view.addSubview(lineView2)
+       // presentedViewController.view.addSubview(lineView2)
         presentedViewController.view.addSubview(customLabel1)
-        presentedViewController.view.addSubview(heartIconView)
+//        presentedViewController.view.addSubview(heartIconView)
         presentedViewController.view.addSubview(starIconView)
         presentedViewController.view.addSubview(squareIconView)
-        presentedViewController.view.addSubview(archiveboxIconView)
-        presentedViewController.view.addSubview(gearshapeIconView)
+//        presentedViewController.view.addSubview(archiveboxIconView)
+//        presentedViewController.view.addSubview(gearshapeIconView)
         presentedViewController.view.addSubview(customLabel2)
         presentedViewController.view.addSubview(customLabel3)
-        presentedViewController.view.addSubview(customLabel4)
-        presentedViewController.view.addSubview(customLabel5)
-        presentedViewController.view.addSubview(customLabel6)
+//        presentedViewController.view.addSubview(customLabel4)
+//        presentedViewController.view.addSubview(customLabel5)
+//        presentedViewController.view.addSubview(customLabel6)
         
       
        NSLayoutConstraint.activate([
@@ -141,45 +138,45 @@ class HalfScreenPresentationController: UIPresentationController {
         starIconView.topAnchor.constraint(equalTo: lineView1.bottomAnchor, constant: 11),
         starIconView.widthAnchor.constraint(equalToConstant: 22),
         starIconView.heightAnchor.constraint(equalTo: starIconView.widthAnchor),
-        // иконка сердца
-        heartIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
-        heartIconView.topAnchor.constraint(equalTo: starIconView.bottomAnchor, constant: 11),
-        heartIconView.widthAnchor.constraint(equalToConstant: 22),
-        heartIconView.heightAnchor.constraint(equalTo: heartIconView.widthAnchor),
+//        // иконка сердца
+//        heartIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
+//        heartIconView.topAnchor.constraint(equalTo: starIconView.bottomAnchor, constant: 11),
+//        heartIconView.widthAnchor.constraint(equalToConstant: 22),
+//        heartIconView.heightAnchor.constraint(equalTo: heartIconView.widthAnchor),
         // иконка поделиться
         squareIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
-        squareIconView.topAnchor.constraint(equalTo: heartIconView.bottomAnchor, constant: 11),
+        squareIconView.topAnchor.constraint(equalTo: starIconView.bottomAnchor, constant: 11),
         squareIconView.widthAnchor.constraint(equalToConstant: 22),
         squareIconView.heightAnchor.constraint(equalTo: squareIconView.widthAnchor),
         // иконка архив
-        archiveboxIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
-        archiveboxIconView.topAnchor.constraint(equalTo: squareIconView.bottomAnchor, constant: 11),
-        archiveboxIconView.widthAnchor.constraint(equalToConstant: 22),
-        archiveboxIconView.heightAnchor.constraint(equalTo: archiveboxIconView.widthAnchor),
-        // иконка настройки
-        gearshapeIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
-        gearshapeIconView.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 11),
-        gearshapeIconView.widthAnchor.constraint(equalToConstant: 22),
-        gearshapeIconView.heightAnchor.constraint(equalTo: gearshapeIconView.widthAnchor),
+//        archiveboxIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
+//        archiveboxIconView.topAnchor.constraint(equalTo: squareIconView.bottomAnchor, constant: 11),
+//        archiveboxIconView.widthAnchor.constraint(equalToConstant: 22),
+//        archiveboxIconView.heightAnchor.constraint(equalTo: archiveboxIconView.widthAnchor),
+//        // иконка настройки
+//        gearshapeIconView.leadingAnchor.constraint(equalTo:presentedViewController.view.leadingAnchor, constant: 15),
+//        gearshapeIconView.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 11),
+//        gearshapeIconView.widthAnchor.constraint(equalToConstant: 22),
+//        gearshapeIconView.heightAnchor.constraint(equalTo: gearshapeIconView.widthAnchor),
         // лейбл закладки
         customLabel2.topAnchor.constraint(equalTo: lineView1.bottomAnchor, constant: 14),
         customLabel2.leadingAnchor.constraint(equalTo: starIconView.trailingAnchor, constant: 6),
-        // лейбл понравилось
-        customLabel3.topAnchor.constraint(equalTo: customLabel2.bottomAnchor, constant: 15),
-        customLabel3.leadingAnchor.constraint(equalTo: heartIconView.trailingAnchor, constant: 6),
         // лейбл файлы
-        customLabel4.topAnchor.constraint(equalTo: customLabel3.bottomAnchor, constant: 16),
-        customLabel4.leadingAnchor.constraint(equalTo: squareIconView.trailingAnchor, constant: 6),
-        // лейбл архив
-        customLabel5.topAnchor.constraint(equalTo: customLabel4.bottomAnchor, constant: 17),
-        customLabel5.leadingAnchor.constraint(equalTo: archiveboxIconView.trailingAnchor, constant: 6),
-        // линия разделения
-        lineView2.topAnchor.constraint(equalTo: customLabel5.bottomAnchor, constant: 15),
-        lineView2.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
-        lineView2.trailingAnchor.constraint(equalTo: presentedViewController.view.trailingAnchor, constant: -16),
-        // лейбл настройки
-        customLabel6.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 15),
-        customLabel6.leadingAnchor.constraint(equalTo: gearshapeIconView.trailingAnchor, constant: 6),
+        customLabel3.topAnchor.constraint(equalTo: customLabel2.bottomAnchor, constant: 15),
+        customLabel3.leadingAnchor.constraint(equalTo: squareIconView.trailingAnchor, constant: 6),
+//        // лейбл файлы
+//        customLabel4.topAnchor.constraint(equalTo: customLabel3.bottomAnchor, constant: 16),
+//        customLabel4.leadingAnchor.constraint(equalTo: squareIconView.trailingAnchor, constant: 6),
+//        // лейбл архив
+//        customLabel5.topAnchor.constraint(equalTo: customLabel4.bottomAnchor, constant: 17),
+//        customLabel5.leadingAnchor.constraint(equalTo: archiveboxIconView.trailingAnchor, constant: 6),
+//        // линия разделения
+//        lineView2.topAnchor.constraint(equalTo: customLabel5.bottomAnchor, constant: 15),
+//        lineView2.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
+//        lineView2.trailingAnchor.constraint(equalTo: presentedViewController.view.trailingAnchor, constant: -16),
+//        // лейбл настройки
+//        customLabel6.topAnchor.constraint(equalTo: lineView2.bottomAnchor, constant: 15),
+//        customLabel6.leadingAnchor.constraint(equalTo: gearshapeIconView.trailingAnchor, constant: 6),
         
         ])
         if let presentedView = presentedView {
@@ -193,18 +190,6 @@ class HalfScreenPresentationController: UIPresentationController {
             ])
         }
             
-    }
-    func didTapSettings() {
-        let settingsVC = SettingsViewController(user: user)
-        if let navigationController = presentingViewController as? UINavigationController {
-            navigationController.pushViewController(settingsVC, animated: true)
-        }
-        presentingViewController.dismiss(animated: true, completion: nil)
-    }
-
-       
-    @objc func handleSettingsTap() {
-        halfScreenDelegate?.didTapSettings()
     }
     
     override var frameOfPresentedViewInContainerView: CGRect {

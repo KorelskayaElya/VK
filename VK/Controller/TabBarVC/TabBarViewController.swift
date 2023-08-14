@@ -59,7 +59,7 @@ class TabBarViewController: UITabBarController {
         var urlString: String?
         let home = HomeViewController()
         let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
-        let saved = LikeViewController()
+        let saved = InformationViewController()
 
         home.title = "Главная"
         saved.title = "Понравившиеся посты"

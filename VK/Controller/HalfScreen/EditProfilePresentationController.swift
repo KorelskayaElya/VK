@@ -5,11 +5,13 @@
 //  Created by Эля Корельская on 06.08.2023.
 //
 import UIKit
-
+protocol EditMainInformationDelegate: AnyObject {
+    func editMainInformation()
+}
 class EditProfilePresentationController: UIPresentationController {
     
     var user: User
-    
+    weak var editMainInformationDelagete: EditMainInformationDelegate?
     init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, user: User) {
         self.user = user
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
@@ -52,23 +54,26 @@ class EditProfilePresentationController: UIPresentationController {
         let customLabel2 = LabelField()
         customLabel2.text = "Основная информация"
         customLabel2.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(didaddInformation))
+        customLabel2.isUserInteractionEnabled = true
+        customLabel2.addGestureRecognizer(tapGesture1)
         customLabel2.translatesAutoresizingMaskIntoConstraints = false
         let customLabel3 = LabelField()
-        customLabel3.text = "Контакты"
+        customLabel3.text = "Интересы"
         customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         customLabel3.translatesAutoresizingMaskIntoConstraints = false
+//        let customLabel4 = LabelField()
+//        customLabel4.text = "Интересы"
+//        customLabel4.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+//        customLabel4.translatesAutoresizingMaskIntoConstraints = false
         let customLabel4 = LabelField()
-        customLabel4.text = "Интересы"
+        customLabel4.text = "Образование"
         customLabel4.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         customLabel4.translatesAutoresizingMaskIntoConstraints = false
         let customLabel5 = LabelField()
-        customLabel5.text = "Образование"
+        customLabel5.text = "Карьера"
         customLabel5.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         customLabel5.translatesAutoresizingMaskIntoConstraints = false
-        let customLabel6 = LabelField()
-        customLabel6.text = "Карьера"
-        customLabel6.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        customLabel6.translatesAutoresizingMaskIntoConstraints = false
 
         containerView.addSubview(dimmingView)
         presentedViewController.view.addSubview(arrowButton)
@@ -78,7 +83,6 @@ class EditProfilePresentationController: UIPresentationController {
         presentedViewController.view.addSubview(customLabel3)
         presentedViewController.view.addSubview(customLabel4)
         presentedViewController.view.addSubview(customLabel5)
-        presentedViewController.view.addSubview(customLabel6)
         
       
        NSLayoutConstraint.activate([
@@ -102,18 +106,15 @@ class EditProfilePresentationController: UIPresentationController {
         // лейбл основная информация
         customLabel2.topAnchor.constraint(equalTo: lineView1.bottomAnchor, constant: 14),
         customLabel2.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
-        // лейбл контакты
+        // лейбл интересы
         customLabel3.topAnchor.constraint(equalTo: customLabel2.bottomAnchor, constant: 15),
         customLabel3.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
-        // лейбл интересы
+        // лейбл образование
         customLabel4.topAnchor.constraint(equalTo: customLabel3.bottomAnchor, constant: 16),
         customLabel4.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
-        // лейбл образование
+        // лейбл карьера
         customLabel5.topAnchor.constraint(equalTo: customLabel4.bottomAnchor, constant: 17),
         customLabel5.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
-        // лейбл карьера
-        customLabel6.topAnchor.constraint(equalTo: customLabel5.bottomAnchor, constant: 15),
-        customLabel6.leadingAnchor.constraint(equalTo: presentedViewController.view.leadingAnchor, constant: 16),
         
         ])
         if let presentedView = presentedView {
@@ -128,6 +129,11 @@ class EditProfilePresentationController: UIPresentationController {
         }
             
     }
+    @objc func didaddInformation() {
+        editMainInformationDelagete?.editMainInformation()
+        presentingViewController.dismiss(animated: true)
+    }
+
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else {
             return CGRect.zero
