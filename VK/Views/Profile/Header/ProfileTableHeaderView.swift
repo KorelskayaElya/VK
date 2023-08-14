@@ -18,12 +18,16 @@ protocol ProfileEditDelegate: AnyObject {
 protocol ProfileAddPhotoDelegate: AnyObject {
     func didAddPhoto()
 }
+protocol ProfileFurtherInformationDelegate: AnyObject {
+    func didFurtherInformation()
+}
 class ProfileTableHeaderView: UITableViewHeaderFooterView {
     
     weak var delegate: ProfileTableHeaderViewDelegate?
     weak var cameraDelegate: ProfileCameraDelegate?
     weak var editProfileDelegate: ProfileEditDelegate?
     weak var addPhotoDelegate: ProfileAddPhotoDelegate?
+    weak var furtherInformation: ProfileFurtherInformationDelegate?
     
     //var viewModel: ProfileHeaderViewModel?
     
@@ -84,8 +88,14 @@ class ProfileTableHeaderView: UITableViewHeaderFooterView {
         label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         label.textColor = UIColor(named: "Black")
         label.translatesAutoresizingMaskIntoConstraints = false
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addFurtherInformation))
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tapGesture)
         return label
     }()
+    @objc func addFurtherInformation() {
+        furtherInformation?.didFurtherInformation()
+    }
 
     private lazy var followers: UILabel = {
         let label = UILabel()

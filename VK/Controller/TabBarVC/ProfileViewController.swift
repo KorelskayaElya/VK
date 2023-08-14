@@ -14,7 +14,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                                 ButtonDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
                              PostAddViewControllerDelegate, ProfileCameraDelegate, ProfileEditDelegate,
                              ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate,
-                             EditMainInformationDelegate{
+                             EditMainInformationDelegate, ProfileFurtherInformationDelegate{
+   
+    
     func editMainInformation() {
         print("info__________________")
         let vc = InformationViewController()
@@ -94,6 +96,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         headerView.editProfileDelegate = self
         headerView.addPhotoDelegate = self
         headerView.editProfileDelegate = self
+        headerView.furtherInformation = self
         let containerView = UIView()
         containerView.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,11 +141,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
+    // включить камеру для истории
     func didTapCamera() {
         let vc = CameraViewController()
         print("didtapcamera")
         navigationController?.pushViewController(vc, animated: true)
     }
+    // подробная информация
+    func didFurtherInformation() {
+        let vc = FurtherInformationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    // передать видео 
     func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL) {
          
     }

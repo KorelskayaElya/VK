@@ -131,9 +131,9 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
 //        navigationItem.rightBarButtonItem = addIcon
         navigationItem.title = "Фотографии"
     }
-    @objc func addPhoto() {
-        print("add")
-    }
+//    @objc func addPhoto() {
+//        print("add")
+//    }
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
