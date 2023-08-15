@@ -9,6 +9,10 @@ import UIKit
 
 protocol PostTableViewCellDelegate: AnyObject {
     func postTableViewCellDidTapLike(_ cell: PostTableViewCell)
+   
+}
+protocol PostTableViewCellCommentDelegate: AnyObject {
+    func postTableViewCellDidTapComment(_ cell: PostTableViewCell)
 }
 
 // структура поста
@@ -98,6 +102,7 @@ class PostTableViewCell: UITableViewCell {
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapComment), for: .touchUpInside)
         return button
     }()
     private lazy var BookmarkIcon: UIButton = {
@@ -139,6 +144,7 @@ class PostTableViewCell: UITableViewCell {
    
     // MARK: - Properties
     weak var delegate: PostTableViewCellDelegate?
+    weak var commentDelegate: PostTableViewCellCommentDelegate?
     private var isFullTextShown = false
     
     
@@ -256,6 +262,9 @@ class PostTableViewCell: UITableViewCell {
         //model.isLikedByCurrentUser = !model.isLikedByCurrentUser
         //likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : UIColor(named: "Orange")
         delegate?.postTableViewCellDidTapLike(self)
+    }
+    @objc private func didTapComment() {
+        commentDelegate?.postTableViewCellDidTapComment(self)
     }
     @objc private func showFullText() {
         isFullTextShown.toggle()

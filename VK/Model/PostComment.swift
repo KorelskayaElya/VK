@@ -14,7 +14,7 @@ struct PostComment {
 
     static func mockCommets() -> [PostComment] {
         let user = User(identifier: "victor.dis", username: "Виктор",
-                        profilePicture: nil,
+                        profilePicture: UIImage(named: "person2"),
                         status: "дизайнер")
         var comments = [PostComment]()
 
