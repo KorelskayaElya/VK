@@ -14,6 +14,7 @@ protocol PostAddViewControllerDelegate: AnyObject {
 class PostAddViewController: UIViewController {
     
     // MARK: - UI
+    /// поле ввода текста для поста
     private lazy var textPostField: UITextView = {
         let textView = UITextView()
         textView.textColor = UIColor(named: "Black")
@@ -26,6 +27,7 @@ class PostAddViewController: UIViewController {
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         return textView
     }()
+    /// лейбл
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "Добавьте текст ниже:"
@@ -35,6 +37,7 @@ class PostAddViewController: UIViewController {
         
         return label
     }()
+    /// лейбл
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
         label.text = "Добавьте изображение"
@@ -52,6 +55,7 @@ class PostAddViewController: UIViewController {
         
         return label
     }()
+    /// кнопка публикации поста
     private lazy var buttonSend: UIButton = {
         let button = UIButton()
         button.setTitle("Опубликовать", for: .normal)
@@ -108,20 +112,23 @@ class PostAddViewController: UIViewController {
     }
    
     // MARK: - Private
+    /// кнопка пеерехода назад
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+    /// кнопка добаваить изображение
     @objc private func addPhoto() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
+    /// кнопка опубликовать пост
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
         let newPost = Post(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер"), textPost: text, imagePost: selectedImage)
         
-        delegate?.postAddViewController(self, didCreatePost: newPost) // Call delegate method
+        delegate?.postAddViewController(self, didCreatePost: newPost)
 
         navigationController?.popViewController(animated: true)
     }

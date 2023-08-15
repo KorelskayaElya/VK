@@ -27,11 +27,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
    // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-        //tableView.backgroundColor = .systemBackground
-        //tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(ProfileTableHeaderView.self, forHeaderFooterViewReuseIdentifier: "HeaderView")
         tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: "PhotosCell")
         tableView.register(PostTableViewCell.self, forCellReuseIdentifier: "PostCell")
         tableView.register(SearchBarTableViewCell.self, forCellReuseIdentifier: "SearchBarCell")
@@ -104,8 +101,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         navigationItem.rightBarButtonItem = menuIcon
         setupView()
         allPosts = loadPostsFromStringsFile()
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
     }
     
    
@@ -156,29 +151,32 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL) {
          
     }
+    /// основная информация
     func editMainInformation() {
         let vc = InformationViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    /// карьера
     func editWork() {
         let workVC = WorkViewController()
         navigationController?.pushViewController(workVC, animated: true)
     }
-    
+    /// инетересы
     func editHobby() {
         let hobbyVC = HobbyViewController()
         navigationController?.pushViewController(hobbyVC, animated: true)
     }
-    
+    /// образование
     func editEducation() {
         let educationVC = EducationViewController()
         navigationController?.pushViewController(educationVC, animated: true)
     }
+    /// файлы
     func detailsProfileToFiles() {
         let filesVC = FilesViewController()
         navigationController?.pushViewController(filesVC, animated: true)
     }
-    
+    /// закладки
     func detailsProfileToSave() {
         let saveVC = SavedViewController()
         navigationController?.pushViewController(saveVC, animated: true)
@@ -260,40 +258,60 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
-            cell.configure(with: post)
+            cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 40 - 30 - 20) 
             return cell
         }
     }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 1 {
             return 120
         } else if indexPath.section == 2 {
             return 60
         } else {
-            return 400
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as! PostTableViewCell
+            let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
+            let textFont = UIFont(name: "Arial", size: 14)!
+            let contentWidth = tableView.frame.width - 100
+            let textHeight = cell.calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+            
+            let imageHeight = cell.calculateImageHeight(image: post.imagePost, width: contentWidth)
+            
+            let timeHeight: CGFloat = 20
+            let avatarHeight: CGFloat = 40
+            let nameLabelHeight: CGFloat = 20
+            let descriptionLabelHeight: CGFloat = 20
+            let otherViewHeights: CGFloat = 90
+            let totalHeight = textHeight + imageHeight + timeHeight + avatarHeight + nameLabelHeight + descriptionLabelHeight + otherViewHeights
+            
+            return totalHeight
         }
     }
+
+
     /// поиск по словам в посте
     func searchBarDidChange(_ searchText: String) {
+        
         if searchText.isEmpty {
             isFiltering = false
-            tableView.reloadData()
         } else {
             isFiltering = true
             filteredPosts = allPosts.filter { post in
-                return post.textPost.lowercased().contains(searchText.lowercased())
+                post.textPost.lowercased().contains(searchText.lowercased())
             }
+        }
+    }
+    
+    func searchBarSearchButtonTapped() {
+        if view.endEditing(true) {
             tableView.reloadData()
         }
     }
-    /// убрать клавиатуру
-    func searchBarSearchButtonTapped() {
-        dismissKeyboard()
-    }
-    /// отмена клавиатуры
-    @objc private func dismissKeyboard() {
-        view.endEditing(true)
-    }
+    
+//    /// отмена клавиатуры
+//    @objc private func dismissKeyboard() {
+//        view.endEditing(true)
+//    }
     /// локальные посты из postfile
     func loadPostsFromStringsFile() -> [Post] {
         guard let path = Bundle.main.path(forResource: "postfile", ofType: "strings"),

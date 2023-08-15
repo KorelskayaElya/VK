@@ -19,6 +19,7 @@ protocol PostTableViewCellCommentDelegate: AnyObject {
 class PostTableViewCell: UITableViewCell {
    
     // MARK: - UI
+    /// изображение аватара
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -28,14 +29,7 @@ class PostTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private lazy var postImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+   /// отображение имени  фамилии пользователя
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -44,7 +38,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    /// отображение статуса пользователя
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -53,6 +47,7 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    /// иконка лайка
     private lazy var likeIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "heart")
@@ -62,25 +57,7 @@ class PostTableViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         return button
     }()
-
-    private lazy var likeCountLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(named: "Black")
-        label.text = "40"
-        label.textAlignment = .left
-        label.font = UIFont(name: "Arial", size: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    private lazy var CommentCountLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(named: "Black")
-        label.text = "40"
-        label.textAlignment = .left
-        label.font = UIFont(name: "Arial", size: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    /// отображение времени публикации поста
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -96,7 +73,8 @@ class PostTableViewCell: UITableViewCell {
         label.clipsToBounds = true
         return label
     }()
-    private lazy var CommentIcon: UIButton = {
+    /// иконка комментария
+    private lazy var сommentIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "text.bubble")
         button.setImage(image, for: .normal)
@@ -105,7 +83,8 @@ class PostTableViewCell: UITableViewCell {
         button.addTarget(self, action: #selector(didTapComment), for: .touchUpInside)
         return button
     }()
-    private lazy var BookmarkIcon: UIButton = {
+    /// иконка закладки
+    private lazy var bookmarkIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "bookmark")
         button.setImage(image, for: .normal)
@@ -113,8 +92,16 @@ class PostTableViewCell: UITableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-   
+    /// изображение поста
+    private lazy var postImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 20
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+   /// отображение текста поста
     private lazy var textPostLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -124,37 +111,16 @@ class PostTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-//    private lazy var fullbutton: UILabel = {
-//        let label = UILabel()
-//        label.textColor = .blue
-//        label.text = "Показать полностью..."
-//        label.textAlignment = .left
-//        label.font = UIFont(name: "Arial", size: 14)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showFullText))
-//        label.isUserInteractionEnabled = true
-//        label.addGestureRecognizer(tapGesture)
-//
-//        return label
-//    }()
+    /// линии для декорации времени
     private let lineView = LineView()
     private let lineView2 = LineView()
-   
+    private var textPostLabelHeightConstraint: NSLayoutConstraint!
+    private var postImageViewHeightConstraint: NSLayoutConstraint!
    
     // MARK: - Properties
     weak var delegate: PostTableViewCellDelegate?
     weak var commentDelegate: PostTableViewCellCommentDelegate?
-    private var isFullTextShown = false
     
-    
-//    var model: Post
-//
-//    init(model: Post, reuseIdentifier: String?) {
-//        self.model = model
-//        super.init(style: .default, reuseIdentifier: reuseIdentifier)
-//        setupView()
-//    }
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -174,14 +140,17 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
-        //contentView.addSubview(fullbutton)
         contentView.addSubview(likeIcon)
-        contentView.addSubview(likeCountLabel)
-        contentView.addSubview(CommentIcon)
-        contentView.addSubview(CommentCountLabel)
-        contentView.addSubview(BookmarkIcon)
+        contentView.addSubview(сommentIcon)
+        contentView.addSubview(bookmarkIcon)
         contentView.addSubview(timeLabel)
         contentView.addSubview(lineView2)
+        
+        textPostLabelHeightConstraint = textPostLabel.heightAnchor.constraint(equalToConstant: 0)
+        textPostLabelHeightConstraint.priority = .defaultHigh
+
+        postImageViewHeightConstraint = postImageView.heightAnchor.constraint(equalToConstant: 0)
+        postImageViewHeightConstraint.priority = .defaultHigh
         
         NSLayoutConstraint.activate([
             avatarImageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 5),
@@ -208,47 +177,31 @@ class PostTableViewCell: UITableViewCell {
             lineView2.leadingAnchor.constraint(equalTo: timeLabel.trailingAnchor),
 
             
-            textPostLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
+            textPostLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
             textPostLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
             textPostLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            textPostLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            textPostLabelHeightConstraint,
             
             
             postImageView.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor),
             postImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            postImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -55),
-        
+            postImageViewHeightConstraint,
             
-//            fullbutton.topAnchor.constraint(equalTo: textPostLabel.bottomAnchor, constant: 1),
-//            fullbutton.leadingAnchor.constraint(equalTo: lineView.trailingAnchor, constant: 10),
-//            fullbutton.widthAnchor.constraint(equalToConstant: 180),
-//            fullbutton.heightAnchor.constraint(equalToConstant: 20),
-            
-            likeIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
+            likeIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
             likeIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 45),
-            likeIcon.widthAnchor.constraint(equalToConstant: 45),
-            likeIcon.heightAnchor.constraint(equalToConstant: 45),
+            likeIcon.widthAnchor.constraint(equalToConstant: 55),
+            likeIcon.heightAnchor.constraint(equalToConstant: 55),
             
-            likeCountLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 23),
-            likeCountLabel.leadingAnchor.constraint(equalTo: likeIcon.trailingAnchor),
-            likeCountLabel.widthAnchor.constraint(equalToConstant: 45),
-            likeCountLabel.heightAnchor.constraint(equalToConstant: 20),
+            сommentIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
+            сommentIcon.leadingAnchor.constraint(equalTo: likeIcon.trailingAnchor, constant: 30),
+            сommentIcon.widthAnchor.constraint(equalToConstant: 40),
+            сommentIcon.heightAnchor.constraint(equalToConstant: 40),
             
-            CommentIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
-            CommentIcon.leadingAnchor.constraint(equalTo: likeCountLabel.trailingAnchor, constant: 20),
-            CommentIcon.widthAnchor.constraint(equalToConstant: 40),
-            CommentIcon.heightAnchor.constraint(equalToConstant: 40),
-            
-            CommentCountLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 22),
-            CommentCountLabel.leadingAnchor.constraint(equalTo: CommentIcon.trailingAnchor),
-            CommentCountLabel.widthAnchor.constraint(equalToConstant: 45),
-            CommentCountLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            BookmarkIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
-            BookmarkIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            BookmarkIcon.widthAnchor.constraint(equalToConstant: 45),
-            BookmarkIcon.heightAnchor.constraint(equalToConstant: 45),
+            bookmarkIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
+            bookmarkIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            bookmarkIcon.widthAnchor.constraint(equalToConstant: 45),
+            bookmarkIcon.heightAnchor.constraint(equalToConstant: 45),
             
             timeLabel.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 10),
             timeLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -259,23 +212,53 @@ class PostTableViewCell: UITableViewCell {
     }
 
     @objc private func didTapLike() {
-        //model.isLikedByCurrentUser = !model.isLikedByCurrentUser
-        //likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : UIColor(named: "Orange")
         delegate?.postTableViewCellDidTapLike(self)
+        
     }
     @objc private func didTapComment() {
         commentDelegate?.postTableViewCellDidTapComment(self)
     }
-    @objc private func showFullText() {
-        isFullTextShown.toggle()
-    }
     
-    func configure(with post: Post) {
-        postImageView.image = post.imagePost
+    func configure(with post: Post, textFont: UIFont, contentWidth: CGFloat) {
         avatarImageView.image = post.user.profilePicture
         descriptionLabel.text = post.user.status
         nameLabel.text = post.user.username
+        
+
         textPostLabel.text = post.textPost
+        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+        textPostLabelHeightConstraint.constant = textHeight + 30
+        
+
+        postImageView.image = post.imagePost
+        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
+        postImageViewHeightConstraint.constant = imageHeight
     }
+    /// рассчет высоты текста
+    func calculateTextHeight(text: String, font: UIFont, width: CGFloat) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = text.boundingRect(with: constraintRect, options: [.usesLineFragmentOrigin], attributes: [.font: font], context: nil)
+        return ceil(boundingBox.height)
+    }
+    /// рассчет высоты изображения
+    func calculateImageHeight(image: UIImage?, width: CGFloat) -> CGFloat {
+        guard let image = image else {
+            return 0
+        }
+        let aspectRatio = image.size.height / image.size.width
+        return width * aspectRatio
+    }
+    /// рассчет размеров текста и изображения
+    func updateConstraints(for post: Post, textFont: UIFont, contentWidth: CGFloat) {
+        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+        textPostLabelHeightConstraint.constant = textHeight
+        
+        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
+        postImageViewHeightConstraint.constant = imageHeight
+        
+        layoutIfNeeded()
+    }
+
+
 }
 
