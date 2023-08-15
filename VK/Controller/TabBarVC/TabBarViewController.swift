@@ -16,36 +16,13 @@ class TabBarViewController: UITabBarController {
         setUpControllers()
         customizeTabBarAppearance()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        /// скрывает навигацию 
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
 
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-////        if KeychainManager.shared.getSignInFlag() == false {
-////            presentWelcomeVC()
-////        } else {
-////            presentTabBarController()
-////        }
-//    }
-//
-//    private func presentWelcomeVC() {
-//        let welcomeVC = WelcomeViewController()
-//        welcomeVC.completion = { [weak self] in
-//            self?.presentTabBarController()
-//        }
-//        let navVC = UINavigationController(rootViewController: welcomeVC)
-//        navVC.modalPresentationStyle = .fullScreen
-//        present(navVC, animated: false, completion: nil)
-//    }
-//    // как открыть tab bar чтобы он был на время главным контроллером
-//    // для tab bar нет completion
-//    // запускается криво
-//    private func presentTabBarController() {
-//        let tabbarVC = TabBarViewController()
-//        let navVC = UINavigationController(rootViewController: tabbarVC)
-//        navVC.modalPresentationStyle = .fullScreen
-//        present(navVC, animated: false, completion: nil)
-//    }
-
-    // MARK: Private
+    // MARK: - Private
     private func customizeTabBarAppearance() {
         let orangeColor = UIColor(named: "Orange")
         let selectedAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: orangeColor!]
@@ -57,12 +34,17 @@ class TabBarViewController: UITabBarController {
     }
 
     private func setUpControllers() {
-        var urlString: String?
         let home = HomeViewController()
         let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
+        /// переход обратно на экран приветствия при выходе на экране профиля
+        let scene = UIApplication.shared.connectedScenes.first
+        if let sceneDelegate : SceneDelegate = (scene?.delegate as? SceneDelegate) {
+            if let router = sceneDelegate.router {
+                profile.delegate = router
+            }
+        }
         let saved = LikeViewController()
-
-        home.title = "Главная"
+        
         saved.title = "Понравившиеся посты"
 
         let nav1 = UINavigationController(rootViewController: home)

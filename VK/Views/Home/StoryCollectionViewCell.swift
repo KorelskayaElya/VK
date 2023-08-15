@@ -26,6 +26,6 @@ class StoryCollectionViewCell: UICollectionViewCell {
         clipsToBounds = true
     }
 //    func configure(with user: User) {
-//        avatarImageView.sd_setImage(with: user.profilePictureURL, completed: nil)
+//        avatarImageView.sd_setImage(with: user.profilePicture, completed: nil)
 //    }
 }

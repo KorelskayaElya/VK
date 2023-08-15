@@ -10,7 +10,7 @@ import UIKit
 // liked publications
 class LikeViewController: UIViewController {
     
-    // MARK: UI
+    // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.dataSource = self
@@ -19,7 +19,7 @@ class LikeViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    // MARK: Properties
+    // MARK: -  Properties
     var likedPosts: [Post] = []
     var savedPosts: [Post] = []
     // MARK: - Lifecycle
@@ -28,7 +28,7 @@ class LikeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupView()
     }
-   // MARK: Private
+   // MARK: - Private
     private func setupView() {
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([

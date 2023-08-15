@@ -20,8 +20,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                                 ProfileTableViewCellDelegate, SearchBarDelegate, ProfileTableHeaderViewDelegate,
                              PostAddViewControllerDelegate, ProfileCameraDelegate, ProfileEditDelegate,
                              ProfileAddPhotoDelegate, UIImagePickerControllerDelegate & UINavigationControllerDelegate,
-                             EditMainInformationDelegate, ProfileFurtherInformationDelegate{
-   // MARK: UI
+                             EditMainInformationDelegate, ProfileFurtherInformationDelegate, EditWorkDelegate, EditHobbyDelegate,
+                             EditEducationDelegate, DetailsProfileToSaveDelegate, DetailsProfileToFilesDelegate {
+    
+    
+   // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         //tableView.backgroundColor = .systemBackground
@@ -73,7 +76,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var filteredPosts: [Post] = []
     
     
-    
+    // MARK: - Init
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
@@ -132,34 +135,56 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         photosViewController.profileAddPhotoViewController(selectedImage)
         navigationController?.pushViewController(photosViewController, animated: true)
     }
-    // создать новый пост из postAddvc
+    /// создать новый пост из postAddvc
     func didTapCreatePost() {
         let vc = PostAddViewController()
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
-    // включить камеру для истории
+    /// включить камеру для истории
     func didTapCamera() {
         let vc = CameraViewController()
         print("didtapcamera")
         navigationController?.pushViewController(vc, animated: true)
     }
-    // подробная информация
+    /// подробная информация
     func didFurtherInformation() {
         let vc = FurtherInformationViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    // передать видео
+    /// передать видео
     func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL) {
          
     }
     func editMainInformation() {
-        print("info__________________")
         let vc = InformationViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-    // переход на редактирование профиля / должен открываться один из модальных экранов
-    // в соответствии с флагом - EditProfilePresentationController
+    func editWork() {
+        let workVC = WorkViewController()
+        navigationController?.pushViewController(workVC, animated: true)
+    }
+    
+    func editHobby() {
+        let hobbyVC = HobbyViewController()
+        navigationController?.pushViewController(hobbyVC, animated: true)
+    }
+    
+    func editEducation() {
+        let educationVC = EducationViewController()
+        navigationController?.pushViewController(educationVC, animated: true)
+    }
+    func detailsProfileToFiles() {
+        let filesVC = FilesViewController()
+        navigationController?.pushViewController(filesVC, animated: true)
+    }
+    
+    func detailsProfileToSave() {
+        let saveVC = SavedViewController()
+        navigationController?.pushViewController(saveVC, animated: true)
+    }
+    ///переход на редактирование профиля / должен открываться один из модальных экранов
+    /// в соответствии с флагом - EditProfilePresentationController
     func didEditProfile() {
         isOpenDetails = false
         isOpenEdit = true
@@ -171,7 +196,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         halfScreenViewController.preferredContentSize = CGSize(width: halfScreenWidth, height: UIScreen.main.bounds.height)
         present(halfScreenViewController, animated: true, completion: nil)
     }
-    // обновить таблицу после нового поста
+    /// обновить таблицу после нового поста
     func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
         // добавление поста сверху
         allPosts.insert(post, at: 0)
@@ -184,11 +209,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
        tableView.reloadData()
    }
     
-    // количество секций
+    /// количество секций
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
-    // количество ячеек в секции
+    /// количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 0
@@ -200,7 +225,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return isFiltering ? filteredPosts.count : allPosts.count
         }
     }
-    // header
+    /// header
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             return createHeaderView()
@@ -209,7 +234,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    // размер секции
+    /// размер секции
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 390
@@ -248,7 +273,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             return 400
         }
     }
-    // поиск по словам в посте
+    /// поиск по словам в посте
     func searchBarDidChange(_ searchText: String) {
         if searchText.isEmpty {
             isFiltering = false
@@ -261,15 +286,15 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.reloadData()
         }
     }
-    // убрать клавиатуру
+    /// убрать клавиатуру
     func searchBarSearchButtonTapped() {
         dismissKeyboard()
     }
-    // отмена клавиатуры
+    /// отмена клавиатуры
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
-    // локальные посты из postfile
+    /// локальные посты из postfile
     func loadPostsFromStringsFile() -> [Post] {
         guard let path = Bundle.main.path(forResource: "postfile", ofType: "strings"),
           let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
@@ -293,7 +318,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
         return posts
     }
-    // кнопка выхода
+    /// кнопка выхода
     @objc func didOut() {
         let actionSheet = UIAlertController(title: "Sign Out",
                                             message: "Would you like to sign out?",
@@ -320,9 +345,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }))
         present(actionSheet, animated: true)
     }
-    // переход на редактирование профиля / должен открываться один из модальных экранов
-    // в соответствии с флагом - HalfScreenPresentationController
-    @objc func openMenu() {
+    /// переход на редактирование профиля / должен открываться один из модальных экранов
+    /// в соответствии с флагом - HalfScreenPresentationController
+    @objc private func openMenu() {
         isOpenEdit = false
         isOpenDetails = true
         let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4
@@ -340,9 +365,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 extension ProfileViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         if isOpenEdit == true && isOpenDetails == false {
-            return EditProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
+            let presentationController = EditProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
+            presentationController.editMainInformationDelagete = self
+            presentationController.editWorkDelegate = self
+            presentationController.editEducationDelegate = self
+            presentationController.editHobbyDelegate = self
+            return presentationController
+            
         } else if isOpenEdit == false && isOpenDetails == true {
-            return DetailsProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
+            let presentationController = DetailsProfilePresentationController(presentedViewController: presented, presenting: presenting, user: user)
+            presentationController.detailsProfileToSaveDelegate = self
+            presentationController.detailsProfileToFilesDelagate = self
+            return presentationController
         } else {
             return nil
         }

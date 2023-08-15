@@ -15,14 +15,15 @@ class NavigationRouter {
     
     // MARK: - Properties
     let navigationController: UINavigationController
+    var profileViewController: ProfileViewController?
     
     // MARK: - Interface
     func start() {
         let welcomeViewController = WelcomeViewController()
         welcomeViewController.delegateSignIn = self
         welcomeViewController.delegateSignUp = self
-        
-        navigationController.pushViewController(welcomeViewController, animated: false)
+        welcomeViewController.delegateConfirm = self
+        navigationController.pushViewController(welcomeViewController, animated: true)
     }
 }
 
@@ -61,6 +62,8 @@ extension NavigationRouter: SignUpViewControllerDelegate {
 extension NavigationRouter: ConfirmViewControllerDelegate {
     func confirmViewControllerTabbarTapped() {
         let tabbarController = TabBarViewController()
+        /// скрывает кнопку назад
+        tabbarController.navigationItem.hidesBackButton = true
         navigationController.pushViewController(tabbarController, animated: true)
     }
 }
@@ -76,7 +79,8 @@ extension NavigationRouter: ProfileViewControllerDelegate {
 extension NavigationRouter: SignInViewControllerDelegate {
     func signInViewControllerTabbarTapped() {
         let tabbarController = TabBarViewController()
+        /// скрывает кнопку назад
+        tabbarController.navigationItem.hidesBackButton = true
         navigationController.pushViewController(tabbarController, animated: true)
     }
 }
-

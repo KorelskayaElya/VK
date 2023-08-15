@@ -15,7 +15,7 @@ protocol ConfirmViewControllerDelegate: AnyObject {
 
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
     // MARK: - UI
-    private let signInButton = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+    private let confirmBtn = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
     
     private let smsCodeField: AuthField = {
         let field = AuthField(type: .smsCode)
@@ -66,7 +66,6 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     }()
     
     // MARK: - Properties
-    var urlString: String?
     var phoneNumber: String?
     
     weak var delegate: ConfirmViewControllerDelegate?
@@ -83,14 +82,14 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     }
     
     func addSubview() {
-        view.addSubview(signInButton)
+        view.addSubview(confirmBtn)
         view.addSubview(confirmLabel)
         view.addSubview(detailsLabel1)
         view.addSubview(detailsLabel2)
         view.addSubview(iconImageView)
         view.addSubview(detailsLabel3)
         view.addSubview(smsCodeField)
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        confirmBtn.translatesAutoresizingMaskIntoConstraints = false
         confirmLabel.translatesAutoresizingMaskIntoConstraints = false
         detailsLabel1.translatesAutoresizingMaskIntoConstraints = false
         detailsLabel2.translatesAutoresizingMaskIntoConstraints = false
@@ -125,13 +124,13 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
             detailsLabel3.heightAnchor.constraint(equalToConstant: 30),
             
             
-            signInButton.topAnchor.constraint(equalTo: detailsLabel3.bottomAnchor, constant: 140),
-            signInButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
-            signInButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
-            signInButton.heightAnchor.constraint(equalToConstant: 55),
+            confirmBtn.topAnchor.constraint(equalTo: detailsLabel3.bottomAnchor, constant: 140),
+            confirmBtn.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 40),
+            confirmBtn.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -40),
+            confirmBtn.heightAnchor.constraint(equalToConstant: 55),
             
             
-            iconImageView.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 80),
+            iconImageView.topAnchor.constraint(equalTo: confirmBtn.bottomAnchor, constant: 80),
             iconImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             iconImageView.widthAnchor.constraint(equalToConstant: 100),
             iconImageView.heightAnchor.constraint(equalToConstant: 100),
@@ -175,11 +174,11 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func configureButtons() {
-        signInButton.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
+        confirmBtn.addTarget(self, action: #selector(didTapConfirm), for: .touchUpInside)
     }
     
-    // регистрация и вход в tabbarcontroller
-    @objc private func didTapSignUp() {
+    /// подтверждение входа в tabbarcontroller
+    @objc private func didTapConfirm() {
         didTapKeyboardDone()
 
         if let code = smsCodeField.text, !code.isEmpty {

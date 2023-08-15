@@ -18,6 +18,7 @@ protocol WelcomeViewControllerSignInDelegate: AnyObject {
 class WelcomeViewController: UIViewController {
     
     // MARK: - UI
+    /// изображение логотип
     private let welcomeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -25,13 +26,13 @@ class WelcomeViewController: UIViewController {
         imageView.image = UIImage(named: "SignIn")
         return imageView
     }()
-
-    private let signInButton: AuthButton = {
+    /// кнопка регистрации
+    private let signUpButton: AuthButton = {
         let button = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
         button.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
         return button
     }()
-
+    /// кнопка есть аккаунт
     private let alreadySignUp: AuthButton = {
         let button = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт")
         button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
@@ -41,6 +42,7 @@ class WelcomeViewController: UIViewController {
     // MARK: - Properties
     weak var delegateSignIn: WelcomeViewControllerSignInDelegate?
     weak var delegateSignUp: WelcomeViewControllerSignUpDelegate?
+    weak var delegateConfirm: ConfirmViewControllerDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -48,18 +50,19 @@ class WelcomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         addSubviews()
         configureConstraints()
+        checksignInFlag()
     }
     
     // MARK: - Private
     private func addSubviews() {
         view.addSubview(welcomeImageView)
-        view.addSubview(signInButton)
+        view.addSubview(signUpButton)
         view.addSubview(alreadySignUp)
     }
 
     private func configureConstraints() {
         welcomeImageView.translatesAutoresizingMaskIntoConstraints = false
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
         alreadySignUp.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -69,23 +72,30 @@ class WelcomeViewController: UIViewController {
             welcomeImageView.heightAnchor.constraint(equalToConstant: 350),
 
 
-            signInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            signInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
-            signInButton.topAnchor.constraint(equalTo: welcomeImageView.bottomAnchor, constant: 20),
-            signInButton.heightAnchor.constraint(equalToConstant: 55),
+            signUpButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            signUpButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            signUpButton.topAnchor.constraint(equalTo: welcomeImageView.bottomAnchor, constant: 20),
+            signUpButton.heightAnchor.constraint(equalToConstant: 55),
 
             alreadySignUp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 70),
             alreadySignUp.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
-            alreadySignUp.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20),
+            alreadySignUp.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 20),
             alreadySignUp.heightAnchor.constraint(equalToConstant: 35)
         ])
     }
-
+    /// переход на экран регистрации
     @objc private func didTapSignUp() {
         delegateSignUp?.welcomeViewControllerSignUpTapped()
     }
-    
+    /// переход на экран входа в профиль при наличии аккаунта
     @objc private func didTapSignIn() {
         delegateSignIn?.welcomeViewControllerSignInTapped()
+    }
+}
+extension WelcomeViewController {
+    /// проаерка флага входа
+    func checksignInFlag() {
+        guard let signInFlag = KeychainManager.shared.getSignInFlag(), signInFlag else {return}
+        delegateConfirm?.confirmViewControllerTabbarTapped()
     }
 }

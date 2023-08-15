@@ -206,6 +206,7 @@
 		6DB0995B2A8069C700C42E5F /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				6DB099A22A8A5F9100C42E5F /* FurtherInformationViewController.swift */,
 				6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */,
 				6DB099412A7C187700C42E5F /* PhotosViewController.swift */,
 				6DB099892A87E0C400C42E5F /* PostAddViewController.swift */,
@@ -274,7 +275,6 @@
 				6DCD2A342A75514A001CED59 /* HalfScreen */,
 				6DCD2A332A75511C001CED59 /* TabBarVC */,
 				6DCAF3B42A6D4E0C00877579 /* Auth */,
-				6DB099A22A8A5F9100C42E5F /* FurtherInformationViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

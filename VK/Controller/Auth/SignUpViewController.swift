@@ -14,17 +14,18 @@ protocol SignUpViewControllerDelegate: AnyObject {
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
     // MARK: - UI
+    /// кнопка далее
     private let nextButton: AuthButton = {
         let button = AuthButton(type: .signUp, title: "ДАЛЕЕ")
         button.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         return button
     }()
-    
+    /// поле для ввода номера телефона
     private let phoneField: AuthField = {
         let field = AuthField(type: .phone)
         return field
     }()
-    
+    /// лейбл регистрации
     private let signInLabel: UILabel = {
         let label = UILabel()
         label.text = "ЗАРЕГИСТРИРОВАТЬСЯ"
@@ -33,7 +34,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
-    
+    /// лейбл
     private let detailsLabel1: UILabel = {
         let label = UILabel()
         label.text = "Введите номер"
@@ -43,7 +44,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
-    
+    /// лейбл
     private let detailsLabel2: UILabel = {
         let label = UILabel()
         label.text = "Ваш номер будет использоваться для входа в аккаунт"
@@ -53,7 +54,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         label.numberOfLines = 0
         return label
     }()
-    
+    /// лейбл
     private let detailsLabel3: UILabel = {
         let label = UILabel()
         label.text = "Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности"
@@ -83,7 +84,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK: - Private
-    func addSubviews() {
+    private func addSubviews() {
         view.addSubview(signInLabel)
         view.addSubview(detailsLabel1)
         view.addSubview(detailsLabel2)
@@ -92,7 +93,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(phoneField)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let margins = view.layoutMarginsGuide
         
         signInLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -134,8 +135,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             phoneField.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
-    
-    func customizeBackButton() {
+    /// кнопка назад
+    private func customizeBackButton() {
         let backButton = UIButton(type: .custom)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
@@ -143,12 +144,12 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let customBackButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = customBackButton
     }
-    
-    @objc func backButtonTapped() {
+    /// переход назад
+    @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    
-    func configureFields() {
+    /// клавиатура для ввода номер телефона
+    private func configureFields() {
         phoneField.delegate = self
         
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
@@ -159,13 +160,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
     }
-    
-    @objc func didTapKeyboardDone() {
+    /// закрыть клавиатуру
+    @objc private func didTapKeyboardDone() {
         phoneField.resignFirstResponder()
     }
     
-    // переход на капчу и последующий ввод кода
-    @objc func didTapNext() {
+    /// переход на капчу и последующий ввод кода
+    @objc private func didTapNext() {
         didTapKeyboardDone()
         if let phone = phoneField.text, !phone.isEmpty {
             AuthManager.shared.startAuth(phoneNumber: phone) { [weak self] success, errorMessage in

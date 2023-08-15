@@ -39,7 +39,6 @@ class HomeViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         let collectionView = view.subviews.compactMap { $0 as? UICollectionView }.first
         let indexPath = IndexPath(item: 0, section: 0)
         collectionView?.scrollToItem(at: indexPath, at: .right, animated: true)
