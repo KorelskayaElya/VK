@@ -6,6 +6,9 @@
 //
 
 import UIKit
+protocol HobbyViewControllerDelegate: AnyObject {
+    func hobbyViewControllerDidFinishEnteringInfo(hobby: String)
+}
 // интересы
 class HobbyViewController: UIViewController {
     // MARK: - UI
@@ -24,6 +27,8 @@ class HobbyViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
+    // MARK: - Properties
+    weak var delegate: HobbyViewControllerDelegate?
     
     // MARK: - Lyfecycle
     override func viewDidLoad() {
@@ -42,6 +47,10 @@ class HobbyViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        hobbyField.delegate = self
+        
         
     }
     // MARK: - Private
@@ -49,6 +58,10 @@ class HobbyViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc private func nextButtonTapped() {
+        let hobby = hobbyField.text ?? ""
+        
+        delegate?.hobbyViewControllerDidFinishEnteringInfo(hobby: hobby)
+        
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
@@ -71,8 +84,15 @@ class HobbyViewController: UIViewController {
             hobbyField.heightAnchor.constraint(equalToConstant: 30),
     ])
     }
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 extension HobbyViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       textField.resignFirstResponder()
+       return true
+    }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length

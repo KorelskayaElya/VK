@@ -126,7 +126,19 @@ class PostAddViewController: UIViewController {
     /// кнопка опубликовать пост
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
-        let newPost = Post(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер"), textPost: text, imagePost: selectedImage)
+        let newPost = Post(user: User(identifier: "annaux_designer",
+                                      username: "Анна Мищенко",
+                                      profilePicture: UIImage(named:"header1"),
+                                      status: "дизайнер",
+                                      gender: "Женский",
+                                      birthday: "01.02.1997",
+                                      city: "Москва",
+                                      hobby: "футбол",
+                                      school:"Дизайнер",
+                                      university: "школа 134",
+                                      work: "Московский"),
+                           textPost: text,
+                           imagePost: selectedImage)
         
         delegate?.postAddViewController(self, didCreatePost: newPost)
 

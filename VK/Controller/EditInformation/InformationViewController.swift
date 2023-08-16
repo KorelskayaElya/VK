@@ -6,12 +6,14 @@
 //
 
 import UIKit
+protocol InformationViewControllerDelegate: AnyObject {
+    func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String)
+}
 // основная информация 
 class InformationViewController: UIViewController {
     
     // MARK: - UI
-    private lazy var nameLabel = LabelField()
-    private lazy var surnameLabel = LabelField()
+    private lazy var usernameLabel = LabelField()
     private lazy var genderLabel = LabelField()
     private lazy var maleLabel = LabelField()
     private lazy var femaleLabel = LabelField()
@@ -19,9 +21,10 @@ class InformationViewController: UIViewController {
     private lazy var cityLabel = LabelField()
     private lazy var dotmale = RoundButtonWithDot()
     private lazy var dotfemale = RoundButtonWithDot()
-    private lazy var nameField: UITextField = {
+    
+    private lazy var usernameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "имя"
+        field.placeholder = "имя фамилия"
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -33,20 +36,7 @@ class InformationViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
-    private lazy var surnameField: UITextField = {
-        let field = UITextField()
-        field.placeholder = "фамилия"
-        field.tintColor = .lightGray
-        field.delegate = self
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
-        field.leftView = paddingView
-        field.leftViewMode = .always
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.layer.cornerRadius = 15
-        field.layer.borderWidth = 2
-        field.layer.borderColor = UIColor.lightGray.cgColor
-        return field
-    }()
+    
     private lazy var birhdayField: UITextField = {
         let field = UITextField()
         field.placeholder = "01.01.2020"
@@ -61,6 +51,7 @@ class InformationViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
+    
     private lazy var cityField: UITextField = {
         let field = UITextField()
         field.placeholder = "Напишите название"
@@ -75,6 +66,8 @@ class InformationViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
+    // MARK: - Properties
+    weak var delegate: InformationViewControllerDelegate?
     
     
     // MARK: - Lifecycle
@@ -100,20 +93,15 @@ class InformationViewController: UIViewController {
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    @objc private func nextButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
     
     private func setupView() {
-        nameLabel.text = "Имя"
-        surnameLabel.text = "Фамилия"
+        usernameLabel.text = "Имя Фамилия"
         genderLabel.text = "Пол"
         maleLabel.text = "Мужской"
         femaleLabel.text = "Женский"
         birthdayLabel.text = "Дата рождения"
         cityLabel.text = "Родной город"
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        surnameLabel.translatesAutoresizingMaskIntoConstraints = false
+        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
         maleLabel.translatesAutoresizingMaskIntoConstraints = false
         femaleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -121,15 +109,18 @@ class InformationViewController: UIViewController {
         cityLabel.translatesAutoresizingMaskIntoConstraints = false
         dotmale.translatesAutoresizingMaskIntoConstraints = false
         dotfemale.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(nameLabel)
-        view.addSubview(surnameLabel)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        usernameField.delegate = self
+        birhdayField.delegate = self
+        cityField.delegate = self
+        view.addSubview(usernameLabel)
         view.addSubview(genderLabel)
         view.addSubview(maleLabel)
         view.addSubview(femaleLabel)
         view.addSubview(birthdayLabel)
         view.addSubview(cityLabel)
-        view.addSubview(nameField)
-        view.addSubview(surnameField)
+        view.addSubview(usernameField)
         view.addSubview(birhdayField)
         view.addSubview(cityField)
         view.addSubview(dotmale)
@@ -140,34 +131,22 @@ class InformationViewController: UIViewController {
 
     private func constraints() {
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameLabel.widthAnchor.constraint(equalToConstant: 100),
-            nameLabel.heightAnchor.constraint(equalToConstant: 20),
+            usernameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            usernameLabel.widthAnchor.constraint(equalToConstant: 200),
+            usernameLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            nameField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
-            nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            nameField.heightAnchor.constraint(equalToConstant: 30),
+            usernameField.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 5),
+            usernameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            usernameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+            usernameField.heightAnchor.constraint(equalToConstant: 30),
             
-            
-            surnameLabel.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 30),
-            surnameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            surnameLabel.widthAnchor.constraint(equalToConstant: 100),
-            surnameLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            surnameField.topAnchor.constraint(equalTo: surnameLabel.bottomAnchor, constant: 5),
-            surnameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            surnameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
-            surnameField.heightAnchor.constraint(equalToConstant: 30),
-            
-            
-            genderLabel.topAnchor.constraint(equalTo: surnameField.bottomAnchor, constant: 30),
+            genderLabel.topAnchor.constraint(equalTo: usernameField.bottomAnchor, constant: 20),
             genderLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             genderLabel.widthAnchor.constraint(equalToConstant: 100),
             genderLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            dotmale.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 25),
+            dotmale.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 15),
             dotmale.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             dotmale.widthAnchor.constraint(equalToConstant: 25),
             dotmale.heightAnchor.constraint(equalToConstant: 25),
@@ -177,7 +156,7 @@ class InformationViewController: UIViewController {
             dotfemale.widthAnchor.constraint(equalToConstant: 25),
             dotfemale.heightAnchor.constraint(equalToConstant: 25),
             
-            maleLabel.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 27),
+            maleLabel.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 17),
             maleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant:50),
             maleLabel.widthAnchor.constraint(equalToConstant: 100),
             maleLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -219,8 +198,26 @@ class InformationViewController: UIViewController {
         dotmale.hideDot()
         dotfemale.showDot()
     }
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    @objc private func nextButtonTapped() {
+        let username = usernameField.text ?? ""
+        let gender = dotmale.isDotVisible ? "Мужской" : "Женский"
+        let birthday = birhdayField.text ?? ""
+        let city = cityField.text ?? ""
+        
+        delegate?.informationViewControllerDidFinishEnteringInfo(username: username, gender: gender, birthday: birthday, city: city)
+        
+        navigationController?.popViewController(animated: true)
+    }
+
 }
 extension InformationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       textField.resignFirstResponder()
+       return true
+    }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length

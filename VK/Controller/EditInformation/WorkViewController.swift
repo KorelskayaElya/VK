@@ -6,6 +6,9 @@
 //
 
 import UIKit
+protocol WorkViewControllerDelegate: AnyObject {
+    func workViewControllerDidFinishEnteringInfo(work: String)
+}
 // текущее место работы
 class WorkViewController: UIViewController {
     
@@ -25,6 +28,8 @@ class WorkViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
+    // MARK: - Properties
+    weak var delegate: WorkViewControllerDelegate?
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +47,13 @@ class WorkViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        workField.delegate = self
         
     }
     // MARK: - Private
     @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    @objc private func nextButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
@@ -71,8 +76,22 @@ class WorkViewController: UIViewController {
             workField.heightAnchor.constraint(equalToConstant: 30),
     ])
     }
+    @objc private func nextButtonTapped() {
+        let work = workField.text ?? ""
+        delegate?.workViewControllerDidFinishEnteringInfo(work: work)
+        
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 extension WorkViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       textField.resignFirstResponder()
+       return true
+    }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length

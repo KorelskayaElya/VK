@@ -8,8 +8,12 @@
 import UIKit
 
 class RoundButtonWithDot: UIButton {
+    
     // MARK: - UI
     private let dotView: UIView
+    var isDotVisible: Bool {
+        return !dotView.isHidden
+    }
     // MARK: - Init
     override init(frame: CGRect) {
         dotView = UIView()

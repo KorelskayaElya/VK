@@ -8,9 +8,17 @@
 import UIKit
 
 struct User {
-    // пока без доп информации
+    
     let identifier: String
     let username: String
     let profilePicture: UIImage?
     let status: String
+    let gender: String
+    let birthday: String
+    let city: String
+    let hobby: String
+    let school: String
+    let university: String
+    let work: String
+    
 }

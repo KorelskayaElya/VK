@@ -6,14 +6,13 @@
 //
 
 import UIKit
+
 // подробная информация
 class FurtherInformationViewController: UIViewController {
 
     // MARK: - UI
-    private lazy var nameLabel = LabelField()
-    private lazy var nameLabel1 = LabelField()
-    private lazy var surnameLabel = LabelField()
-    private lazy var surnameLabel1 = LabelField()
+    private lazy var usernameLabel = LabelField()
+    private lazy var usernameLabel1 = LabelField()
     private lazy var genderLabel = LabelField()
     private lazy var genderLabel1 = LabelField()
     private lazy var birthdayLabel = LabelField()
@@ -24,10 +23,21 @@ class FurtherInformationViewController: UIViewController {
     private lazy var hobbyLabel1 = LabelField()
     private lazy var schoolLabel = LabelField()
     private lazy var schoolLabel1 = LabelField()
-    private lazy var univercityLabel = LabelField()
-    private lazy var univercityLabel1 = LabelField()
+    private lazy var universityLabel = LabelField()
+    private lazy var universityLabel1 = LabelField()
     private lazy var workLabel = LabelField()
     private lazy var workLabel1 = LabelField()
+    
+    // MARK: -  Properties
+    var receivedUsername: String = ""
+    var receivedGender: String = ""
+    var receivedBirthday: String = ""
+    var receivedCity: String = ""
+    var receivedHobby: String = ""
+    var receivedSchool: String = ""
+    var receivedUniversity: String = ""
+    var receivedWork: String = ""
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -45,12 +55,9 @@ class FurtherInformationViewController: UIViewController {
     
     // MARK: - Private
     private func setupView() {
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel1.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel1.font = UIFont.boldSystemFont(ofSize: 15)
-        surnameLabel.translatesAutoresizingMaskIntoConstraints = false
-        surnameLabel1.translatesAutoresizingMaskIntoConstraints = false
-        surnameLabel1.font = UIFont.boldSystemFont(ofSize: 15)
+        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
+        usernameLabel1.translatesAutoresizingMaskIntoConstraints = false
+        usernameLabel1.font = UIFont.boldSystemFont(ofSize: 15)
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel1.translatesAutoresizingMaskIntoConstraints = false
         genderLabel1.font = UIFont.boldSystemFont(ofSize: 15)
@@ -66,72 +73,57 @@ class FurtherInformationViewController: UIViewController {
         schoolLabel.translatesAutoresizingMaskIntoConstraints = false
         schoolLabel1.translatesAutoresizingMaskIntoConstraints = false
         schoolLabel1.font = UIFont.boldSystemFont(ofSize: 15)
-        univercityLabel.translatesAutoresizingMaskIntoConstraints = false
-        univercityLabel1.translatesAutoresizingMaskIntoConstraints = false
-        univercityLabel1.font = UIFont.boldSystemFont(ofSize: 15)
+        universityLabel.translatesAutoresizingMaskIntoConstraints = false
+        universityLabel1.translatesAutoresizingMaskIntoConstraints = false
+        universityLabel1.font = UIFont.boldSystemFont(ofSize: 15)
         workLabel.translatesAutoresizingMaskIntoConstraints = false
         workLabel1.translatesAutoresizingMaskIntoConstraints = false
         workLabel1.font = UIFont.boldSystemFont(ofSize: 15)
-        nameLabel.text = "Анна"
-        nameLabel1.text = "Имя"
-        surnameLabel.text = "Мищенко"
-        surnameLabel1.text = "Фамилия"
-        genderLabel.text = "Женский"
+        usernameLabel1.text = "Имя Фамилия"
         genderLabel1.text = "Пол"
-        birthdayLabel.text = "01.01.1993"
         birthdayLabel1.text = "Дата рождения"
-        cityLabel.text = "Москва"
         cityLabel1.text = "Родной город"
-        hobbyLabel.text = "балет"
         hobbyLabel1.text = "Интересы"
-        schoolLabel.text = "Школа 123"
         schoolLabel1.text = "Школа"
-        univercityLabel.text = "Московский государственный"
-        univercityLabel1.text = "Университет"
-        workLabel.text = "Балерина"
+        universityLabel1.text = "Университет"
         workLabel1.text = "Место работы"
-        view.addSubview(nameLabel)
-        view.addSubview(surnameLabel)
+        usernameLabel.text = receivedUsername
+        genderLabel.text = receivedGender
+        birthdayLabel.text = receivedBirthday
+        cityLabel.text = receivedCity
+        schoolLabel.text = receivedSchool
+        universityLabel.text = receivedUniversity
+        hobbyLabel.text = receivedHobby
+        view.addSubview(usernameLabel)
         view.addSubview(genderLabel)
         view.addSubview(birthdayLabel)
         view.addSubview(cityLabel)
         view.addSubview(hobbyLabel)
         view.addSubview(schoolLabel)
-        view.addSubview(univercityLabel)
+        view.addSubview(universityLabel)
         view.addSubview(workLabel)
-        view.addSubview(nameLabel1)
-        view.addSubview(surnameLabel1)
+        view.addSubview(usernameLabel1)
         view.addSubview(genderLabel1)
         view.addSubview(birthdayLabel1)
         view.addSubview(cityLabel1)
         view.addSubview(hobbyLabel1)
         view.addSubview(schoolLabel1)
-        view.addSubview(univercityLabel1)
+        view.addSubview(universityLabel1)
         view.addSubview(workLabel1)
     }
     private func constraints() {
         NSLayoutConstraint.activate([
-            nameLabel1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            nameLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameLabel1.widthAnchor.constraint(equalToConstant: 300),
-            nameLabel1.heightAnchor.constraint(equalToConstant: 20),
+            usernameLabel1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            usernameLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            usernameLabel1.widthAnchor.constraint(equalToConstant: 300),
+            usernameLabel1.heightAnchor.constraint(equalToConstant: 20),
             
-            nameLabel.topAnchor.constraint(equalTo: nameLabel1.bottomAnchor, constant: 5),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            nameLabel.widthAnchor.constraint(equalToConstant: 300),
-            nameLabel.heightAnchor.constraint(equalToConstant: 20),
+            usernameLabel.topAnchor.constraint(equalTo: usernameLabel1.bottomAnchor, constant: 5),
+            usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            usernameLabel.widthAnchor.constraint(equalToConstant: 300),
+            usernameLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            surnameLabel1.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
-            surnameLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            surnameLabel1.widthAnchor.constraint(equalToConstant: 300),
-            surnameLabel1.heightAnchor.constraint(equalToConstant: 20),
-            
-            surnameLabel.topAnchor.constraint(equalTo: surnameLabel1.bottomAnchor, constant: 5),
-            surnameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            surnameLabel.widthAnchor.constraint(equalToConstant: 300),
-            surnameLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            genderLabel1.topAnchor.constraint(equalTo: surnameLabel.bottomAnchor, constant: 20),
+            genderLabel1.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 20),
             genderLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             genderLabel1.widthAnchor.constraint(equalToConstant: 300),
             genderLabel1.heightAnchor.constraint(equalToConstant: 20),
@@ -181,17 +173,17 @@ class FurtherInformationViewController: UIViewController {
             schoolLabel.widthAnchor.constraint(equalToConstant: 300),
             schoolLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            univercityLabel1.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 20),
-            univercityLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            univercityLabel1.widthAnchor.constraint(equalToConstant: 300),
-            univercityLabel1.heightAnchor.constraint(equalToConstant: 20),
+            universityLabel1.topAnchor.constraint(equalTo: schoolLabel.bottomAnchor, constant: 20),
+            universityLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            universityLabel1.widthAnchor.constraint(equalToConstant: 300),
+            universityLabel1.heightAnchor.constraint(equalToConstant: 20),
             
-            univercityLabel.topAnchor.constraint(equalTo: univercityLabel1.bottomAnchor, constant: 5),
-            univercityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            univercityLabel.widthAnchor.constraint(equalToConstant: 300),
-            univercityLabel.heightAnchor.constraint(equalToConstant: 20),
+            universityLabel.topAnchor.constraint(equalTo: universityLabel1.bottomAnchor, constant: 5),
+            universityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            universityLabel.widthAnchor.constraint(equalToConstant: 300),
+            universityLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            workLabel1.topAnchor.constraint(equalTo: univercityLabel.bottomAnchor, constant: 20),
+            workLabel1.topAnchor.constraint(equalTo: universityLabel.bottomAnchor, constant: 20),
             workLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             workLabel1.widthAnchor.constraint(equalToConstant: 300),
             workLabel1.heightAnchor.constraint(equalToConstant: 20),

@@ -5,6 +5,9 @@
 //  Created by Эля Корельская on 14.08.2023.
 //
 import UIKit
+protocol EducationViewControllerDelegate: AnyObject {
+    func educationViewControllerDidFinishEnteringInfo(school: String, university: String)
+}
 // образование
 class EducationViewController: UIViewController {
     // MARK: - UI
@@ -38,6 +41,8 @@ class EducationViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         return field
     }()
+    // MARK: - Properties
+    weak var educationDelegate: EducationViewControllerDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -56,6 +61,10 @@ class EducationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        schoolField.delegate = self
+        unisercityField.delegate = self
         
     }
     // MARK: - Private
@@ -63,6 +72,10 @@ class EducationViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc private func nextButtonTapped() {
+        let school = schoolField.text ?? ""
+        let university = unisercityField.text ?? ""
+        educationDelegate?.educationViewControllerDidFinishEnteringInfo(school: school, university: university)
+        
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
@@ -101,9 +114,16 @@ class EducationViewController: UIViewController {
         
     ])
     }
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 
 extension EducationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       textField.resignFirstResponder()
+       return true
+    }
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return true }
         let newLength = text.count + string.count - range.length

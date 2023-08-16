@@ -37,7 +37,7 @@ class TabBarViewController: UITabBarController {
 
     private func setUpControllers() {
         let home = HomeViewController()
-        let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
+        let profile = ProfileViewController(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"))
         /// переход обратно на экран приветствия при выходе на экране профиля
         let scene = UIApplication.shared.connectedScenes.first
         if let sceneDelegate : SceneDelegate = (scene?.delegate as? SceneDelegate) {

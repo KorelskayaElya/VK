@@ -12,14 +12,13 @@ import SwiftyCam
 class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDelegate {
     
     // MARK: - UI
-    // нужно ли это не понятно
-//    private let cameraView: UIView = {
-//        let view = UIView()
-//        view.clipsToBounds = true
-//        view.backgroundColor = .black
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
+    private let cameraView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     /// Кнопка для захвата (записи) видео или фотографии
     private lazy var captureButton: SwiftyRecordButton = {
         let capture = SwiftyRecordButton()
@@ -55,12 +54,15 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         allowAutoRotate = true
         audioEnabled = true
         flashMode = .auto
-        flashButton.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
+        flashButton.setImage(UIImage(systemName: "bolt.fill"), for: .normal)
+        flashButton.tintColor = .systemYellow
         customizeBackButton()
-        view.addSubview(captureButton)
+        view.addSubview(cameraView)
+        cameraView.addSubview(captureButton)
         captureButton.buttonEnabled = false
-        view.addSubview(flipCameraButton)
-        view.addSubview(flashButton)
+        cameraView.addSubview(flipCameraButton)
+        cameraView.addSubview(flashButton)
+        
         constraints()
        
     }
@@ -76,21 +78,25 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     // MARK: - Private
     private func constraints() {
         NSLayoutConstraint.activate([
+            cameraView.topAnchor.constraint(equalTo: view.topAnchor),
+            cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             // Констрейнты для captureButton
-            captureButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            captureButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            captureButton.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
+            captureButton.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor, constant: -20),
             captureButton.widthAnchor.constraint(equalToConstant: 70),
             captureButton.heightAnchor.constraint(equalToConstant: 70),
             
             // Констрейнты для flipCameraButton
-            flipCameraButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            flipCameraButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            flipCameraButton.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 20),
+            flipCameraButton.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor, constant: -20),
             flipCameraButton.widthAnchor.constraint(equalToConstant: 40),
             flipCameraButton.heightAnchor.constraint(equalToConstant: 40),
             
             // Констрейнты для flashButton
-            flashButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            flashButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            flashButton.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 20),
+            flashButton.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor, constant: 20),
             flashButton.widthAnchor.constraint(equalToConstant: 40),
             flashButton.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -99,6 +105,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     private func customizeBackButton() {
         let backButton = UIButton(type: .custom)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = .systemOrange
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         let customBackButton = UIBarButtonItem(customView: backButton)

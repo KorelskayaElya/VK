@@ -23,6 +23,8 @@ protocol ProfileFurtherInformationDelegate: AnyObject {
 }
 
 class ProfileTableHeaderView: UIView {
+    
+    
     // MARK: - UI
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
