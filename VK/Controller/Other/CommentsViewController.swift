@@ -60,7 +60,7 @@ class CommentsViewController: UIViewController, PostTableViewCellCommentDelegate
     }
     // существующие комменты
     func fetchPostComments() {
-        self.comments = PostComment.mockCommets()
+        self.comments = PostComment.mockComments()
     }
     func postTableViewCellDidTapComment(_ cell: PostTableViewCell) {
         // открыть комментарии

@@ -20,22 +20,25 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     }()
     /// Кнопка для захвата (записи) видео или фотографии
     private lazy var captureButton: SwiftyRecordButton = {
-        let capture = SwiftyRecordButton()
+        let capture = SwiftyRecordButton(frame: CGRectMake(0,0,70,70))
         capture.translatesAutoresizingMaskIntoConstraints = false
-        capture.addTarget(self, action: #selector(cameraSwitchTapped), for: .touchUpInside)
         return capture
     }()
     /// Кнопка для переключения между камерами (фронтальной и задней)
     private lazy var flipCameraButton : UIButton = {
         let flipCamera = UIButton()
         flipCamera.translatesAutoresizingMaskIntoConstraints = false
-        flipCamera.addTarget(self, action: #selector(toggleFlashTapped), for: .touchUpInside)
+        flipCamera.setImage(UIImage(systemName: "camera.rotate"), for: .normal)
+        flipCamera.tintColor = UIColor(named: "Orange")
+        flipCamera.addTarget(self, action: #selector(cameraSwitchTapped), for: .touchUpInside)
         return flipCamera
     }()
     /// Кнопка для управления вспышкой
     private lazy var flashButton : UIButton = {
         let flashButton = UIButton()
+        flashButton.tintColor = UIColor(named: "Orange")
         flashButton.translatesAutoresizingMaskIntoConstraints = false
+        flashButton.addTarget(self, action: #selector(toggleFlashTapped), for: .touchUpInside)
         return flashButton
     }()
     
@@ -52,9 +55,9 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         shouldUseDeviceOrientation = false
         allowAutoRotate = true
         audioEnabled = true
-        flashMode = .auto
+        /// всегда вспышка
+        flashMode = .on
         flashButton.setImage(UIImage(systemName: "bolt.fill"), for: .normal)
-        flashButton.tintColor = .systemYellow
         customizeBackButton()
         view.addSubview(cameraView)
         cameraView.addSubview(captureButton)
@@ -83,21 +86,21 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
             cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             // Констрейнты для captureButton
             captureButton.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor),
-            captureButton.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor, constant: -20),
+            captureButton.bottomAnchor.constraint(equalTo: cameraView.bottomAnchor, constant: -120),
             captureButton.widthAnchor.constraint(equalToConstant: 70),
             captureButton.heightAnchor.constraint(equalToConstant: 70),
             
             // Констрейнты для flipCameraButton
             flipCameraButton.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 20),
             flipCameraButton.trailingAnchor.constraint(equalTo: cameraView.trailingAnchor, constant: -20),
-            flipCameraButton.widthAnchor.constraint(equalToConstant: 40),
-            flipCameraButton.heightAnchor.constraint(equalToConstant: 40),
+            flipCameraButton.widthAnchor.constraint(equalToConstant: 50),
+            flipCameraButton.heightAnchor.constraint(equalToConstant: 50),
             
             // Констрейнты для flashButton
             flashButton.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 20),
             flashButton.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor, constant: 20),
-            flashButton.widthAnchor.constraint(equalToConstant: 40),
-            flashButton.heightAnchor.constraint(equalToConstant: 40)
+            flashButton.widthAnchor.constraint(equalToConstant: 50),
+            flashButton.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     /// кнопка назад
@@ -112,6 +115,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     }
     /// навигация назад
     @objc private func backButtonTapped() {
+        tabBarController?.tabBar.isHidden = false
         navigationController?.popViewController(animated: true)
     }
 
@@ -167,6 +171,11 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         print("Camera did change to \(camera.rawValue)")
         print(camera)
     }
+    /// сохранение изображения
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didTake photo: UIImage) {
+        let newVC = CameraPhotoSaveViewController(image: photo)
+        self.present(newVC, animated: true, completion: nil)
+    }
     /// ошибка при записи видео
     func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFailToRecordVideo error: Error) {
         print(error)
@@ -201,7 +210,7 @@ extension CameraViewController {
     }
     /// Анимация фокуса на точке нажатия
     fileprivate func focusAnimationAt(_ point: CGPoint) {
-        let focusView = UIImageView(image: #imageLiteral(resourceName: "focus"))
+        let focusView = UIImageView()
         focusView.center = point
         focusView.alpha = 0.0
         view.addSubview(focusView)

@@ -58,7 +58,7 @@ class VideoViewController: UIViewController {
         
         /// Добавление кнопки отмены
         let cancelButton = UIButton(frame: CGRect(x: 10.0, y: 10.0, width: 30.0, height: 30.0))
-        cancelButton.setImage(#imageLiteral(resourceName: "cancel"), for: UIControl.State())
+        cancelButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         view.addSubview(cancelButton)
         

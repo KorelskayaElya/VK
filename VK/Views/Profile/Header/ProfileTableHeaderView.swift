@@ -112,7 +112,6 @@ class ProfileTableHeaderView: UIView {
     
     private lazy var photosPublished: UILabel = {
         let label = UILabel()
-        label.text = "1400 публикаций"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.numberOfLines = 0
@@ -316,5 +315,8 @@ class ProfileTableHeaderView: UIView {
     }
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
+    }
+    func updatePhotosPublished(count: Int) {
+        photosPublished.text = "\(count) публикаций"
     }
 }

@@ -36,7 +36,7 @@ class SwiftyRecordButton: SwiftyCamButton {
 
     }
     /// Анимация увеличения кнопки при начале записи
-    public  func growButton() {
+    public func growButton() {
         /// Создание внутреннего круга (innerCircle) для анимации роста
         innerCircle = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         innerCircle.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)

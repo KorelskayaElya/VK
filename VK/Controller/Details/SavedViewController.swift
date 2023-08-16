@@ -24,6 +24,7 @@ class SavedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
+        title = "Закладки"
     }
     // MARK: - Private
     private func setupView() {

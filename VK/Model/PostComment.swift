@@ -12,7 +12,7 @@ struct PostComment {
     let user: User
     let date: Date
 
-    static func mockCommets() -> [PostComment] {
+    static func mockComments() -> [PostComment] { // Corrected function name
         let user = User(identifier: "victor.dis", username: "Виктор",
                         profilePicture: UIImage(named: "person2"),
                         status: "дизайнер", gender: "Мужской", birthday: "01.02.1997", city: "Москва",hobby: "футбол",
@@ -38,4 +38,3 @@ struct PostComment {
         return comments
     }
 }
-

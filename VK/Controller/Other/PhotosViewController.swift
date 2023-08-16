@@ -113,6 +113,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
     }
     private func setupImages(from photoNames: [String]) {
         recivedImages = photoNames.compactMap { UIImage(named: $0) }
+        print("count setup images", recivedImages.count)
     }
     func profileAddPhotoViewController(_ selectedImage: UIImage) {
         print("photos select image", selectedImage)
@@ -122,8 +123,6 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
             self.collection.reloadData()
         }
     }
-    
-    
 }
 
 extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate {

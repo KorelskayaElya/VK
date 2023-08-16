@@ -42,7 +42,7 @@ class PostAddViewController: UIViewController {
         let label = UILabel()
         label.text = "Добавьте изображение"
         label.textColor = UIColor(named: "Orange")
-        label.font = UIFont(name: "Arial", size: 15)
+        label.font = UIFont(name: "Arial", size: 20)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addPhoto))
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(tapGesture)
@@ -100,8 +100,8 @@ class PostAddViewController: UIViewController {
             
             self.photoLabel.topAnchor.constraint(equalTo: self.textPostField.bottomAnchor, constant: 15),
             self.photoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.photoLabel.widthAnchor.constraint(equalToConstant: 185),
-            self.photoLabel.heightAnchor.constraint(equalToConstant: 20),
+            self.photoLabel.widthAnchor.constraint(equalToConstant: 220),
+            self.photoLabel.heightAnchor.constraint(equalToConstant: 30),
             
             self.buttonSend.topAnchor.constraint(equalTo: self.photoLabel.bottomAnchor, constant: 20),
             self.buttonSend.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),

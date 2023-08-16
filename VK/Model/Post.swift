@@ -14,4 +14,7 @@ struct Post {
 
     var isLikedByCurrentUser = false
     var isSavedByCurrentUser = false
+    var isShowingComments: Bool = false
+    
+    var comments: [PostComment] = []
 }

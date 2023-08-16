@@ -42,6 +42,8 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         headerView.addPhotoDelegate = self
         headerView.editProfileDelegate = self
         headerView.furtherInformation = self
+        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: allPosts.count)
+        headerView.updatePhotosPublished(count: profileViewModel.publishedPhotos)
         let containerView = UIView()
         containerView.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -164,6 +166,8 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         }))
         present(actionSheet, animated: true)
     }
+
+
     /// переход на редактирование профиля / должен открываться один из модальных экранов
     /// в соответствии с флагом - HalfScreenPresentationController
     @objc private func openMenu() {
@@ -259,6 +263,15 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
             cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 100)
+            /// удаление поста
+            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
+                self?.deletePost(at: indexPath)
+                completionHandler(true)
+            }
+            deleteAction.backgroundColor = .red
+            deleteAction.image = UIImage(systemName: "trash.fill")
+            
+            let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
             return cell
         }
     }
@@ -291,6 +304,22 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return totalHeight
         }
     }
+    /// удаление поста
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            deletePost(at: indexPath)
+        }
+    }
+    /// удаление поста
+    func deletePost(at indexPath: IndexPath) {
+        if isFiltering {
+            filteredPosts.remove(at: indexPath.row)
+        } else {
+            allPosts.remove(at: indexPath.row)
+        }
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+
 }
 extension ProfileViewController: ProfileFurtherInformationDelegate {
     /// подробная информация
@@ -391,6 +420,7 @@ extension ProfileViewController: ProfileCameraDelegate {
     /// включить камеру для истории
     func didTapCamera() {
         let vc = CameraViewController()
+        tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(vc, animated: true)
     }
 }
