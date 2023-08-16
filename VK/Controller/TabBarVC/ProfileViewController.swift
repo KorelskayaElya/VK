@@ -83,6 +83,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         fatalError()
     }
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
