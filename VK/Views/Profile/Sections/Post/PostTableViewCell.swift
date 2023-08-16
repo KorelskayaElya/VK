@@ -210,8 +210,15 @@ class PostTableViewCell: UITableViewCell {
             
         ])
     }
+//    init(model: Post) {
+//        self.model = model
+//        super.init(nibName: nil, bundle: nil)
+//    }
 
     @objc private func didTapLike() {
+//        model.isLikedByCurrentUser = !model.isLikedByCurrentUser
+//
+//        likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : .orange
         delegate?.postTableViewCellDidTapLike(self)
         
     }

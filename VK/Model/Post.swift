@@ -13,4 +13,5 @@ struct Post {
     var imagePost: UIImage? = nil
 
     var isLikedByCurrentUser = false
+    var isSavedByCurrentUser = false
 }

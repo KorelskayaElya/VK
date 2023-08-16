@@ -5,210 +5,226 @@
 //  Created by Эля Корельская on 13.08.2023.
 //
 
-import AVFoundation
 import UIKit
+import AVFoundation
+import SwiftyCam
 
-protocol CameraViewControllerDelegate: AnyObject {
-    func cameraViewControllerDidRecordVideo(_ viewController: CameraViewController, videoURL: URL)
-}
-// добавлять истории
-class CameraViewController: UIViewController {
+class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDelegate {
     
-    // MARK: - Properties
-    weak var delegateCamera: CameraViewControllerDelegate?
-    // Capture Session
-    var captureSession = AVCaptureSession()
-
-    // Capture Device
-    var videoCaptureDevice: AVCaptureDevice?
-
-    // Capture Output
-    var captureOutput = AVCaptureMovieFileOutput()
-
-    // Capture Preview
-    var capturePreviewLayer: AVCaptureVideoPreviewLayer?
-    private let recordButton = RecordButton()
-
-    private var previewLayer: AVPlayerLayer?
-
-    var recordedVideoURL: URL?
-
     // MARK: - UI
-    private let cameraView: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.backgroundColor = .black
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    // нужно ли это не понятно
+//    private let cameraView: UIView = {
+//        let view = UIView()
+//        view.clipsToBounds = true
+//        view.backgroundColor = .black
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
+    /// Кнопка для захвата (записи) видео или фотографии
+    private lazy var captureButton: SwiftyRecordButton = {
+        let capture = SwiftyRecordButton()
+        capture.translatesAutoresizingMaskIntoConstraints = false
+        capture.addTarget(self, action: #selector(cameraSwitchTapped), for: .touchUpInside)
+        return capture
     }()
-
+    /// Кнопка для переключения между камерами (фронтальной и задней)
+    private lazy var flipCameraButton : UIButton = {
+        let flipCamera = UIButton()
+        flipCamera.translatesAutoresizingMaskIntoConstraints = false
+        flipCamera.addTarget(self, action: #selector(toggleFlashTapped), for: .touchUpInside)
+        return flipCamera
+    }()
+    /// Кнопка для управления вспышкой
+    private lazy var flashButton : UIButton = {
+        let flashButton = UIButton()
+        flashButton.translatesAutoresizingMaskIntoConstraints = false
+        return flashButton
+    }()
     
-
+    
     // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(cameraView)
-        view.backgroundColor = .systemBackground
-        setUpCamera()
-        setupNavigationBar()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .close,
-            target: self,
-            action: #selector(didTapClose)
-        )
-        view.addSubview(recordButton)
-        recordButton.addTarget(self, action: #selector(didTapRecord), for: .touchUpInside)
-
-        NSLayoutConstraint.activate([
-            cameraView.topAnchor.constraint(equalTo: view.topAnchor),
-            cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            recordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            recordButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            recordButton.widthAnchor.constraint(equalToConstant: 70),
-            recordButton.heightAnchor.constraint(equalToConstant: 70)
-        ])
+        /// Настройки SwiftyCam
+        shouldPrompToAppSettings = true
+        cameraDelegate = self
+        /// максимальная продолжительность видео
+        maximumVideoDuration = 10.0
+        /// ориентация фотографии портретная
+        shouldUseDeviceOrientation = false
+        allowAutoRotate = true
+        audioEnabled = true
+        flashMode = .auto
+        flashButton.setImage(#imageLiteral(resourceName: "flashauto"), for: UIControl.State())
+        customizeBackButton()
+        view.addSubview(captureButton)
+        captureButton.buttonEnabled = false
+        view.addSubview(flipCameraButton)
+        view.addSubview(flashButton)
+        constraints()
+       
     }
+    /// Скрытие статус-бара
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tabBarController?.tabBar.isHidden = true
+        captureButton.delegate = self
     }
     // MARK: - Private
-    private func setupNavigationBar() {
-        let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.tintColor = UIColor(named: "Orange")
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    private func constraints() {
+        NSLayoutConstraint.activate([
+            // Констрейнты для captureButton
+            captureButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            captureButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            captureButton.widthAnchor.constraint(equalToConstant: 70),
+            captureButton.heightAnchor.constraint(equalToConstant: 70),
+            
+            // Констрейнты для flipCameraButton
+            flipCameraButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            flipCameraButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            flipCameraButton.widthAnchor.constraint(equalToConstant: 40),
+            flipCameraButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            // Констрейнты для flashButton
+            flashButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            flashButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            flashButton.widthAnchor.constraint(equalToConstant: 40),
+            flashButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
+    /// кнопка назад
+    private func customizeBackButton() {
+        let backButton = UIButton(type: .custom)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        let customBackButton = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = customBackButton
+    }
+    /// навигация назад
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    @objc private func didTapSave() {
-        // передать видео
-        navigationController?.popViewController(animated: true)
+
+    /// сессия начала выполняться
+    func swiftyCamSessionDidStartRunning(_ swiftyCam: SwiftyCamViewController) {
+        print("Session did start running")
+        captureButton.buttonEnabled = true
     }
-    @objc private func didTapRecord() {
-        if captureOutput.isRecording {
-            recordButton.toggle(for: .notRecording)
-            captureOutput.stopRecording()
-            HapticsManager.shared.vibrateForSelection()
-        } else {
-            guard var url = FileManager.default.urls(
-                for: .documentDirectory,
-                in: .userDomainMask
-            ).first else {
-                return
-            }
-            HapticsManager.shared.vibrateForSelection()
-
-            url.appendPathComponent("video.mov")
-
-            recordButton.toggle(for: .recording)
-
-            try? FileManager.default.removeItem(at: url)
-
-            captureOutput.startRecording(to: url,
-                                         recordingDelegate: self)
-        }
+    /// сессия закончилась
+    func swiftyCamSessionDidStopRunning(_ swiftyCam: SwiftyCamViewController) {
+        print("Session did stop running")
+        captureButton.buttonEnabled = false
     }
-
-    @objc private func didTapClose() {
-        navigationItem.rightBarButtonItem = nil
-        recordButton.isHidden = false
-        if previewLayer != nil {
-            previewLayer?.removeFromSuperlayer()
-            previewLayer = nil
-        } else {
-            captureSession.stopRunning()
-            tabBarController?.tabBar.isHidden = false
-            tabBarController?.selectedIndex = 0
-        }
-    }
-
-    func setUpCamera() {
-       if let audioDevice = AVCaptureDevice.default(for: .audio) {
-           let audioInput = try? AVCaptureDeviceInput(device: audioDevice)
-           if let audioInput = audioInput {
-               if captureSession.canAddInput(audioInput) {
-                   captureSession.addInput(audioInput)
-               }
-           }
-       }
-
-       if let videoDevice = AVCaptureDevice.default(for: .video) {
-           if let videoInput = try? AVCaptureDeviceInput(device: videoDevice) {
-               if captureSession.canAddInput(videoInput) {
-                   captureSession.addInput(videoInput)
-               }
-           }
-       }
-
-       // update session
-       captureSession.sessionPreset = .hd1280x720
-       if captureSession.canAddOutput(captureOutput) {
-           captureSession.addOutput(captureOutput)
-       }
-
-       // configure preview
-       capturePreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-       capturePreviewLayer?.videoGravity = .resizeAspectFill
-       capturePreviewLayer?.frame = view.bounds
-       if let layer = capturePreviewLayer {
-           cameraView.layer.addSublayer(layer)
-       }
-
-       // Enable camera start
-       DispatchQueue.global(qos: .background).async { [weak self] in
-           self?.captureSession.startRunning()
-       }
-   }
-    @objc private func didTapNext() {
-        guard let recordedVideoURL = recordedVideoURL else {
-            return
-        }
-
-        delegateCamera?.cameraViewControllerDidRecordVideo(self, videoURL: recordedVideoURL)
-        didTapClose()
-    }
-}
-
-extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-
-        guard error == nil else {
-            let alert = UIAlertController(title: "Woops",
-                                          message: "Something went wrong when recording your video",
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            present(alert, animated: true)
-            return
-        }
-
-        recordedVideoURL = outputFileURL
-
-        if UserDefaults.standard.bool(forKey: "save_video") {
-            UISaveVideoAtPathToSavedPhotosAlbum(outputFileURL.path, nil, nil, nil)
-        }
-        // Кнопка сохранить
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(didTapNext))
-        
-        
-        let player = AVPlayer(url: outputFileURL)
-        previewLayer = AVPlayerLayer(player: player)
-        previewLayer?.videoGravity = .resizeAspectFill
-        previewLayer?.frame = cameraView.bounds
-        guard let previewLayer = previewLayer else {
-            return
-        }
-        recordButton.isHidden = true
-        cameraView.layer.addSublayer(previewLayer)
-        previewLayer.player?.play()
-    }
-
-}
-
     
+    /// начало записи видео
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didBeginRecordingVideo camera: SwiftyCamViewController.CameraSelection) {
+        print("Did Begin Recording")
+        /// кнопка увеличивается при начале записи
+        captureButton.growButton()
+        hideButtons()
+    }
+    /// окончание записи видео
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFinishRecordingVideo camera: SwiftyCamViewController.CameraSelection) {
+        print("Did finish Recording")
+        /// кнопка уменьшается при окончании записи
+        captureButton.shrinkButton()
+        showButtons()
+    }
+    /// сохранение записанного видео
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFinishProcessVideoAt url: URL) {
+        let newVC = VideoViewController(videoURL: url)
+        self.present(newVC, animated: true, completion: nil)
+    }
+    /// сделать фокусировку в точке
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFocusAtPoint point: CGPoint) {
+        print("Did focus at point: \(point)")
+        focusAnimationAt(point)
+    }
+    /// ошибка конфигурации камеры
+    func swiftyCamDidFailToConfigure(_ swiftyCam: SwiftyCamViewController) {
+        let message = NSLocalizedString("Unable to capture media", comment: "Alert message when something goes wrong during capture session configuration")
+        let alertController = UIAlertController(title: "AVCam", message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    /// поменять зум
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didChangeZoomLevel zoom: CGFloat) {
+        print("Zoom level did change. Level: \(zoom)")
+        print(zoom)
+    }
+    /// переклчить камеру
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didSwitchCameras camera: SwiftyCamViewController.CameraSelection) {
+        print("Camera did change to \(camera.rawValue)")
+        print(camera)
+    }
+    /// ошибка при записи видео
+    func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFailToRecordVideo error: Error) {
+        print(error)
+    }
+    /// Обработка нажатия на кнопку переключения камеры
+    @objc private func cameraSwitchTapped(_ sender: Any) {
+        switchCamera()
+    }
+    /// Обработка нажатия на кнопку управления вспышкой
+    @objc private func toggleFlashTapped(_ sender: Any) {
+        //flashEnabled = !flashEnabled
+        toggleFlashAnimation()
+    }
+}
+
+
+// UI Animations
+extension CameraViewController {
+    /// Скрытие кнопок
+    fileprivate func hideButtons() {
+        UIView.animate(withDuration: 0.25) {
+            self.flashButton.alpha = 0.0
+            self.flipCameraButton.alpha = 0.0
+        }
+    }
+    /// Показ кнопок
+    fileprivate func showButtons() {
+        UIView.animate(withDuration: 0.25) {
+            self.flashButton.alpha = 1.0
+            self.flipCameraButton.alpha = 1.0
+        }
+    }
+    /// Анимация фокуса на точке нажатия
+    fileprivate func focusAnimationAt(_ point: CGPoint) {
+        let focusView = UIImageView(image: #imageLiteral(resourceName: "focus"))
+        focusView.center = point
+        focusView.alpha = 0.0
+        view.addSubview(focusView)
+        
+        UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseInOut, animations: {
+            focusView.alpha = 1.0
+            focusView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+        }) { (success) in
+            UIView.animate(withDuration: 0.15, delay: 0.5, options: .curveEaseInOut, animations: {
+                focusView.alpha = 0.0
+                focusView.transform = CGAffineTransform(translationX: 0.6, y: 0.6)
+            }) { (success) in
+                focusView.removeFromSuperview()
+            }
+        }
+    }
+    /// Анимация переключения режимов вспышки
+    fileprivate func toggleFlashAnimation() {
+        //flashEnabled = !flashEnabled
+        if flashMode == .auto{
+            flashMode = .on
+            flashButton.setImage(#imageLiteral(resourceName: "flash"), for: UIControl.State())
+        }else if flashMode == .on{
+            flashMode = .off
+            flashButton.setImage(#imageLiteral(resourceName: "flashOutline"), for: UIControl.State())
+        }else if flashMode == .off{
+            flashMode = .auto
+            flashButton.setImage(#imageLiteral(resourceName: "flashauto"), for: UIControl.State())
+        }
+    }
+}
+

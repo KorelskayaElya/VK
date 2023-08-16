@@ -11,6 +11,7 @@ import KeychainAccess
 class TabBarViewController: UITabBarController {
 
     // MARK: - Lifecycle
+    @available(iOS 13.0, *)
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpControllers()
@@ -33,6 +34,7 @@ class TabBarViewController: UITabBarController {
         UITabBar.appearance().tintColor = orangeColor
     }
 
+    @available(iOS 13.0, *)
     private func setUpControllers() {
         let home = HomeViewController()
         let profile = ProfileViewController(user: User(identifier: "annaux_desinger", username: "Анна Мищенко", profilePicture: UIImage(named: "header1"), status: "дизайнер"))
