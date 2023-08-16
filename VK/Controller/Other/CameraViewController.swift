@@ -15,7 +15,6 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     private let cameraView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
-        view.backgroundColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
