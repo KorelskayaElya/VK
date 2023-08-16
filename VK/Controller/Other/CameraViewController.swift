@@ -55,7 +55,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         allowAutoRotate = true
         audioEnabled = true
         flashMode = .auto
-        flashButton.setImage(#imageLiteral(resourceName: "flashauto"), for: UIControl.State())
+        flashButton.setImage(UIImage(systemName: "flashlight.on.fill"), for: .normal)
         customizeBackButton()
         view.addSubview(captureButton)
         captureButton.buttonEnabled = false
