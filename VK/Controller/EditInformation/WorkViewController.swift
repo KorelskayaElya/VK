@@ -16,7 +16,7 @@ class WorkViewController: UIViewController {
     private lazy var workLabel = LabelField()
     private lazy var workField: UITextField = {
         let field = UITextField()
-        field.placeholder = "работа".localized
+        field.placeholder = "work".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -46,7 +46,7 @@ class WorkViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Карьера".localized
+        navigationItem.title = "Work".localized
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")
@@ -74,7 +74,7 @@ class WorkViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
-        workLabel.text = "Работа".localized
+        workLabel.text = "Work".localized
         view.addSubview(workLabel)
         view.addSubview(workField)
         workLabel.translatesAutoresizingMaskIntoConstraints = false

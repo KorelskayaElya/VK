@@ -15,7 +15,7 @@ class EducationViewController: UIViewController {
     private lazy var univercityLabel = LabelField()
     private lazy var schoolField: UITextField = {
         let field = UITextField()
-        field.placeholder = "школа".localized
+        field.placeholder = "school".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -29,7 +29,7 @@ class EducationViewController: UIViewController {
     }()
     private lazy var unisercityField: UITextField = {
         let field = UITextField()
-        field.placeholder = "университет".localized
+        field.placeholder = "university".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -60,7 +60,7 @@ class EducationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Образование".localized
+        navigationItem.title = "Education".localized
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")
@@ -97,8 +97,8 @@ class EducationViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
-        schoolLabel.text = "Школа".localized
-        univercityLabel.text = "Университет".localized
+        schoolLabel.text = "School".localized
+        univercityLabel.text = "University".localized
         view.addSubview(schoolLabel)
         view.addSubview(univercityLabel)
         view.addSubview(schoolField)

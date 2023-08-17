@@ -30,7 +30,7 @@ class PostAddViewController: UIViewController {
     /// лейбл
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.text = "Добавьте текст ниже:".localized
+        label.text = "Add you text:".localized
         label.textColor = UIColor(named: "Black")
         label.font = UIFont(name: "Arial", size: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class PostAddViewController: UIViewController {
     /// лейбл
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Добавьте изображение".localized
+        label.text = "Add you photo".localized
         label.textColor = UIColor(named: "Orange")
         label.font = UIFont(name: "Arial", size: 20)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addPhoto))
@@ -58,7 +58,7 @@ class PostAddViewController: UIViewController {
     /// кнопка публикации поста
     private lazy var buttonSend: UIButton = {
         let button = UIButton()
-        button.setTitle("Опубликовать".localized, for: .normal)
+        button.setTitle("Add Post".localized, for: .normal)
         button.backgroundColor = UIColor(named: "Orange")
         button.titleLabel?.font = UIFont(name: "Arial", size: 15)
         button.setTitleColor(UIColor(named: "Black"), for: .normal)

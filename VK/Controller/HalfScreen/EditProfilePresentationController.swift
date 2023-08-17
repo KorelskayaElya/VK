@@ -77,7 +77,7 @@ class EditProfilePresentationController: UIPresentationController {
         let lineView1 = LineView()
         /// лейбл основная информация
         let customLabel2 = LabelField()
-        customLabel2.text = "Основная информация".localized
+        customLabel2.text = "Main informaion".localized
         customLabel2.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(didAddInformation))
         customLabel2.isUserInteractionEnabled = true
@@ -85,7 +85,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel2.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл интересы
         let customLabel3 = LabelField()
-        customLabel3.text = "Интересы".localized
+        customLabel3.text = "Hobby".localized
         customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(didAddHobby))
         customLabel3.isUserInteractionEnabled = true
@@ -93,7 +93,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel3.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл образование
         let customLabel4 = LabelField()
-        customLabel4.text = "Образование".localized
+        customLabel4.text = "Education".localized
         customLabel4.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(didAddEducation))
         customLabel4.isUserInteractionEnabled = true
@@ -101,7 +101,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel4.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл карьера
         let customLabel5 = LabelField()
-        customLabel5.text = "Карьера".localized
+        customLabel5.text = "Work".localized
         customLabel5.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture4 = UITapGestureRecognizer(target: self, action: #selector(didAddWork))
         customLabel5.isUserInteractionEnabled = true

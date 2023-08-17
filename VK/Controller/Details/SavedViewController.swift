@@ -24,7 +24,7 @@ class SavedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
-        title = "Закладки".localized
+        title = "Saved".localized
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")

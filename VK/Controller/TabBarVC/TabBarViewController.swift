@@ -47,15 +47,15 @@ class TabBarViewController: UITabBarController {
         }
         let saved = LikeViewController()
         
-        saved.title = "Понравившиеся посты".localized
+        saved.title = "Liked Post".localized
 
         let nav1 = UINavigationController(rootViewController: home)
         let nav2 = UINavigationController(rootViewController: profile)
         let nav3 = UINavigationController(rootViewController: saved)
 
-        let tabBarItem1 = UITabBarItem(title: "Главная".localized, image: UIImage(systemName: "house"), tag: 1)
-        let tabBarItem2 = UITabBarItem(title: "Профиль".localized, image: UIImage(systemName: "person.crop.circle"), tag: 2)
-        let tabBarItem3 = UITabBarItem(title: "Сохраненные".localized, image: UIImage(systemName: "heart"), tag: 3)
+        let tabBarItem1 = UITabBarItem(title: "Home".localized, image: UIImage(systemName: "house"), tag: 1)
+        let tabBarItem2 = UITabBarItem(title: "Profile".localized, image: UIImage(systemName: "person.crop.circle"), tag: 2)
+        let tabBarItem3 = UITabBarItem(title: "Liked".localized, image: UIImage(systemName: "heart"), tag: 3)
 
         tabBarItem1.selectedImage = UIImage(systemName: "house.fill")
         tabBarItem2.selectedImage = UIImage(systemName: "person.crop.circle.fill")

@@ -1,0 +1,85 @@
+/* 
+  Localizable.strings
+  VK
+
+  Created by Эля Корельская on 17.08.2023.
+  
+*/
+"Liked Post" = "Понравившиеся посты";
+"Home" = "Главная";
+"Profile" = "Профиль";
+"Liked" = "Сохраненные";
+"Sign Out" = "Выход из профиля" ;
+"Would you like to sign out?" = "Вы хотите выйти?";
+"Cancel" = "Отмена";
+"Sign Out" = "Выход";
+"Woops" = "Упс";
+"Something went wrong when signing out. Please try again." = "Что-то не так. Попробуйте снова";
+"My Posts" = "Мои записи";
+"Saved" = "Закладки";
+"Files" = "Файлы";
+"Main informaion" = "Основная информация";
+"Hobby" = "Интересы";
+"Work" = "Карьера";
+"Education" = "Образование" ;
+"Add you text:" = "Добавьте текст ниже:";
+"Add you photo" = "Добавьте изображение" ;
+"Add Post" = "Опубликовать" ;
+"Add Post" = "Добавить пост";
+"Photos" = "Фотографии";
+"Furhter information" = "Подробная информация";
+"Name Surname" = "Имя Фамилия";
+"Gender" = "Пол";
+"Birthaday" = "Дата рождения";
+"Native city" = "Родной город";
+"School" = "Школа";
+"University" = "Университет";
+"Work" = "Место работы" ;
+"Status" = "Статус";
+"Sign Up" = "ЗАРЕГИСТРИРОВАТЬСЯ";
+"Already sign up" = "Уже есть аккаунт";
+"Confirm" = "Подтвердить";
+"You are welcome" = "С возвращением";
+"Enter you phone number" = "Введите номер телефона для входа в приложение";
+"Close" = "Закрыть";
+"Error sign in" = "Ошибка входа в аккаунт";
+"Check you phone number and try again" = "Проверьте ваш номер телефона и попробуйте снова";
+"Next" = "ДАЛЕЕ";
+"Enter you number" = "Введите номер";
+"You phone pumber will use for sign in" = "Ваш номер будет использоваться для входа в аккаунт";
+"By clicking 'Next', you accept the User Agreement and Privacy Policy" = "Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности";
+"Authentication Failed" = "Неудачная попытка входа";
+"Phone number is already registered. Please sign in instead." = "Такой номер телефона уже был зарегистрирован";
+"Unknown error occurred" = "Произошла неизвестная ошибка";
+"Confirm sign up" = "Подтверждение регистрации";
+"We sent you an SMS with a code" = "Мы отправили SMS с кодом на номер";
+"Enter an SMS code" = "Введите код из SMS" ;
+"hobby" = "хобби";
+"Male"= "Мужской";
+"Female" = "Женский";
+"name surname" = "имя фамилия";
+"status" = "статус";
+"native city" = "Напишите название";
+"work" = "работа";
+"school" = "школа";
+"university" = "университет";
+"Text file" = "Текстовый файл";
+"Image" = "Изображение";
+"File" = "Файл";
+"Folder" = "Папка";
+"Save" = "Сохранить";
+"Enter new name" = "Введите новое название";
+"Filename" = "Название файла";
+"Create file" = "Создать файл";
+"Create" = "Создать";
+"Folder name" = "Имя папки";
+"Create new folder" = "Создать новую папку";
+"Edit Profile" = "Редактировать";
+"Post" = "Запись";
+"Story" = "История";
+"Image" = "Фото";
+"Follow" = "Подписаться";
+"Unfollow" = "Убрать подписку";
+"Hobby" = "Хобби";
+"Work" = "Работа";
+"All fotos" = "Все фотографии" ;

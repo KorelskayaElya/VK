@@ -45,7 +45,7 @@ class ProfileTableHeaderView: UIView {
     private lazy var editButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(named: "Orange")
-        button.setTitle("Редактировать".localized, for: .normal)
+        button.setTitle("Edit Profile".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
         button.clipsToBounds = true
@@ -101,7 +101,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл подробная информация
     private lazy var detailsLabel: UILabel = {
         let label = UILabel()
-        label.text = "Подробная информация".localized
+        label.text = "Furhter information".localized
         label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         label.textColor = UIColor(named: "Black")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -186,7 +186,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл запись
     private lazy var squareLabel: UILabel = {
         let label = UILabel()
-        label.text = "Запись".localized
+        label.text = "Post".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -196,7 +196,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл история
     private lazy var cameraLabel: UILabel = {
         let label = UILabel()
-        label.text = "История".localized
+        label.text = "Story".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -206,7 +206,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл фото
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Фото".localized
+        label.text = "Photo".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -223,10 +223,10 @@ class ProfileTableHeaderView: UIView {
     var isButtonFollowTapped = false {
         didSet {
             if isButtonFollowTapped {
-                followButton.setTitle("Подписаться".localized, for: .normal)
+                followButton.setTitle("Follow".localized, for: .normal)
                 followButton.backgroundColor = UIColor(named: "Orange")
             } else {
-                followButton.setTitle("Убрать подписку".localized, for: .normal)
+                followButton.setTitle("Unfollow".localized, for: .normal)
                 followButton.backgroundColor = UIColor(named: "Gray")
             }
         }
@@ -238,7 +238,7 @@ class ProfileTableHeaderView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         setupView()
         constraints()
-        followButton.setTitle("Подписаться".localized, for: .normal)
+        followButton.setTitle("Follow".localized, for: .normal)
         followButton.backgroundColor = UIColor(named: "Orange")
         lineView.isHidden = false
         if isAnotherUser == true {

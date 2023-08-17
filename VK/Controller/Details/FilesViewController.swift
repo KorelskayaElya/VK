@@ -36,7 +36,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         super.viewDidLoad()
         setupView()
         view.backgroundColor = .systemBackground
-        title = "Файлы".localized
+        title = "Files".localized
         navigationController?.navigationBar.prefersLargeTitles = true
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
@@ -76,12 +76,12 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     // создать папку
     @objc private func createDirectory() {
-        let alert = UIAlertController(title: "Создать новую папку".localized, message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Create new folder".localized, message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
-            textField.placeholder = "Имя папки".localized
+            textField.placeholder = "Folder name".localized
         }
-        alert.addAction(UIAlertAction(title: "Отмена".localized, style: .cancel))
-        alert.addAction(UIAlertAction(title: "Создать".localized, style: .default, handler: { [self] _ in
+        alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
+        alert.addAction(UIAlertAction(title: "Create".localized, style: .default, handler: { [self] _ in
             guard let textField = alert.textFields?[0].text else {return}
             var newDirectoryURL: URL
             // чтобы при переходе по папкам путь менялся
@@ -110,7 +110,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     // запускаем пикер текста
     @objc private func tapBtn() {
-        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Создать файл".localized, message: "Название файла".localized) {
+        TextPicker.defaultPicker.getText(showPickerIn: self, title: "Create file".localized, message: "Filename".localized) {
             text1, text2 in
             let filePath = self.path + "/" + text1
             let fileData = text2.data(using:.utf8)
@@ -148,12 +148,12 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let currentName = cell.textLabel?.text ?? ""
         
-        let alert = UIAlertController(title: "Введите новое название".localized, message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Enter new name".localized, message: nil, preferredStyle: .alert)
         alert.addTextField { textField in
             textField.text = currentName
         }
         
-        let saveAction = UIAlertAction(title: "Сохранить".localized, style: .default) { [weak self] _ in
+        let saveAction = UIAlertAction(title: "Save".localized, style: .default) { [weak self] _ in
             guard let self = self else { return }
             
             if let textField = alert.textFields?.first, let newName = textField.text, !newName.isEmpty {
@@ -185,11 +185,11 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         if objcBool.boolValue {
             if let detailTextLabel = cell.detailTextLabel {
-                detailTextLabel.text = "Папка".localized
+                detailTextLabel.text = "Folder".localized
             }
         } else {
             if let detailTextLabel = cell.detailTextLabel {
-                detailTextLabel.text = "Файл".localized
+                detailTextLabel.text = "File".localized
             }
         }
         
@@ -243,7 +243,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
             } else if let image = UIImage(contentsOfFile: selectedPath) {
                 let dataViewController = DataViewController()
                 dataViewController.image = image
-                dataViewController.title = "Изображение".localized
+                dataViewController.title = "Image".localized
                 navigationController?.pushViewController(dataViewController, animated: true)
             }
         }

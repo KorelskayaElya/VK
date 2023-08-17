@@ -1,0 +1,98 @@
+/* 
+  LocalizableEn.strings
+  VK
+
+  Created by Эля Корельская on 17.08.2023.
+  
+*/
+"Liked Post" = "Понравившиеся посты";
+"Home" = "Главная";
+"Profile" = "Профиль";
+"Liked" = "Сохраненные";
+"Sign Out" = "Выход из профиля" ;
+"Would you like to sign out?" = "Вы хотите выйти?";
+"Cancel" = "Отмена";
+"Sign Out" = "Выход";
+"Woops" = "Упс";
+"Something went wrong when signing out. Please try again." = "Что-то не так. Попробуйте снова";
+"My Posts" = "Мои записи";
+"Saved" = "Закладки";
+"Files" = "Файлы";
+"Main informaion" = "Основная информация";
+"Hobby" = "Интересы";
+"Work" = "Карьера";
+"Education" = "Образование" ;
+"Add you text:" = "Добавьте текст ниже:";
+"Add you photo" = "Добавьте изображение" ;
+"Add Post" = "Опубликовать" ;
+"Add Post" = "Добавить пост";
+"Photos" = "Фотографии";
+"Furhter information" = "Подробная информация";
+"Name Surname" = "Имя Фамилия";
+"Gender" = "Пол";
+//"Дата рождения" = "Birthaday";
+//"Родной город" = "Native city";
+//"Школа" = "School";
+//"Университет" = "University";
+//"Место работы" = "Work";
+//"Статус" = "Status";
+//"ЗАРЕГИСТРИРОВАТЬСЯ" = "Sign Up";
+//"Уже есть аккаунт" = "Already sign up";
+//"Подтвердить" = "Confirm";
+//"С возвращением" = "You are welcome";
+//"Введите номер телефона для входа в приложение" = "Enter you phone number";
+//"Закрыть" = "Close";
+//"Ошибка входа в аккаунт" = "Error sign in";
+//"Проверьте ваш номер телефона и попробуйте снова" = "Check you phone number and try again";
+//"ДАЛЕЕ" = "Next";
+//"Введите номер" = "Enter you number";
+//"Ваш номер будет использоваться для входа в аккаунт" = "You phone pumber will use for sign in";
+//"Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности" = "By clicking 'Next', you accept the User Agreement and Privacy Policy";
+//"Неудачная попытка входа" = "Authentication Failed";
+//"Такой номер телефона уже был зарегестрирован" = "Phone number is already registered. Please sign in instead.";
+//"Произошла неизвестная ошибка" = "Unknown error occurred";
+//"Подтверждение регистрации" = "Confirm sign up";
+//"Мы отправили SMS с кодом на номер" = "We sent you an SMS with a code";
+//"Введите код из SMS" = "Enter an SMS code";
+//"хобби" = "hobby";
+//"Мужской" = "Male";
+//"Женский" = "Female";
+//"имя фамилия" = "name surname";
+//"статус" = "status";
+//"Напишите название" = "native city";
+//"работа" = "work";
+//"школа" = "school";
+//"университет" = "university";
+//"Текстовый файл" = "Text file";
+//"Изображение" = "Image";
+//"Файл" = "File";
+//"Папка" = "Folder";
+//"Сохранить" = "Save";
+//"Введите новое название" = "Enter new name";
+//"Название файла" = "Filename";
+//"Создать файл" = "Create file";
+//"Создать" = "Create";
+//"Имя папки" = "Folder name";
+//"Создать новую папку" = "Create new folder";
+//"Редактировать" = "Edit Profile";
+//"Запись" = "Post";
+//"История" = "Story";
+//"Фото" = "Image";
+//"Подписаться" = "Follow";
+//"Убрать подписку" = "Unfollow";
+//"Хобби" = "Hobby";
+//"Работа" = "Работа";
+//"Все фотографии" = "All fotos";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

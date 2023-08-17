@@ -25,7 +25,7 @@ class TextViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "Текстовый файл".localized
+        title = "Text file".localized
         /// Добавить кнопку "Поделиться"
         shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonTapped))
         navigationItem.rightBarButtonItem = shareButton

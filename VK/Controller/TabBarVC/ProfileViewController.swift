@@ -159,11 +159,11 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     
     /// кнопка выхода
     @objc func didOut() {
-        let actionSheet = UIAlertController(title: "Выход из профиля".localized,
-                                            message: "Вы хотите выйти?".localized,
+        let actionSheet = UIAlertController(title: "Sign Out".localized,
+                                            message: "Would you like to sign out?".localized,
                                             preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Отмена".localized, style: .cancel, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Выход".localized, style: .destructive, handler: { [weak self] _ in
+        actionSheet.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Sign Out".localized, style: .destructive, handler: { [weak self] _ in
             DispatchQueue.main.async {
                 AuthManager.shared.signOut { success in
                     if success {
@@ -173,10 +173,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
                         print("### You have to get out")
                     } else {
                         // failed
-                        let alert = UIAlertController(title: "Упс".localized,
-                                                      message: "Что-то не так. Попробуйте снова".localized,
+                        let alert = UIAlertController(title: "Woops".localized,
+                                                      message: "Something went wrong when signing out. Please try again.".localized,
                                                       preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Отмена".localized, style: .cancel, handler: nil))
+                        alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
                         self?.present(alert, animated: true)
                     }
                 }
@@ -275,7 +275,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
         } else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SearchBarCell", for: indexPath) as! SearchBarTableViewCell
             cell.searchBarDelegate = self
-            cell.configure(with: SearchBarModel(placeholder: "Мои записи".localized))
+            cell.configure(with: SearchBarModel(placeholder: "My Posts".localized))
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell

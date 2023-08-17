@@ -15,7 +15,7 @@ class HobbyViewController: UIViewController {
     private lazy var hobbyLabel = LabelField()
     private lazy var hobbyField: UITextField = {
         let field = UITextField()
-        field.placeholder = "хобби".localized
+        field.placeholder = "hobby".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -45,7 +45,7 @@ class HobbyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Интересы".localized
+        navigationItem.title = "Hobby".localized
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")
@@ -80,7 +80,7 @@ class HobbyViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {
-        hobbyLabel.text = "Хобби".localized
+        hobbyLabel.text = "Hobby".localized
         view.addSubview(hobbyLabel)
         view.addSubview(hobbyField)
         hobbyLabel.translatesAutoresizingMaskIntoConstraints = false

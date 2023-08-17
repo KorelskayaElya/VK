@@ -82,7 +82,7 @@ class DetailsProfilePresentationController: UIPresentationController {
         squareIconView.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл закладки
         let customLabel2 = LabelField()
-        customLabel2.text = "Закладки".localized
+        customLabel2.text = "Saved".localized
         customLabel2.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(didSave))
         customLabel2.isUserInteractionEnabled = true
@@ -90,7 +90,7 @@ class DetailsProfilePresentationController: UIPresentationController {
         customLabel2.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл файлы
         let customLabel3 = LabelField()
-        customLabel3.text = "Файлы".localized
+        customLabel3.text = "Files".localized
         customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(didFiles))
         customLabel3.isUserInteractionEnabled = true

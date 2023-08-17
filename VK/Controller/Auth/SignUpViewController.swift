@@ -16,7 +16,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     // MARK: - UI
     /// кнопка далее
     private let nextButton: AuthButton = {
-        let button = AuthButton(type: .signUp, title: "ДАЛЕЕ".localized)
+        let button = AuthButton(type: .signUp, title: "Next".localized)
         button.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
         return button
     }()
@@ -28,7 +28,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     /// лейбл регистрации
     private let signInLabel: UILabel = {
         let label = UILabel()
-        label.text = "ЗАРЕГИСТРИРОВАТЬСЯ".localized
+        label.text = "Sign Up".localized
         label.textColor = UIColor(named: "Black")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -37,7 +37,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     /// лейбл
     private let detailsLabel1: UILabel = {
         let label = UILabel()
-        label.text = "Введите номер".localized
+        label.text = "Enter you number".localized
         label.textColor = .systemGray2
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -47,7 +47,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     /// лейбл
     private let detailsLabel2: UILabel = {
         let label = UILabel()
-        label.text = "Ваш номер будет использоваться для входа в аккаунт".localized
+        label.text = "You phone pumber will use for sign in".localized
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 14, weight: .regular)
@@ -57,7 +57,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     /// лейбл
     private let detailsLabel3: UILabel = {
         let label = UILabel()
-        label.text = "Нажимая кнопку 'Далее' Вы принимаете пользовательское Соглашение и политику конфиденциальности".localized
+        label.text = "By clicking 'Next', you accept the User Agreement and Privacy Policy".localized
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 11, weight: .regular)
@@ -155,7 +155,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Закрыть".localized, style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Close".localized, style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
@@ -178,11 +178,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async {
                         if let errorMessage = errorMessage, errorMessage.contains("already in use") {
                             if let weakSelf = self {
-                                AlertManager.showAlert(on: weakSelf, with: "Неудачная попытка входа".localized, message: "Такой номер телефона уже был зарегестрирован".localized)
+                                AlertManager.showAlert(on: weakSelf, with: "Authentication Failed".localized, message: "Phone number is already registered. Please sign in instead".localized)
                             }
                         } else {
                             if let weakSelf = self {
-                                AlertManager.showAlert(on: weakSelf, with: "Неудачная попытка входа".localized, message: errorMessage ?? "Произошла неизвестная ошибка".localized)
+                                AlertManager.showAlert(on: weakSelf, with: "Authentication Failed".localized, message: errorMessage ?? "Unknown error occurred".localized)
                             }
                         }
                     }
