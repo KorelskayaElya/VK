@@ -29,7 +29,19 @@ class WorkViewController: UIViewController {
         return field
     }()
     // MARK: - Properties
+    var user: User?
     weak var delegate: WorkViewControllerDelegate?
+    
+    // MARK: - Init
+    init(user: User?) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,12 +59,17 @@ class WorkViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        setUserInfo()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         workField.delegate = self
+       
         
     }
     // MARK: - Private
+    private func setUserInfo() {
+        workField.text = user?.work
+    }
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }

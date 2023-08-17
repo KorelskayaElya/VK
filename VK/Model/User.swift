@@ -10,15 +10,15 @@ import UIKit
 struct User {
     
     let identifier: String
-    let username: String
-    let profilePicture: UIImage?
-    let status: String
-    let gender: String
-    let birthday: String
-    let city: String
-    let hobby: String
-    let school: String
-    let university: String
-    let work: String
+    var username: String
+    var profilePicture: UIImage?
+    var status: String
+    var gender: String
+    var birthday: String
+    var city: String
+    var hobby: String
+    var school: String
+    var university: String
+    var work: String
     
 }

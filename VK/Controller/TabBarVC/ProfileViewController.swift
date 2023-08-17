@@ -365,19 +365,28 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate, Informat
         receivedBirthday = birthday
         receivedCity = city
         receivedStatus = status
+        user.username = receivedUsername
+        user.gender = receivedGender
+        user.birthday = receivedBirthday
+        user.city = receivedCity
+        user.status = receivedStatus
     }
     /// передать напечатанную информацию в подробую информацию
     func workViewControllerDidFinishEnteringInfo(work: String) {
         receivedWork = work
+        user.work = receivedWork
     }
     /// передать напечатанную информацию в подробую информацию
     func educationViewControllerDidFinishEnteringInfo(school: String, university: String) {
         receivedSchool = school
         receivedUniversity = university
+        user.school = receivedSchool
+        user.university = receivedUniversity
     }
     /// передать напечатанную информацию в подробую информацию
     func hobbyViewControllerDidFinishEnteringInfo(hobby: String) {
         receivedHobby = hobby
+        user.hobby = receivedHobby
     }
     /// полуэкраны
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
@@ -401,25 +410,29 @@ extension ProfileViewController: UIViewControllerTransitioningDelegate, Informat
         
 }
 
-extension ProfileViewController: EditMainInformationDelegate,EditEducationDelegate, EditWorkDelegate, EditHobbyDelegate{
+extension ProfileViewController: EditMainInformationDelegate,EditEducationDelegate, EditWorkDelegate, EditHobbyDelegate {
     /// основная информация
     func editMainInformation() {
-        let vc = InformationViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let infoVC = InformationViewController(user: user)
+        infoVC.delegate = self
+        navigationController?.pushViewController(infoVC, animated: true)
     }
     /// карьера
     func editWork() {
-        let workVC = WorkViewController()
+        let workVC = WorkViewController(user: user)
+        workVC.delegate = self
         navigationController?.pushViewController(workVC, animated: true)
     }
     /// инетересы
     func editHobby() {
-        let hobbyVC = HobbyViewController()
+        let hobbyVC = HobbyViewController(user:user)
+        hobbyVC.delegate = self
         navigationController?.pushViewController(hobbyVC, animated: true)
     }
     /// образование
     func editEducation() {
-        let educationVC = EducationViewController()
+        let educationVC = EducationViewController(user:user)
+        educationVC.delegate = self
         navigationController?.pushViewController(educationVC, animated: true)
     }
 }

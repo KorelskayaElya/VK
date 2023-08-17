@@ -28,7 +28,18 @@ class HobbyViewController: UIViewController {
         return field
     }()
     // MARK: - Properties
+    var user: User?
     weak var delegate: HobbyViewControllerDelegate?
+    // MARK: - Init
+    init(user: User?) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: - Lyfecycle
     override func viewDidLoad() {
@@ -50,10 +61,14 @@ class HobbyViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         hobbyField.delegate = self
+        setUserInfo()
         
         
     }
     // MARK: - Private
+    private func setUserInfo() {
+        hobbyField.text = user?.hobby
+    }
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }

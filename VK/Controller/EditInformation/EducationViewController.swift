@@ -42,7 +42,19 @@ class EducationViewController: UIViewController {
         return field
     }()
     // MARK: - Properties
-    weak var educationDelegate: EducationViewControllerDelegate?
+    var user: User?
+    weak var delegate: EducationViewControllerDelegate?
+    
+    // MARK: - Init
+    init(user: User?) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -61,21 +73,27 @@ class EducationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        setUserInfo()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         schoolField.delegate = self
         unisercityField.delegate = self
+
         
     }
     // MARK: - Private
+    private func setUserInfo() {
+        schoolField.text = user?.school
+        unisercityField.text = user?.university
+    }
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
     @objc private func nextButtonTapped() {
         let school = schoolField.text ?? ""
         let university = unisercityField.text ?? ""
-        educationDelegate?.educationViewControllerDidFinishEnteringInfo(school: school, university: university)
         
+        delegate?.educationViewControllerDidFinishEnteringInfo(school: school, university: university)
         navigationController?.popViewController(animated: true)
     }
     private func setupView() {

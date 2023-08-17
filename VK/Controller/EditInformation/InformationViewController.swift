@@ -83,7 +83,18 @@ class InformationViewController: UIViewController {
         return field
     }()
     // MARK: - Properties
+    var user: User?
     weak var delegate: InformationViewControllerDelegate?
+
+    // MARK: - Init
+    init(user: User?) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     // MARK: - Lifecycle
@@ -103,6 +114,7 @@ class InformationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: doneBtn)
         setupView()
         constraints()
+        setUserInfo()
         
     }
     // MARK: - Private
@@ -148,6 +160,19 @@ class InformationViewController: UIViewController {
         view.addSubview(statusLabel)
         dotmale.addTarget(self, action: #selector(dotMaleButtonTapped), for: .touchUpInside)
         dotfemale.addTarget(self, action: #selector(dotFemaleButtonTapped), for: .touchUpInside)
+    }
+    private func setUserInfo() {
+        usernameField.text = user?.username
+        statusField.text = user?.status
+        birhdayField.text = user?.birthday
+        cityField.text = user?.city
+        if let gender = user?.gender, !gender.isEmpty {
+            if gender == "Мужской".localized {
+                dotMaleButtonTapped()
+            } else {
+                dotFemaleButtonTapped()
+            }
+        }
     }
 
     private func constraints() {
@@ -244,6 +269,7 @@ class InformationViewController: UIViewController {
         
         navigationController?.popViewController(animated: true)
     }
+    
 
 }
 extension InformationViewController: UITextFieldDelegate {

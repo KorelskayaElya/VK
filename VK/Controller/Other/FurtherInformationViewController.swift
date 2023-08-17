@@ -102,6 +102,7 @@ class FurtherInformationViewController: UIViewController {
         schoolLabel.text = receivedSchool
         universityLabel.text = receivedUniversity
         hobbyLabel.text = receivedHobby
+        workLabel.text = receivedWork
         view.addSubview(usernameLabel)
         view.addSubview(genderLabel)
         view.addSubview(birthdayLabel)
