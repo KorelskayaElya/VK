@@ -26,7 +26,7 @@ class TextPicker {
                 completion?(text1, text2)
             }
         }
-        let alertCancel = UIAlertAction(title: "Cancel", style: .cancel)
+        let alertCancel = UIAlertAction(title: "Отмена".localized, style: .cancel)
         alertController.addAction(alertOK)
         alertController.addAction(alertCancel)
         viewController.present(alertController,animated: true)

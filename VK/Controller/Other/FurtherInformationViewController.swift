@@ -51,7 +51,7 @@ class FurtherInformationViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         view.backgroundColor = .systemBackground
-        title = "Подробная информация"
+        title = "Подробная информация".localized
         setupView()
         constraints()
     }
@@ -85,15 +85,15 @@ class FurtherInformationViewController: UIViewController {
         workLabel.translatesAutoresizingMaskIntoConstraints = false
         workLabel1.translatesAutoresizingMaskIntoConstraints = false
         workLabel1.font = UIFont.boldSystemFont(ofSize: 15)
-        usernameLabel1.text = "Имя Фамилия"
-        genderLabel1.text = "Пол"
-        birthdayLabel1.text = "Дата рождения"
-        cityLabel1.text = "Родной город"
-        hobbyLabel1.text = "Интересы"
-        schoolLabel1.text = "Школа"
-        universityLabel1.text = "Университет"
-        workLabel1.text = "Место работы"
-        statusLabel1.text = "Статус"
+        usernameLabel1.text = "Имя Фамилия".localized
+        genderLabel1.text = "Пол".localized
+        birthdayLabel1.text = "Дата рождения".localized
+        cityLabel1.text = "Родной город".localized
+        hobbyLabel1.text = "Интересы".localized
+        schoolLabel1.text = "Школа".localized
+        universityLabel1.text = "Университет".localized
+        workLabel1.text = "Место работы".localized
+        statusLabel1.text = "Статус".localized
         usernameLabel.text = receivedUsername
         statusLabel.text = receivedStatus
         genderLabel.text = receivedGender

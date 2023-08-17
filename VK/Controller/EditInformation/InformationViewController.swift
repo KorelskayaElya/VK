@@ -25,7 +25,7 @@ class InformationViewController: UIViewController {
     
     private lazy var usernameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "имя фамилия"
+        field.placeholder = "имя фамилия".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -40,7 +40,7 @@ class InformationViewController: UIViewController {
     
     private lazy var statusField: UITextField = {
         let field = UITextField()
-        field.placeholder = "статус"
+        field.placeholder = "статус".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -70,7 +70,7 @@ class InformationViewController: UIViewController {
     
     private lazy var cityField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Напишите название"
+        field.placeholder = "Напишите название".localized
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -90,7 +90,7 @@ class InformationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Основная информация"
+        navigationItem.title = "Основная информация".localized
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         backButton.tintColor = UIColor(named: "Orange")
@@ -111,13 +111,13 @@ class InformationViewController: UIViewController {
     }
     
     private func setupView() {
-        usernameLabel.text = "Имя Фамилия"
-        genderLabel.text = "Пол"
-        maleLabel.text = "Мужской"
-        statusLabel.text = "Статус"
-        femaleLabel.text = "Женский"
-        birthdayLabel.text = "Дата рождения"
-        cityLabel.text = "Родной город"
+        usernameLabel.text = "Имя Фамилия".localized
+        genderLabel.text = "Пол".localized
+        maleLabel.text = "Мужской".localized
+        statusLabel.text = "Статус".localized
+        femaleLabel.text = "Женский".localized
+        birthdayLabel.text = "Дата рождения".localized
+        cityLabel.text = "Родной город".localized
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -235,7 +235,7 @@ class InformationViewController: UIViewController {
     }
     @objc private func nextButtonTapped() {
         let username = usernameField.text ?? ""
-        let gender = dotmale.isDotVisible ? "Мужской" : "Женский"
+        let gender = dotmale.isDotVisible ? "Мужской".localized : "Женский".localized
         let birthday = birhdayField.text ?? ""
         let city = cityField.text ?? ""
         let status = statusField.text ?? ""

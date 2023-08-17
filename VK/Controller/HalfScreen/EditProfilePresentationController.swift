@@ -70,14 +70,14 @@ class EditProfilePresentationController: UIPresentationController {
         arrowButton.contentHorizontalAlignment = .fill
         /// лейбл профиль
         let customLabel1 = LabelField()
-        customLabel1.text = "Профиль"
+        customLabel1.text = "Профиль".localized
         customLabel1.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         customLabel1.translatesAutoresizingMaskIntoConstraints = false
         /// линия разделения
         let lineView1 = LineView()
         /// лейбл основная информация
         let customLabel2 = LabelField()
-        customLabel2.text = "Основная информация"
+        customLabel2.text = "Основная информация".localized
         customLabel2.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(didAddInformation))
         customLabel2.isUserInteractionEnabled = true
@@ -85,7 +85,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel2.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл интересы
         let customLabel3 = LabelField()
-        customLabel3.text = "Интересы"
+        customLabel3.text = "Интересы".localized
         customLabel3.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(didAddHobby))
         customLabel3.isUserInteractionEnabled = true
@@ -93,7 +93,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel3.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл образование
         let customLabel4 = LabelField()
-        customLabel4.text = "Образование"
+        customLabel4.text = "Образование".localized
         customLabel4.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(didAddEducation))
         customLabel4.isUserInteractionEnabled = true
@@ -101,7 +101,7 @@ class EditProfilePresentationController: UIPresentationController {
         customLabel4.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл карьера
         let customLabel5 = LabelField()
-        customLabel5.text = "Карьера"
+        customLabel5.text = "Карьера".localized
         customLabel5.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         let tapGesture4 = UITapGestureRecognizer(target: self, action: #selector(didAddWork))
         customLabel5.isUserInteractionEnabled = true

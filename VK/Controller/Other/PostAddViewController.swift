@@ -30,7 +30,7 @@ class PostAddViewController: UIViewController {
     /// лейбл
     private lazy var textLabel: UILabel = {
         let label = UILabel()
-        label.text = "Добавьте текст ниже:"
+        label.text = "Добавьте текст ниже:".localized
         label.textColor = UIColor(named: "Black")
         label.font = UIFont(name: "Arial", size: 15)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class PostAddViewController: UIViewController {
     /// лейбл
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Добавьте изображение"
+        label.text = "Добавьте изображение".localized
         label.textColor = UIColor(named: "Orange")
         label.font = UIFont(name: "Arial", size: 20)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addPhoto))
@@ -58,7 +58,7 @@ class PostAddViewController: UIViewController {
     /// кнопка публикации поста
     private lazy var buttonSend: UIButton = {
         let button = UIButton()
-        button.setTitle("Опубликовать", for: .normal)
+        button.setTitle("Опубликовать".localized, for: .normal)
         button.backgroundColor = UIColor(named: "Orange")
         button.titleLabel?.font = UIFont(name: "Arial", size: 15)
         button.setTitleColor(UIColor(named: "Black"), for: .normal)
@@ -74,7 +74,7 @@ class PostAddViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Добавить пост"
+        navigationItem.title = "Добавить пост".localized
         view.addSubview(textPostField)
         view.addSubview(photoLabel)
         view.addSubview(textLabel)

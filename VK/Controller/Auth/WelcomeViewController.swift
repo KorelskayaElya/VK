@@ -28,13 +28,13 @@ class WelcomeViewController: UIViewController {
     }()
     /// кнопка регистрации
     private let signUpButton: AuthButton = {
-        let button = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+        let button = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ".localized)
         button.addTarget(self, action: #selector(didTapSignUp), for: .touchUpInside)
         return button
     }()
     /// кнопка есть аккаунт
     private let alreadySignUp: AuthButton = {
-        let button = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт")
+        let button = AuthButton(type: .alreadySignUp, title: "Уже есть аккаунт".localized)
         button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         return button
     }()

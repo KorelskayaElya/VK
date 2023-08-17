@@ -18,7 +18,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     // MARK: - UI
     /// кнопка подтвердить вход в аккаунт
     private let signInButton: AuthButton = {
-        let button = AuthButton(type: .signIn, title: "Подтвердить")
+        let button = AuthButton(type: .signIn, title: "Подтвердить".localized)
         return button
     }()
     /// кнопка поле ввода телефона
@@ -29,7 +29,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     /// кнопка лейбл
     private let returnLabel: UILabel = {
         let label = UILabel()
-        label.text = "С возвращением"
+        label.text = "С возвращением".localized
         label.textColor = UIColor(named: "Orange")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -38,7 +38,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     /// кнопка лейбл
     private let detailsLabel: UILabel = {
         let label = UILabel()
-        label.text = "Введите номер телефона для входа в приложение"
+        label.text = "Введите номер телефона для входа в приложение".localized
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 15, weight: .regular)
@@ -124,7 +124,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Закрыть", style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Закрыть".localized, style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         phoneField.inputAccessoryView = toolBar
@@ -152,9 +152,9 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                     case .failure:
                         HapticsManager.shared.vibrate(for: .error)
                         let alert = UIAlertController(
-                            title: "Ошибка входа в аккаунт",
-                            message: "Проверьте ваш номер телефона и попробуйте снова", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+                            title: "Ошибка входа в аккаунт".localized,
+                            message: "Проверьте ваш номер телефона и попробуйте снова".localized, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Отмена".localized, style: .cancel, handler: nil))
                         self?.present(alert, animated: true)
                         self?.phoneField.text = nil
                     }

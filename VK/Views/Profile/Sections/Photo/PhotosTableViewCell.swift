@@ -147,7 +147,7 @@ class PhotosTableViewCell: UITableViewCell {
         delegate?.didTapButton(sender: button_photos)
     }
     func setup(with viewModel: ViewModel) {
-        self.titleLabel.text = "Фотографии"
+        self.titleLabel.text = "Фотографии".localized
         self.countPhotosLabel.text = "10"
         self.Image1.image = UIImage(named: "picture1")
         self.Image2.image = UIImage(named: "picture2")

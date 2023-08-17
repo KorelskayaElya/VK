@@ -36,7 +36,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
     private lazy var allPhotosLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
-        label.text = "Все фотографии"
+        label.text = "Все фотографии".localized
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -92,7 +92,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         backButton.tintColor = UIColor(named: "Orange")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.title = "Фотографии"
+        navigationItem.title = "Фотографии".localized
     }
     
     // MARK: - Private

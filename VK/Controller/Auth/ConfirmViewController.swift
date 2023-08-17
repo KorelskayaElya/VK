@@ -15,7 +15,7 @@ protocol ConfirmViewControllerDelegate: AnyObject {
 
 class ConfirmViewController: UIViewController, UITextFieldDelegate {
     // MARK: - UI
-    private let confirmBtn = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ")
+    private let confirmBtn = AuthButton(type: .signUp, title: "ЗАРЕГИСТРИРОВАТЬСЯ".localized)
     
     private let smsCodeField: AuthField = {
         let field = AuthField(type: .smsCode)
@@ -24,7 +24,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     
     private let confirmLabel: UILabel = {
         let label = UILabel()
-        label.text = "Подтверждение регистрации"
+        label.text = "Подтверждение регистрации".localized
         label.textColor = UIColor(named: "Orange")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -33,7 +33,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     
     private let detailsLabel1: UILabel = {
         let label = UILabel()
-        label.text = "Мы отправили SMS с кодом на номер"
+        label.text = "Мы отправили SMS с кодом на номер".localized
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 15, weight: .regular)
@@ -52,7 +52,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.textColor = UIColor(named: "Gray")
         label.textAlignment = .left
-        label.text = "Введите код из SMS"
+        label.text = "Введите код из SMS".localized
         label.font = .systemFont(ofSize: 14, weight: .regular)
         return label
     }()
@@ -163,7 +163,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.width, height: 25))
         toolBar.items = [
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
-            UIBarButtonItem(title: "Закрыть", style: .done, target: self, action: #selector(didTapKeyboardDone))
+            UIBarButtonItem(title: "Закрыть".localized, style: .done, target: self, action: #selector(didTapKeyboardDone))
         ]
         toolBar.sizeToFit()
         smsCodeField.inputAccessoryView = toolBar
@@ -196,9 +196,9 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
                         HapticsManager.shared.vibrate(for: .error)
                         if let weakSelf = self {
                             if let errorMessage = errorMessage {
-                                AlertManager.showAlert(on: weakSelf, with: "Sign In Failed", message: errorMessage)
+                                AlertManager.showAlert(on: weakSelf, with: "Неудачная попытка входа".localized, message: errorMessage)
                             } else {
-                                AlertManager.showAlert(on: weakSelf, with: "Sign In Failed", message: "Unknown error occurred.")
+                                AlertManager.showAlert(on: weakSelf, with: "Неудачная попытка входа".localized, message: "Произошла неизвестная ошибка".localized)
                             }
                         }
                     }

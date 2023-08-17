@@ -45,7 +45,7 @@ class ProfileTableHeaderView: UIView {
     private lazy var editButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(named: "Orange")
-        button.setTitle("Редактировать", for: .normal)
+        button.setTitle("Редактировать".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
         button.clipsToBounds = true
@@ -101,7 +101,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл подробная информация
     private lazy var detailsLabel: UILabel = {
         let label = UILabel()
-        label.text = "Подробная информация"
+        label.text = "Подробная информация".localized
         label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         label.textColor = UIColor(named: "Black")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -186,7 +186,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл запись
     private lazy var squareLabel: UILabel = {
         let label = UILabel()
-        label.text = "Запись"
+        label.text = "Запись".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -196,7 +196,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл история
     private lazy var cameraLabel: UILabel = {
         let label = UILabel()
-        label.text = "История"
+        label.text = "История".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -206,7 +206,7 @@ class ProfileTableHeaderView: UIView {
     /// лейбл фото
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Фото"
+        label.text = "Фото".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.isHidden = false
@@ -223,10 +223,10 @@ class ProfileTableHeaderView: UIView {
     var isButtonFollowTapped = false {
         didSet {
             if isButtonFollowTapped {
-                followButton.setTitle("Подписаться", for: .normal)
+                followButton.setTitle("Подписаться".localized, for: .normal)
                 followButton.backgroundColor = UIColor(named: "Orange")
             } else {
-                followButton.setTitle("Убрать подписку", for: .normal)
+                followButton.setTitle("Убрать подписку".localized, for: .normal)
                 followButton.backgroundColor = UIColor(named: "Gray")
             }
         }
@@ -238,7 +238,7 @@ class ProfileTableHeaderView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         setupView()
         constraints()
-        followButton.setTitle("Подписаться", for: .normal)
+        followButton.setTitle("Подписаться".localized, for: .normal)
         followButton.backgroundColor = UIColor(named: "Orange")
         lineView.isHidden = false
         if isAnotherUser == true {
@@ -283,88 +283,88 @@ class ProfileTableHeaderView: UIView {
     private func constraints() {
         NSLayoutConstraint.activate([
             /// изображение - аватар
-            avatarImageView.topAnchor.constraint(equalTo: self.topAnchor,constant: 20),
-            avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            avatarImageView.topAnchor.constraint(equalTo: topAnchor,constant: 20),
+            avatarImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 110),
             avatarImageView.heightAnchor.constraint(equalToConstant: 110),
             /// кнопка редактировать
-            editButton.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor,constant: 25),
-            editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            editButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor,constant: 25),
+            editButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             editButton.heightAnchor.constraint(equalToConstant: 50),
-            editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
+            editButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
             /// кнопка подписаться
-            followButton.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor,constant: 25),
-            followButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            followButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor,constant: 25),
+            followButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             followButton.heightAnchor.constraint(equalToConstant: 50),
-            followButton.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
+            followButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
             /// имя пользователя
-            nameLabel.topAnchor.constraint(equalTo: self.topAnchor,constant: 35),
-            nameLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
-            nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor,constant: 35),
+            nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
             /// статус
-            descriptionLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor,constant: 5 ),
-            descriptionLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
-            descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            descriptionLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor,constant: 5 ),
+            descriptionLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
+            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 20),
             /// иконка подробная инфомация
-            detailsIcon.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 10),
-            detailsIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 130),
+            detailsIcon.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
+            detailsIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 130),
             detailsIcon.widthAnchor.constraint(equalToConstant: 25),
             detailsIcon.heightAnchor.constraint(equalToConstant: 25),
             /// лейбл подробная информация
-            detailsLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 11),
-            detailsLabel.leadingAnchor.constraint(equalTo: self.detailsIcon.trailingAnchor, constant: 0),
-            detailsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            detailsLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 11),
+            detailsLabel.leadingAnchor.constraint(equalTo: detailsIcon.trailingAnchor, constant: 0),
+            detailsLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             detailsLabel.heightAnchor.constraint(equalToConstant: 25),
             /// количество публикаций
-            photosPublished.topAnchor.constraint(equalTo: self.editButton.bottomAnchor, constant: 25),
-            photosPublished.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+            photosPublished.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 25),
+            photosPublished.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
             photosPublished.heightAnchor.constraint(equalToConstant: 50),
             photosPublished.widthAnchor.constraint(equalToConstant: 85),
             /// количество подписок
-            following.topAnchor.constraint(equalTo:self.editButton.bottomAnchor, constant: 25),
-            following.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            following.topAnchor.constraint(equalTo:editButton.bottomAnchor, constant: 25),
+            following.centerXAnchor.constraint(equalTo: centerXAnchor),
             following.heightAnchor.constraint(equalToConstant: 50),
             following.widthAnchor.constraint(equalToConstant: 85),
             /// количество подписчиков
-            followers.topAnchor.constraint(equalTo:self.editButton.bottomAnchor, constant: 25),
-            followers.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            followers.topAnchor.constraint(equalTo:editButton.bottomAnchor, constant: 25),
+            followers.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             followers.heightAnchor.constraint(equalToConstant: 50),
             followers.widthAnchor.constraint(equalToConstant: 90),
             /// линия разделения
-            lineView.topAnchor.constraint(equalTo: self.photosPublished.bottomAnchor, constant: 15),
-            lineView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25),
-            lineView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -25),
+            lineView.topAnchor.constraint(equalTo: photosPublished.bottomAnchor, constant: 15),
+            lineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
+            lineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
             /// кнопка сделать пост
-            buttonSquare.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 15),
-            buttonSquare.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 52),
+            buttonSquare.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 15),
+            buttonSquare.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 52),
             buttonSquare.widthAnchor.constraint(equalToConstant: 35),
             buttonSquare.heightAnchor.constraint(equalToConstant: 35),
             /// кнопка сделать историю
-            buttonCamera.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 17),
-            buttonCamera.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            buttonCamera.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 17),
+            buttonCamera.centerXAnchor.constraint(equalTo: centerXAnchor),
             buttonCamera.widthAnchor.constraint(equalToConstant: 40),
             buttonCamera.heightAnchor.constraint(equalToConstant: 35),
             /// кнопка сделать фото
-            buttonPhoto.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 16),
-            buttonPhoto.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -55),
+            buttonPhoto.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 16),
+            buttonPhoto.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -55),
             buttonPhoto.widthAnchor.constraint(equalToConstant: 40),
             buttonPhoto.heightAnchor.constraint(equalToConstant: 35),
             /// лейбл запись
-            squareLabel.topAnchor.constraint(equalTo: self.buttonSquare.bottomAnchor, constant: 10),
-            squareLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 45),
-            squareLabel.widthAnchor.constraint(equalToConstant: 50),
+            squareLabel.topAnchor.constraint(equalTo: buttonSquare.bottomAnchor, constant: 10),
+            squareLabel.centerXAnchor.constraint(equalTo: buttonSquare.centerXAnchor, constant: 7),
+            squareLabel.widthAnchor.constraint(equalToConstant: 60),
             squareLabel.heightAnchor.constraint(equalToConstant: 20),
             /// лейбл истрия
-            cameraLabel.topAnchor.constraint(equalTo: self.buttonCamera.bottomAnchor, constant: 8),
-            cameraLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            cameraLabel.topAnchor.constraint(equalTo: buttonCamera.bottomAnchor, constant: 8),
+            cameraLabel.centerXAnchor.constraint(equalTo: buttonCamera.centerXAnchor,constant: 5),
             cameraLabel.widthAnchor.constraint(equalToConstant: 60),
             cameraLabel.heightAnchor.constraint(equalToConstant: 20),
             /// лейбл фото
-            photoLabel.topAnchor.constraint(equalTo: self.buttonPhoto.bottomAnchor, constant: 10),
-            photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -58),
-            photoLabel.widthAnchor.constraint(equalToConstant: 35),
+            photoLabel.topAnchor.constraint(equalTo: buttonPhoto.bottomAnchor, constant: 10),
+            photoLabel.centerXAnchor.constraint(equalTo: buttonPhoto.centerXAnchor, constant: 12),
+            photoLabel.widthAnchor.constraint(equalToConstant: 60),
             photoLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
