@@ -25,6 +25,12 @@ class SavedViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupView()
         title = "Закладки"
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        view.backgroundColor = .systemBackground
     }
     // MARK: - Private
     private func setupView() {
@@ -35,6 +41,9 @@ class SavedViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
+    }
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
 extension SavedViewController: UITableViewDataSource, UITableViewDelegate {

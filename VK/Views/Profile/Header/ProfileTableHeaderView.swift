@@ -6,26 +6,32 @@
 //
 
 import UIKit
-protocol ProfileTableHeaderViewDelegate: AnyObject {
+/// сделать пост
+protocol ProfileTableHeaderAddPostViewDelegate: AnyObject {
     func didTapCreatePost()
 }
+/// сделать историю
 protocol ProfileCameraDelegate: AnyObject {
     func didTapCamera()
 }
+/// редактировать информацию
 protocol ProfileEditDelegate: AnyObject {
     func didEditProfile()
 }
+/// добавить изображение
 protocol ProfileAddPhotoDelegate: AnyObject {
     func didAddPhoto()
 }
+/// подробная информация
 protocol ProfileFurtherInformationDelegate: AnyObject {
     func didFurtherInformation()
 }
-
+/// Отображает вью шапки профиля
 class ProfileTableHeaderView: UIView {
     
     
     // MARK: - UI
+    /// изображение - аватар
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -35,8 +41,8 @@ class ProfileTableHeaderView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
-    lazy var button: UIButton = {
+    /// кнопка редактировать
+    private lazy var editButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(named: "Orange")
         button.setTitle("Редактировать", for: .normal)
@@ -46,10 +52,25 @@ class ProfileTableHeaderView: UIView {
         button.addTarget(self, action: #selector(self.buttonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 15
+        button.isHidden = false
         button.layer.masksToBounds = false
         return button
     }()
-    // username
+    /// кнопка подписаться
+    private lazy var followButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 15
+        button.isHidden = true
+        button.layer.masksToBounds = false
+        return button
+    }()
+    
+    /// имя пользователя
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -58,7 +79,7 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    // status
+    /// статус
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -68,7 +89,8 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    lazy var detailsIcon: UIButton = {
+    /// иконка около подробной информации
+    private lazy var detailsIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "exclamationmark.lock.fill")
         button.setImage(image, for: .normal)
@@ -76,7 +98,8 @@ class ProfileTableHeaderView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    lazy var detailsLabel: UILabel = {
+    /// лейбл подробная информация
+    private lazy var detailsLabel: UILabel = {
         let label = UILabel()
         label.text = "Подробная информация"
         label.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
@@ -87,7 +110,7 @@ class ProfileTableHeaderView: UIView {
         label.addGestureRecognizer(tapGesture)
         return label
     }()
-    
+    /// количество подписчиков
     private lazy var followers: UILabel = {
         let label = UILabel()
         label.text = "161 тыс. подписчиков"
@@ -98,7 +121,7 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+    /// количество подписок
     private lazy var following: UILabel = {
         let label = UILabel()
         label.text = "477 подписок"
@@ -109,7 +132,7 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+    /// количество публикаций
     private lazy var photosPublished: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Arial", size: 15)
@@ -119,9 +142,10 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    let lineView = LineView()
-    
-    lazy var buttonSquare: UIButton = {
+    /// линия разделения
+    private let lineView = LineView()
+    /// кнопка сделать запись
+    private lazy var buttonSquare: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
         button.addTarget(self, action: #selector(self.buttonTapSquare), for: .touchUpInside)
@@ -129,10 +153,12 @@ class ProfileTableHeaderView: UIView {
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
+        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    lazy var buttonCamera: UIButton = {
+    /// кнопка записать историю
+    private lazy var buttonCamera: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
         button.addTarget(self, action: #selector(self.buttonTapCamera), for: .touchUpInside)
@@ -140,10 +166,12 @@ class ProfileTableHeaderView: UIView {
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
+        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    lazy var buttonPhoto: UIButton = {
+    /// кнопка добавить изображение
+    private lazy var buttonPhoto: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
         button.addTarget(self, action: #selector(self.buttonTapPhoto), for: .touchUpInside)
@@ -151,39 +179,58 @@ class ProfileTableHeaderView: UIView {
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
+        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    /// лейбл запись
     private lazy var squareLabel: UILabel = {
         let label = UILabel()
         label.text = "Запись"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
+        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    /// лейбл история
     private lazy var cameraLabel: UILabel = {
         let label = UILabel()
         label.text = "История"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
+        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    /// лейбл фото
     private lazy var photoLabel: UILabel = {
         let label = UILabel()
         label.text = "Фото"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
+        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     // MARK: - Properties
-    weak var delegate: ProfileTableHeaderViewDelegate?
+    weak var delegate: ProfileTableHeaderAddPostViewDelegate?
     weak var cameraDelegate: ProfileCameraDelegate?
     weak var editProfileDelegate: ProfileEditDelegate?
     weak var addPhotoDelegate: ProfileAddPhotoDelegate?
     weak var furtherInformation: ProfileFurtherInformationDelegate?
+    var isAnotherUser = false
+    var isButtonFollowTapped = false {
+        didSet {
+            if isButtonFollowTapped {
+                followButton.setTitle("Подписаться", for: .normal)
+                followButton.backgroundColor = UIColor(named: "Orange")
+            } else {
+                followButton.setTitle("Убрать подписку", for: .normal)
+                followButton.backgroundColor = UIColor(named: "Gray")
+            }
+        }
+    }
     
     // MARK:  - Init
     override init(frame: CGRect) {
@@ -191,6 +238,21 @@ class ProfileTableHeaderView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         setupView()
         constraints()
+        followButton.setTitle("Подписаться", for: .normal)
+        followButton.backgroundColor = UIColor(named: "Orange")
+        lineView.isHidden = false
+        if isAnotherUser == true {
+            editButton.isHidden = true
+            followButton.isHidden = false
+            lineView.isHidden = true
+            squareLabel.isHidden = true
+            photoLabel.isHidden = true
+            cameraLabel.isHidden = true
+            buttonCamera.isHidden = true
+            buttonSquare.isHidden = true
+            buttonPhoto.isHidden = true
+            
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -200,7 +262,7 @@ class ProfileTableHeaderView: UIView {
     // MARK: - Private
     private func setupView() {
         addSubview(avatarImageView)
-        addSubview(button)
+        addSubview(editButton)
         addSubview(nameLabel)
         addSubview(descriptionLabel)
         addSubview(detailsIcon)
@@ -215,108 +277,123 @@ class ProfileTableHeaderView: UIView {
         addSubview(squareLabel)
         addSubview(cameraLabel)
         addSubview(photoLabel)
+        addSubview(followButton)
     }
     
     private func constraints() {
         NSLayoutConstraint.activate([
-            // image avatar
+            /// изображение - аватар
             avatarImageView.topAnchor.constraint(equalTo: self.topAnchor,constant: 20),
             avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 110),
             avatarImageView.heightAnchor.constraint(equalToConstant: 110),
-            // редактировать button
-            button.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor,constant: 25),
-            button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            button.heightAnchor.constraint(equalToConstant: 50),
-            button.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
-            // username
+            /// кнопка редактировать
+            editButton.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor,constant: 25),
+            editButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            editButton.heightAnchor.constraint(equalToConstant: 50),
+            editButton.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
+            /// кнопка подписаться
+            followButton.topAnchor.constraint(equalTo: self.avatarImageView.bottomAnchor,constant: 25),
+            followButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            followButton.heightAnchor.constraint(equalToConstant: 50),
+            followButton.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16),
+            /// имя пользователя
             nameLabel.topAnchor.constraint(equalTo: self.topAnchor,constant: 35),
             nameLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
             nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
-            // status
+            /// статус
             descriptionLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor,constant: 5 ),
             descriptionLabel.leadingAnchor.constraint(equalTo: self.avatarImageView.trailingAnchor, constant: 15),
             descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             descriptionLabel.heightAnchor.constraint(equalToConstant: 20),
-            // icon details
+            /// иконка подробная инфомация
             detailsIcon.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 10),
             detailsIcon.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 130),
             detailsIcon.widthAnchor.constraint(equalToConstant: 25),
             detailsIcon.heightAnchor.constraint(equalToConstant: 25),
-            // details label
+            /// лейбл подробная информация
             detailsLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 11),
             detailsLabel.leadingAnchor.constraint(equalTo: self.detailsIcon.trailingAnchor, constant: 0),
             detailsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             detailsLabel.heightAnchor.constraint(equalToConstant: 25),
-            // published photos
-            photosPublished.topAnchor.constraint(equalTo: self.button.bottomAnchor, constant: 25),
+            /// количество публикаций
+            photosPublished.topAnchor.constraint(equalTo: self.editButton.bottomAnchor, constant: 25),
             photosPublished.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             photosPublished.heightAnchor.constraint(equalToConstant: 50),
             photosPublished.widthAnchor.constraint(equalToConstant: 85),
-            // following
-            following.topAnchor.constraint(equalTo:self.button.bottomAnchor, constant: 25),
-            following.leadingAnchor.constraint(equalTo: self.photosPublished.trailingAnchor, constant: 40),
+            /// количество подписок
+            following.topAnchor.constraint(equalTo:self.editButton.bottomAnchor, constant: 25),
+            following.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             following.heightAnchor.constraint(equalToConstant: 50),
             following.widthAnchor.constraint(equalToConstant: 85),
-            // followers
-            followers.topAnchor.constraint(equalTo:self.button.bottomAnchor, constant: 25),
+            /// количество подписчиков
+            followers.topAnchor.constraint(equalTo:self.editButton.bottomAnchor, constant: 25),
             followers.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
             followers.heightAnchor.constraint(equalToConstant: 50),
             followers.widthAnchor.constraint(equalToConstant: 90),
-            // lineView
+            /// линия разделения
             lineView.topAnchor.constraint(equalTo: self.photosPublished.bottomAnchor, constant: 15),
             lineView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 25),
             lineView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -25),
-            // button square
+            /// кнопка сделать пост
             buttonSquare.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 15),
             buttonSquare.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 52),
             buttonSquare.widthAnchor.constraint(equalToConstant: 35),
             buttonSquare.heightAnchor.constraint(equalToConstant: 35),
-            // button camera
+            /// кнопка сделать историю
             buttonCamera.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 17),
-            buttonCamera.trailingAnchor.constraint(equalTo: self.buttonSquare.trailingAnchor, constant: 130),
+            buttonCamera.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             buttonCamera.widthAnchor.constraint(equalToConstant: 40),
             buttonCamera.heightAnchor.constraint(equalToConstant: 35),
-            // button photo
+            /// кнопка сделать фото
             buttonPhoto.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 16),
             buttonPhoto.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -55),
             buttonPhoto.widthAnchor.constraint(equalToConstant: 40),
             buttonPhoto.heightAnchor.constraint(equalToConstant: 35),
-            // square label
+            /// лейбл запись
             squareLabel.topAnchor.constraint(equalTo: self.buttonSquare.bottomAnchor, constant: 10),
             squareLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 45),
             squareLabel.widthAnchor.constraint(equalToConstant: 50),
             squareLabel.heightAnchor.constraint(equalToConstant: 20),
-            // camera label
+            /// лейбл истрия
             cameraLabel.topAnchor.constraint(equalTo: self.buttonCamera.bottomAnchor, constant: 8),
-            cameraLabel.leadingAnchor.constraint(equalTo: self.squareLabel.trailingAnchor, constant: 73),
+            cameraLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             cameraLabel.widthAnchor.constraint(equalToConstant: 60),
             cameraLabel.heightAnchor.constraint(equalToConstant: 20),
-            // photo label
+            /// лейбл фото
             photoLabel.topAnchor.constraint(equalTo: self.buttonPhoto.bottomAnchor, constant: 10),
             photoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -58),
             photoLabel.widthAnchor.constraint(equalToConstant: 35),
             photoLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
-    
+    /// редактировать профиль
     @objc private func buttonPressed() {
         editProfileDelegate?.didEditProfile()
     }
+    /// сделать запись - пост
     @objc private func buttonTapSquare() {
         delegate?.didTapCreatePost()
     }
+    /// сделать историю
     @objc private func buttonTapCamera() {
         cameraDelegate?.didTapCamera()
     }
+    /// добавить фото
     @objc private func buttonTapPhoto() {
         addPhotoDelegate?.didAddPhoto()
     }
+    /// посмотреть подробную информацию
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
     }
+    /// количество публикаций
     func updatePhotosPublished(count: Int) {
         photosPublished.text = "\(count) публикаций"
+    }
+    ///  подписаться
+    @objc private func buttonFollow() {
+        isButtonFollowTapped.toggle()
     }
 }

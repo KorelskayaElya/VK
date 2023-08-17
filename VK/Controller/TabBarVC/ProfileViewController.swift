@@ -16,7 +16,7 @@ protocol ProfileViewControllerDelegate: AnyObject {
     func welcomeViewControllerSignOutTapped()
 }
 
-class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, ProfileTableHeaderViewDelegate {
+class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, ProfileTableHeaderAddPostViewDelegate {
     
     
    // MARK: - UI
@@ -69,6 +69,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     /// открытие того или другого presentationcontroller
     var isOpenEdit = false
     var isOpenDetails = false
+    var isAnotherUser = false
     
     
     
@@ -86,6 +87,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var receivedSchool: String = ""
     var receivedUniversity: String = ""
     var receivedWork: String = ""
+    var receivedStatus: String = ""
     
     
     // MARK: - Init
@@ -113,6 +115,22 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
 
         let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
                                        style: .done, target: self, action: #selector(openMenu))
+        if #available(iOS 16.0, *) {
+            menuIcon.isHidden = false
+            outIcon.isHidden = false
+        } else {
+           print("error hidden")
+        }
+        /// когда пользователь будет попадать на страницу к другому поьзователю
+        /// скрываются кнопки
+        if isAnotherUser == true {
+            if #available(iOS 16.0, *) {
+                menuIcon.isHidden = true
+                outIcon.isHidden = true
+            } else {
+               print("error hidden")
+            }
+        }
         menuIcon.tintColor = UIColor(named: "Orange")
         navigationItem.rightBarButtonItem = menuIcon
         setupView()
@@ -135,7 +153,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     func didTapButton(sender: UIButton) {
         let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
-        photosViewController.viewModel = viewModel
+        //photosViewController.viewModel = viewModel
         navigationController?.pushViewController(photosViewController, animated: true)
     }
     
@@ -333,6 +351,7 @@ extension ProfileViewController: ProfileFurtherInformationDelegate {
         vc.receivedSchool = receivedSchool
         vc.receivedUniversity = receivedUniversity
         vc.receivedWork = receivedWork
+        vc.receivedStatus = receivedStatus
         navigationController?.pushViewController(vc, animated: true)
     }
 
@@ -340,16 +359,16 @@ extension ProfileViewController: ProfileFurtherInformationDelegate {
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate, InformationViewControllerDelegate,  WorkViewControllerDelegate, EducationViewControllerDelegate, HobbyViewControllerDelegate {
     /// передать напечатанную информацию в подробую информацию
-    func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String) {
+    func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String, status: String) {
         receivedUsername = username
         receivedGender = gender
         receivedBirthday = birthday
         receivedCity = city
+        receivedStatus = status
     }
     /// передать напечатанную информацию в подробую информацию
     func workViewControllerDidFinishEnteringInfo(work: String) {
         receivedWork = work
-        print("receivedWork", receivedWork)
     }
     /// передать напечатанную информацию в подробую информацию
     func educationViewControllerDidFinishEnteringInfo(school: String, university: String) {
@@ -430,7 +449,7 @@ extension ProfileViewController: ProfileAddPhotoDelegate {
         print("select image", selectedImage)
         let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
-        photosViewController.viewModel = viewModel
+        //photosViewController.viewModel = viewModel
         photosViewController.profileAddPhotoViewController(selectedImage)
         navigationController?.pushViewController(photosViewController, animated: true)
     }

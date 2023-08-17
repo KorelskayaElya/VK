@@ -20,6 +20,11 @@ class DataViewController: UIViewController {
         /// Добавить кнопку "Поделиться"
         shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonTapped))
         navigationItem.rightBarButtonItem = shareButton
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         ///Добавить UIImageView на экран и отобразить на нем изображение.
         let imageView = UIImageView(image: image)
@@ -40,5 +45,8 @@ class DataViewController: UIViewController {
         let activityViewController = UIActivityViewController(activityItems: [self.image!], applicationActivities: nil)
         activityViewController.popoverPresentationController?.barButtonItem = shareButton
         present(activityViewController, animated: true, completion: nil)
+    }
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

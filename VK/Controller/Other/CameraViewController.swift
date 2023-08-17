@@ -187,6 +187,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     /// Обработка нажатия на кнопку управления вспышкой
     @objc private func toggleFlashTapped(_ sender: Any) {
         //flashEnabled = !flashEnabled
+        /// по умолчанию всегда при записи видео
         toggleFlashAnimation()
     }
 }

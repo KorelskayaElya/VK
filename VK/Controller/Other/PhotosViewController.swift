@@ -32,18 +32,6 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
     
     // MARK: - properties
     private var recivedImages: [UIImage] = []
-    var viewModel: PhotoViewModel! {
-        didSet {
-            self.viewModel.photoChange = { [weak self] viewModel in
-                if let photoNames = viewModel.photoNames {
-                    self?.setupImages(from: photoNames)
-                } else {
-                    self?.recivedImages = []
-                }
-                self?.collection.reloadData()
-            }
-        }
-    }
 
     private lazy var allPhotosLabel: UILabel = {
         let label = UILabel()
@@ -57,7 +45,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         let label = UILabel()
         label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
         label.textColor = .lightGray
-        label.text = "\(viewModel?.photoArr.count ?? 0)"
+        label.text = "\(recivedImages.count ?? 0)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -66,7 +54,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         super.viewDidLoad()
         setupView()
         setupNavigationBar()
-        viewModel?.photoAdd()
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -110,10 +98,6 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
     // MARK: - Private
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
-    }
-    private func setupImages(from photoNames: [String]) {
-        recivedImages = photoNames.compactMap { UIImage(named: $0) }
-        print("count setup images", recivedImages.count)
     }
     func profileAddPhotoViewController(_ selectedImage: UIImage) {
         print("photos select image", selectedImage)

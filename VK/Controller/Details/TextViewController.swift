@@ -29,6 +29,11 @@ class TextViewController: UIViewController {
         /// Добавить кнопку "Поделиться"
         shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonTapped))
         navigationItem.rightBarButtonItem = shareButton
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Orange")
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
         
         let textView = UITextView()
@@ -37,8 +42,8 @@ class TextViewController: UIViewController {
         view.addSubview(textView)
         
         NSLayoutConstraint.activate([
-            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             textView.topAnchor.constraint(equalTo: view.topAnchor),
             textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
@@ -49,6 +54,9 @@ class TextViewController: UIViewController {
         let activityViewController = UIActivityViewController(activityItems: [self.fileContents], applicationActivities: nil)
         activityViewController.popoverPresentationController?.barButtonItem = shareButton
         present(activityViewController, animated: true, completion: nil)
+    }
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
 

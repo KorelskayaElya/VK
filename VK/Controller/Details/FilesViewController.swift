@@ -67,10 +67,10 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         table.dataSource = self
         table.delegate = self
         NSLayoutConstraint.activate([
-            self.table.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.table.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.table.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.table.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            table.topAnchor.constraint(equalTo: view.topAnchor),
+            table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            table.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            table.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
         ])
     }
@@ -177,17 +177,12 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
-        /// название файлов
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "rectangle.and.pencil.and.ellipsis"), for: .normal)
-        button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        button.frame = CGRect(x: cell.frame.width - 40, y: 10, width: 150, height: cell.frame.height)
-        cell.contentView.addSubview(button)
-        
+
         cell.textLabel?.text = String(file[indexPath.row].prefix(10))
         cell.backgroundColor = .systemBackground
         var objcBool: ObjCBool = false
         FileManager.default.fileExists(atPath: path + "/" + file[indexPath.row], isDirectory: &objcBool)
+        
         if objcBool.boolValue {
             if let detailTextLabel = cell.detailTextLabel {
                 detailTextLabel.text = "Folder"
@@ -197,12 +192,29 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
                 detailTextLabel.text = "File"
             }
         }
+        
         /// путь к изображению
         let imagePath = path + "/" + file[indexPath.row]
         /// добавить изображение
         cell.imageView?.image = UIImage(contentsOfFile: imagePath)
+
+        /// кнопка реадктировать название
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "rectangle.and.pencil.and.ellipsis"), for: .normal)
+        button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(button)
+
+        NSLayoutConstraint.activate([
+            button.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -10),
+            button.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
+            button.widthAnchor.constraint(equalToConstant: 50),
+            button.heightAnchor.constraint(equalTo: cell.contentView.heightAnchor, constant: -20) 
+        ])
+        
         return cell
     }
+
     /// для удаления ячейки
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {

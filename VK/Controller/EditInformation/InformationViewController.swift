@@ -7,7 +7,7 @@
 
 import UIKit
 protocol InformationViewControllerDelegate: AnyObject {
-    func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String)
+    func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String, status: String)
 }
 // основная информация 
 class InformationViewController: UIViewController {
@@ -17,6 +17,7 @@ class InformationViewController: UIViewController {
     private lazy var genderLabel = LabelField()
     private lazy var maleLabel = LabelField()
     private lazy var femaleLabel = LabelField()
+    private lazy var statusLabel = LabelField()
     private lazy var birthdayLabel = LabelField()
     private lazy var cityLabel = LabelField()
     private lazy var dotmale = RoundButtonWithDot()
@@ -25,6 +26,21 @@ class InformationViewController: UIViewController {
     private lazy var usernameField: UITextField = {
         let field = UITextField()
         field.placeholder = "имя фамилия"
+        field.tintColor = .lightGray
+        field.delegate = self
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
+        field.leftView = paddingView
+        field.leftViewMode = .always
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.layer.cornerRadius = 15
+        field.layer.borderWidth = 2
+        field.layer.borderColor = UIColor.lightGray.cgColor
+        return field
+    }()
+    
+    private lazy var statusField: UITextField = {
+        let field = UITextField()
+        field.placeholder = "статус"
         field.tintColor = .lightGray
         field.delegate = self
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 20))
@@ -98,9 +114,11 @@ class InformationViewController: UIViewController {
         usernameLabel.text = "Имя Фамилия"
         genderLabel.text = "Пол"
         maleLabel.text = "Мужской"
+        statusLabel.text = "Статус"
         femaleLabel.text = "Женский"
         birthdayLabel.text = "Дата рождения"
         cityLabel.text = "Родной город"
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
         maleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +132,7 @@ class InformationViewController: UIViewController {
         usernameField.delegate = self
         birhdayField.delegate = self
         cityField.delegate = self
+        statusField.delegate = self
         view.addSubview(usernameLabel)
         view.addSubview(genderLabel)
         view.addSubview(maleLabel)
@@ -125,6 +144,8 @@ class InformationViewController: UIViewController {
         view.addSubview(cityField)
         view.addSubview(dotmale)
         view.addSubview(dotfemale)
+        view.addSubview(statusField)
+        view.addSubview(statusLabel)
         dotmale.addTarget(self, action: #selector(dotMaleButtonTapped), for: .touchUpInside)
         dotfemale.addTarget(self, action: #selector(dotFemaleButtonTapped), for: .touchUpInside)
     }
@@ -141,7 +162,18 @@ class InformationViewController: UIViewController {
             usernameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
             usernameField.heightAnchor.constraint(equalToConstant: 30),
             
-            genderLabel.topAnchor.constraint(equalTo: usernameField.bottomAnchor, constant: 20),
+            statusLabel.topAnchor.constraint(equalTo: usernameField.bottomAnchor, constant: 20),
+            statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            statusLabel.widthAnchor.constraint(equalToConstant: 200),
+            statusLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            statusField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 5),
+            statusField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
+            statusField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+            statusField.heightAnchor.constraint(equalToConstant: 30),
+            
+            
+            genderLabel.topAnchor.constraint(equalTo: statusField.bottomAnchor, constant: 20),
             genderLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             genderLabel.widthAnchor.constraint(equalToConstant: 100),
             genderLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -206,8 +238,9 @@ class InformationViewController: UIViewController {
         let gender = dotmale.isDotVisible ? "Мужской" : "Женский"
         let birthday = birhdayField.text ?? ""
         let city = cityField.text ?? ""
+        let status = statusField.text ?? ""
         
-        delegate?.informationViewControllerDidFinishEnteringInfo(username: username, gender: gender, birthday: birthday, city: city)
+        delegate?.informationViewControllerDidFinishEnteringInfo(username: username, gender: gender, birthday: birthday, city: city, status: status)
         
         navigationController?.popViewController(animated: true)
     }

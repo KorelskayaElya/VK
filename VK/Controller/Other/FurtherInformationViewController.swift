@@ -13,6 +13,8 @@ class FurtherInformationViewController: UIViewController {
     // MARK: - UI
     private lazy var usernameLabel = LabelField()
     private lazy var usernameLabel1 = LabelField()
+    private lazy var statusLabel = LabelField()
+    private lazy var statusLabel1 = LabelField()
     private lazy var genderLabel = LabelField()
     private lazy var genderLabel1 = LabelField()
     private lazy var birthdayLabel = LabelField()
@@ -37,6 +39,7 @@ class FurtherInformationViewController: UIViewController {
     var receivedSchool: String = ""
     var receivedUniversity: String = ""
     var receivedWork: String = ""
+    var receivedStatus: String = ""
     
     
     // MARK: - Lifecycle
@@ -48,7 +51,7 @@ class FurtherInformationViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Подробная информация"
+        title = "Подробная информация"
         setupView()
         constraints()
     }
@@ -58,6 +61,9 @@ class FurtherInformationViewController: UIViewController {
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         usernameLabel1.translatesAutoresizingMaskIntoConstraints = false
         usernameLabel1.font = UIFont.boldSystemFont(ofSize: 15)
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel1.translatesAutoresizingMaskIntoConstraints = false
+        statusLabel1.font = UIFont.boldSystemFont(ofSize: 15)
         genderLabel.translatesAutoresizingMaskIntoConstraints = false
         genderLabel1.translatesAutoresizingMaskIntoConstraints = false
         genderLabel1.font = UIFont.boldSystemFont(ofSize: 15)
@@ -87,7 +93,9 @@ class FurtherInformationViewController: UIViewController {
         schoolLabel1.text = "Школа"
         universityLabel1.text = "Университет"
         workLabel1.text = "Место работы"
+        statusLabel1.text = "Статус"
         usernameLabel.text = receivedUsername
+        statusLabel.text = receivedStatus
         genderLabel.text = receivedGender
         birthdayLabel.text = receivedBirthday
         cityLabel.text = receivedCity
@@ -110,6 +118,8 @@ class FurtherInformationViewController: UIViewController {
         view.addSubview(schoolLabel1)
         view.addSubview(universityLabel1)
         view.addSubview(workLabel1)
+        view.addSubview(statusLabel)
+        view.addSubview(statusLabel1)
     }
     private func constraints() {
         NSLayoutConstraint.activate([
@@ -123,7 +133,17 @@ class FurtherInformationViewController: UIViewController {
             usernameLabel.widthAnchor.constraint(equalToConstant: 300),
             usernameLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            genderLabel1.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 20),
+            statusLabel1.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 20),
+            statusLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            statusLabel1.widthAnchor.constraint(equalToConstant: 300),
+            statusLabel1.heightAnchor.constraint(equalToConstant: 20),
+            
+            statusLabel.topAnchor.constraint(equalTo: statusLabel1.bottomAnchor, constant: 5),
+            statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            statusLabel.widthAnchor.constraint(equalToConstant: 300),
+            statusLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            genderLabel1.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20),
             genderLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             genderLabel1.widthAnchor.constraint(equalToConstant: 300),
             genderLabel1.heightAnchor.constraint(equalToConstant: 20),
