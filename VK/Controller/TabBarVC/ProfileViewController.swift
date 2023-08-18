@@ -453,7 +453,7 @@ extension ProfileViewController: DetailsProfileToSaveDelegate, DetailsProfileToF
     /// закладки
     func detailsProfileToSave() {
         let saveVC = SavedViewController()
-        saveVC.savedPosts = savedPosts
+        saveVC.updateSavedPosts(savePosts: savedPosts)
         navigationController?.pushViewController(saveVC, animated: true)
     }
 }

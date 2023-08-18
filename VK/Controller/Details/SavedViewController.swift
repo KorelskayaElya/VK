@@ -42,6 +42,14 @@ class SavedViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    func updateSavedPosts(savePosts: [Post]) {
+        for post in savePosts {
+            if !savedPosts.contains(where: { $0.textPost == post.textPost && $0.imagePost == post.imagePost }) {
+                savedPosts.append(post)
+            }
+        }
+    }
+
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }

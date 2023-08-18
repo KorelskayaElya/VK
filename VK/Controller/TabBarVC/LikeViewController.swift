@@ -36,6 +36,13 @@ class LikeViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    func updateLikedPosts(likePosts: [Post]) {
+        for post in likePosts {
+            if !likedPosts.contains(where: { $0.textPost == post.textPost && $0.imagePost == post.imagePost }) {
+                likedPosts.append(post)
+            }
+        }
+    }
 
 }
 extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
