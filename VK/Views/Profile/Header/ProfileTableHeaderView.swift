@@ -253,6 +253,23 @@ class ProfileTableHeaderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // MARK: - Interface
+    func configure(with viewModel: ProfileHeaderViewModel) {
+        self.viewModel = viewModel
+        followers.text = "\(viewModel.followerCount)\nFollowers"
+        following.text = "\(viewModel.followingCount)\nFollowing"
+        photosPublished.text = "\(viewModel.publishedPhotos)\nPosts"
+//        followButton.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
+        if var isFollowing = viewModel.isFollowing {
+            followButton.setTitle("Follow".localized, for: .normal)
+            followButton.backgroundColor = UIColor(named: "Orange")
+//            isFollowing.toggle()
+        } else {
+            followButton.setTitle("Unfollow".localized, for: .normal)
+            followButton.backgroundColor = UIColor(named: "Gray")
+        }
+        
+    }
     
     // MARK: - Private
     private func setupView() {
@@ -382,23 +399,6 @@ class ProfileTableHeaderView: UIView {
     /// посмотреть подробную информацию
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
-    }
-   
-    func configure(with viewModel: ProfileHeaderViewModel) {
-        self.viewModel = viewModel
-        followers.text = "\(viewModel.followerCount)\nFollowers"
-        following.text = "\(viewModel.followingCount)\nFollowing"
-        photosPublished.text = "\(viewModel.publishedPhotos)\nPosts"
-//        followButton.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
-        if var isFollowing = viewModel.isFollowing {
-            followButton.setTitle("Follow".localized, for: .normal)
-            followButton.backgroundColor = UIColor(named: "Orange")
-//            isFollowing.toggle()
-        } else {
-            followButton.setTitle("Unfollow".localized, for: .normal)
-            followButton.backgroundColor = UIColor(named: "Gray")
-        }
-        
     }
     ///  подписаться
     @objc private func buttonFollow() {
