@@ -14,10 +14,10 @@
             filePath = "VK/Controller/TabBarVC/TabBarViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "TabBarViewController"
-            landmarkType = "21">
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "tabBarController(_:didSelect:)"
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "D15BD47A-7127-415F-B595-16C3EA2260ED - 44ab0766e229762e"

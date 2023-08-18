@@ -540,6 +540,7 @@ extension ProfileViewController: PostAddViewControllerDelegate {
 extension ProfileViewController: PostTableViewCellLikeDelegate {
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
         likedPosts.append(model)
+       
         print(likedPosts)
     }
     func postTableViewCellDidTapLikeWith(_ model: Post) {

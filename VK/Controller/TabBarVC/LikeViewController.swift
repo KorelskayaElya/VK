@@ -20,11 +20,15 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
     }()
     // MARK: -  Properties
     var likedPosts: [Post] = []
+    var updateDataClosure: (() -> Void)?
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
+        updateDataClosure = { [weak self] in
+           self?.tableView.reloadData() 
+       }
     }
    // MARK: - Private
     private func setupView() {
@@ -41,7 +45,10 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
             if !likedPosts.contains(where: { $0.textPost == post.textPost && $0.imagePost == post.imagePost }) {
                 likedPosts.append(post)
             }
+            
         }
+        /// непонятно куда положить замыкание чтобы посты убранные не возвращались
+        
     }
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
         if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {

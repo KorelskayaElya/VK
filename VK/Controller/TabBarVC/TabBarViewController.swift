@@ -68,14 +68,15 @@ class TabBarViewController: UITabBarController {
         nav3.tabBarItem = tabBarItem3
 
         setViewControllers([nav1, nav2, nav3], animated: false)
+        
         delegate = self
     }
 }
 // MARK: - UITabBarControllerDelegate
 extension TabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        like?.updateDataClosure?()
         like?.updateLikedPosts(likePosts: profile!.likedPosts)
-        
         print(profile!.likedPosts)
     }
 }
