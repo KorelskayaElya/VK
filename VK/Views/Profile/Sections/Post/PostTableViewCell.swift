@@ -7,8 +7,11 @@
 
 import UIKit
 
-protocol PostTableViewCellDelegate: AnyObject {
+protocol PostTableViewCellLikeDelegate: AnyObject {
     func postTableViewCellDidTapLikeSaveWith(_ model: Post)
+}
+protocol PostTableViewCellSaveDelegate: AnyObject {
+    func postTableViewCellDidTapSavePostWith(_ model: Post)
 }
 protocol PostTableViewCellCommentDelegate: AnyObject {
     func postTableViewCellDidTapComment(_ cell: PostTableViewCell)
@@ -47,9 +50,9 @@ class PostTableViewCell: UITableViewCell {
         return label
     }()
     /// иконка лайка
-    private lazy var likeIcon: UIButton = {
+    private lazy var likeIconButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "heart")
+        let image = UIImage(systemName: "heart.fill")
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -73,9 +76,9 @@ class PostTableViewCell: UITableViewCell {
         return label
     }()
     /// иконка комментария
-    private lazy var сommentIcon: UIButton = {
+    private lazy var сommentIconButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "text.bubble")
+        let image = UIImage(systemName: "text.bubble.fill")
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -83,12 +86,13 @@ class PostTableViewCell: UITableViewCell {
         return button
     }()
     /// иконка закладки
-    private lazy var bookmarkIcon: UIButton = {
+    private lazy var bookmarkIconButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "bookmark")
+        let image = UIImage(systemName: "bookmark.fill")
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTapSave), for: .touchUpInside)
         return button
     }()
     /// изображение поста
@@ -117,7 +121,8 @@ class PostTableViewCell: UITableViewCell {
     private var postImageViewHeightConstraint: NSLayoutConstraint!
    
     // MARK: - Properties
-    weak var delegate: PostTableViewCellDelegate?
+    weak var delegate: PostTableViewCellLikeDelegate?
+    weak var saveDelegate: PostTableViewCellSaveDelegate?
     weak var commentDelegate: PostTableViewCellCommentDelegate?
     private var post: Post?
     
@@ -157,9 +162,9 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
-        contentView.addSubview(likeIcon)
-        contentView.addSubview(сommentIcon)
-        contentView.addSubview(bookmarkIcon)
+        contentView.addSubview(likeIconButton)
+        contentView.addSubview(сommentIconButton)
+        contentView.addSubview(bookmarkIconButton)
         contentView.addSubview(timeLabel)
         contentView.addSubview(lineView2)
         
@@ -205,20 +210,20 @@ class PostTableViewCell: UITableViewCell {
             postImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             postImageViewHeightConstraint,
             
-            likeIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
-            likeIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 45),
-            likeIcon.widthAnchor.constraint(equalToConstant: 55),
-            likeIcon.heightAnchor.constraint(equalToConstant: 55),
+            likeIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 5),
+            likeIconButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 45),
+            likeIconButton.widthAnchor.constraint(equalToConstant: 55),
+            likeIconButton.heightAnchor.constraint(equalToConstant: 55),
             
-            сommentIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
-            сommentIcon.leadingAnchor.constraint(equalTo: likeIcon.trailingAnchor, constant: 30),
-            сommentIcon.widthAnchor.constraint(equalToConstant: 40),
-            сommentIcon.heightAnchor.constraint(equalToConstant: 40),
+            сommentIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
+            сommentIconButton.leadingAnchor.constraint(equalTo: likeIconButton.trailingAnchor, constant: 30),
+            сommentIconButton.widthAnchor.constraint(equalToConstant: 40),
+            сommentIconButton.heightAnchor.constraint(equalToConstant: 40),
             
-            bookmarkIcon.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
-            bookmarkIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            bookmarkIcon.widthAnchor.constraint(equalToConstant: 45),
-            bookmarkIcon.heightAnchor.constraint(equalToConstant: 45),
+            bookmarkIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
+            bookmarkIconButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            bookmarkIconButton.widthAnchor.constraint(equalToConstant: 45),
+            bookmarkIconButton.heightAnchor.constraint(equalToConstant: 45),
             
             timeLabel.topAnchor.constraint(equalTo: contentView.topAnchor , constant: 10),
             timeLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -229,12 +234,22 @@ class PostTableViewCell: UITableViewCell {
     }
     @objc private func didTapLike() {
         post?.toggleLike()
-        likeIcon.tintColor = post!.isLikedByCurrentUser ? .systemOrange : .systemRed
+        likeIconButton.tintColor = post!.isLikedByCurrentUser ? .systemOrange : .systemRed
         
         if let post = post {
             delegate?.postTableViewCellDidTapLikeSaveWith(post)
         }
     }
+    
+    @objc private func didTapSave() {
+        post?.toggleSave()
+        bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemOrange : .systemGray
+        
+        if let post = post {
+            saveDelegate?.postTableViewCellDidTapSavePostWith(post)
+        }
+    }
+    
     
     @objc private func didTapComment() {
         commentDelegate?.postTableViewCellDidTapComment(self)

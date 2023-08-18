@@ -17,6 +17,9 @@ struct Post {
         isLikedByCurrentUser.toggle()
     }
     var isSavedByCurrentUser = false
+    mutating func toggleSave() {
+        isSavedByCurrentUser.toggle()
+    }
     var isShowingComments: Bool = false
     
     var comments: [PostComment] = []

@@ -19,7 +19,7 @@ class LikeViewController: UIViewController {
         return tableView
     }()
     // MARK: -  Properties
-    var savedPosts: [Post] = []
+    var likedPosts: [Post] = []
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return savedPosts.count
+        return likedPosts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -50,7 +50,7 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError("Could not dequeue a LikePostTableViewCell")
         }
         
-        var post = savedPosts[indexPath.row]
+        var post = likedPosts[indexPath.row]
         cell.configure(with: post,
                        textFont: UIFont(name: "Arial", size: 14)!,
                        contentWidth: tableView.frame.width - 100)
@@ -60,7 +60,7 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LikePostCell") as! PostTableViewCell
-        let post = savedPosts[indexPath.row]
+        let post = likedPosts[indexPath.row]
         /// ширина  контента
         let contentWidth = tableView.frame.width - 100
         /// динамичное отображение высоты текста в посте

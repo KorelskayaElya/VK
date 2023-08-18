@@ -75,15 +75,13 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     private var followers = [String]()
     private var following = [String]()
     private var isFollower: Bool = false
-    
-    
-    
     var user: User
     /// для показа отфильрованных постов и всех постов
     var isFiltering: Bool = false
     var allPosts: [Post] = []
     var filteredPosts: [Post] = []
     var likedPosts: [Post] = []
+    var savedPosts: [Post] = []
     /// получение данных для подробной информации
     var receivedUsername: String = ""
     var receivedGender: String = ""
@@ -287,7 +285,10 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
             cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 100)
+            /// для лайка
             cell.delegate = self
+            /// для сохранения поста
+            cell.saveDelegate = self
             /// удаление поста
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
                 self?.deletePost(at: indexPath)
@@ -452,6 +453,7 @@ extension ProfileViewController: DetailsProfileToSaveDelegate, DetailsProfileToF
     /// закладки
     func detailsProfileToSave() {
         let saveVC = SavedViewController()
+        saveVC.savedPosts = savedPosts
         navigationController?.pushViewController(saveVC, animated: true)
     }
 }
@@ -535,11 +537,17 @@ extension ProfileViewController: PostAddViewControllerDelegate {
     }
     
 }
-// MARK: - PostTableViewCellDelegate
-extension ProfileViewController: PostTableViewCellDelegate {
+// MARK: - PostTableViewCellLikeDelegate
+extension ProfileViewController: PostTableViewCellLikeDelegate {
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
         likedPosts.append(model)
         print(likedPosts)
     }
 }
-
+// MARK: - PostTableViewCellSaveDelegate
+extension ProfileViewController: PostTableViewCellSaveDelegate {
+    func postTableViewCellDidTapSavePostWith(_ model: Post) {
+        savedPosts.append(model)
+        print(savedPosts)
+    }
+}

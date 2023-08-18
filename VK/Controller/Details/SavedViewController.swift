@@ -34,12 +34,12 @@ class SavedViewController: UIViewController {
     }
     // MARK: - Private
     private func setupView() {
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     @objc private func backButtonTapped() {
@@ -57,11 +57,32 @@ extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError("Could not dequeue a SavedPostTableViewCell")
         }
         
-        let post = self.savedPosts[indexPath.row]
-        //cell.configure(with: post.imagePost)
-        //cell.delegate = self
-        
+        var post = savedPosts[indexPath.row]
+        cell.configure(with: post,
+                       textFont: UIFont(name: "Arial", size: 14)!,
+                       contentWidth: tableView.frame.width - 100)
+        post.toggleSave()
         return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SavedPostCell") as! PostTableViewCell
+        let post = savedPosts[indexPath.row]
+        /// ширина  контента
+        let contentWidth = tableView.frame.width - 100
+        /// динамичное отображение высоты текста в посте
+        let textHeight = cell.calculateTextHeight(text: post.textPost, font: UIFont(name: "Arial", size: 14)!, width: contentWidth)
+        /// динамичное отображение высоты изображения в посте
+        let imageHeight = cell.calculateImageHeight(image: post.imagePost, width: contentWidth)
+        /// приблизительные размеры под элементы
+        let timeHeight: CGFloat = 20
+        let avatarHeight: CGFloat = 40
+        let nameLabelHeight: CGFloat = 20
+        let descriptionLabelHeight: CGFloat = 20
+        let otherViewHeights: CGFloat = 90
+        /// сколько всего занимает высоты пост
+        let totalHeight = textHeight + imageHeight + timeHeight + avatarHeight + nameLabelHeight + descriptionLabelHeight + otherViewHeights
+        
+        return totalHeight
     }
     
 //    func postTableViewCellDidTapSave(_ cell: PostTableViewCell) {
