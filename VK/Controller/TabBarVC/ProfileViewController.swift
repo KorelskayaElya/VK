@@ -8,9 +8,6 @@
 import UIKit
 import KeychainAccess
 
-protocol ProfileAddPhotoViewControllerDelegate: AnyObject {
-    func profileAddPhotoViewController(_ selectedImage: UIImage)
-}
 
 protocol ProfileViewControllerDelegate: AnyObject {
     func welcomeViewControllerSignOutTapped()
@@ -60,8 +57,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
    
     
     // MARK: Properties
-    /// делегат для добавления изображения в photovc
-    weak var profileAddPhotoDelegate: ProfileAddPhotoViewControllerDelegate?
     /// делегат для выхода из аккаунта
     weak var delegate: ProfileViewControllerDelegate?
     /// для сохранения выбора изображения
@@ -467,12 +462,7 @@ extension ProfileViewController: ProfileCameraDelegate {
 }
 extension ProfileViewController: ProfileAddPhotoDelegate {
     func didAddPhoto() {
-        ImagePicker.defaultPicker.getImage(in: self)
-        print("select image", selectedImage)
-        let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
-        //photosViewController.viewModel = viewModel
-        photosViewController.profileAddPhotoViewController(selectedImage)
         navigationController?.pushViewController(photosViewController, animated: true)
     }
 }

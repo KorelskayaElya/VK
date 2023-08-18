@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDelegate {
+class PhotosViewController: UIViewController {
 
     // MARK: - UI
     private lazy var flowLayout: UICollectionViewFlowLayout = {
@@ -60,7 +60,7 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
     }
-    
+    // MARK: - Private
     private func setupView() {
         view.backgroundColor = .systemBackground
         view.addSubview(allPhotosLabel)
@@ -93,23 +93,30 @@ class PhotosViewController: UIViewController, ProfileAddPhotoViewControllerDeleg
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.title = "Photos".localized
+        let addPhotoButton = UIButton(type: .system)
+        addPhotoButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        addPhotoButton.tintColor = UIColor(named: "Orange")
+        addPhotoButton.addTarget(self, action: #selector(addPhotoButtonTapped), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addPhotoButton)
+                
     }
     
-    // MARK: - Private
+
+    @objc private func addPhotoButtonTapped() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    func profileAddPhotoViewController(_ selectedImage: UIImage) {
-        print("photos select image", selectedImage)
-        recivedImages.append(selectedImage)
-        print("count images", recivedImages.count)
-        DispatchQueue.main.async {
-            self.collection.reloadData()
-        }
+    private func updateCountPhotosLabel() {
+        countPhotosLabel.text = "\(recivedImages.count)"
     }
 }
 
-extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return recivedImages.count
@@ -127,6 +134,15 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("User tapped on item \(indexPath.row)")
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            recivedImages.append(selectedImage)
+            updateCountPhotosLabel()
+            collection.reloadData()
+        }
+        
+        dismiss(animated: true, completion: nil)
     }
 }
 
