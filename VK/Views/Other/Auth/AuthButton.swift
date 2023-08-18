@@ -42,13 +42,13 @@ class AuthButton: UIButton {
         switch type {
         case .signIn, .signUp:
             backgroundColor = UIColor(named: "Black")
-            setTitleColor(.white, for: .normal)
+            setTitleColor(UIColor.createColor(lightMode: .white, darkMode: .black), for: .normal)
             titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
             layer.cornerRadius = 25
             layer.masksToBounds = true
         case .alreadySignUp:
             backgroundColor = .white
-            setTitleColor(.black, for: .normal)
+            setTitleColor(UIColor.createColor(lightMode: .black, darkMode: .white), for: .normal)
             titleLabel?.font = .systemFont(ofSize: 15, weight: .regular)
             layer.cornerRadius = 20
             layer.masksToBounds = true

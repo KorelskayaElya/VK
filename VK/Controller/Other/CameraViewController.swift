@@ -105,17 +105,14 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     }
     /// кнопка назад
     private func customizeBackButton() {
-        let backButton = UIButton(type: .custom)
+        let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
-        backButton.tintColor = .systemOrange
+        backButton.tintColor = UIColor(named: "Orange")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        let customBackButton = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = customBackButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
     /// навигация назад
     @objc private func backButtonTapped() {
-        tabBarController?.tabBar.isHidden = false
         navigationController?.popViewController(animated: true)
     }
 

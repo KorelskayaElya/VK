@@ -36,7 +36,7 @@ class PhotosTableViewCell: UITableViewCell {
         button.contentMode = .scaleAspectFill
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(self.didTapButton), for: .touchUpInside)
-        button.tintColor = .black
+        button.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         return button
     }()
     private lazy var stackWithPersons: UIStackView = {

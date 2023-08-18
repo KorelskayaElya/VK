@@ -56,8 +56,8 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         let addDirectory = UIBarButtonItem(image: UIImage(systemName: "folder.badge.plus"), style: .plain, target: self, action: #selector(createDirectory))
         
         navigationItem.rightBarButtonItems = [img, file, addDirectory]
-        navigationItem.rightBarButtonItem?.tintColor = .black
-        navigationController?.navigationBar.tintColor = .black
+        navigationItem.rightBarButtonItem?.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
+        navigationController?.navigationBar.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         
     }
     
@@ -74,7 +74,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
             
         ])
     }
-    // создать папку
+    /// создать папку
     @objc private func createDirectory() {
         let alert = UIAlertController(title: "Create new folder".localized, message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in

@@ -74,7 +74,7 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsLabel2.text = phoneNumber ?? "Phone number not provided"
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         customizeBackButton()
         addSubview()
         configureFields()
@@ -143,16 +143,16 @@ class ConfirmViewController: UIViewController, UITextFieldDelegate {
         ])
     }
     // MARK: - Private
-    
+    /// кнопка назад
     private func customizeBackButton() {
-        let backButton = UIButton(type: .custom)
+        let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "backarrow"), for: .normal)
+        backButton.tintColor = UIColor(named: "Black")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        let customBackButton = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = customBackButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        
     }
-    
+    /// навигация назад
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }

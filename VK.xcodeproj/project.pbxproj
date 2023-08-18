@@ -49,6 +49,7 @@
 		6DB099B52A8D36B100C42E5F /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099B42A8D36B100C42E5F /* TextViewController.swift */; };
 		6DB099BE2A8E52E000C42E5F /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099BD2A8E52E000C42E5F /* StringExtension.swift */; };
 		6DB099DB2A8EA1B400C42E5F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB099DD2A8EA1B400C42E5F /* Localizable.strings */; };
+		6DB099E02A8F720300C42E5F /* ColorExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099DF2A8F720300C42E5F /* ColorExtenstion.swift */; };
 		6DB6CE9C2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */; };
 		6DCAF37D2A6C759A00877579 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37C2A6C759A00877579 /* AppDelegate.swift */; };
 		6DCAF37F2A6C759A00877579 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37E2A6C759A00877579 /* SceneDelegate.swift */; };
@@ -120,6 +121,7 @@
 		6DB099BD2A8E52E000C42E5F /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		6DB099D82A8EA19700C42E5F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		6DB099DE2A8EA1BE00C42E5F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6DB099DF2A8F720300C42E5F /* ColorExtenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtenstion.swift; sourceTree = "<group>"; };
 		6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
 		6DCAF3792A6C759A00877579 /* VK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DCAF37C2A6C759A00877579 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				6DB099A42A8A96A900C42E5F /* NavigationRouter.swift */,
 				6DB099BD2A8E52E000C42E5F /* StringExtension.swift */,
 				6DB099DD2A8EA1B400C42E5F /* Localizable.strings */,
+				6DB099DF2A8F720300C42E5F /* ColorExtenstion.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -578,6 +581,7 @@
 				6DB0994A2A7F15A000C42E5F /* EditProfilePresentationController.swift in Sources */,
 				6DB0998E2A88BB7900C42E5F /* RoundButtonWithDot.swift in Sources */,
 				6DB0999D2A8A4D6300C42E5F /* SavedViewController.swift in Sources */,
+				6DB099E02A8F720300C42E5F /* ColorExtenstion.swift in Sources */,
 				6DCAF3B22A6D4DD500877579 /* AuthField.swift in Sources */,
 				6DB099942A8A4B1D00C42E5F /* HobbyViewController.swift in Sources */,
 				6DCAF3972A6C767900877579 /* ProfileViewController.swift in Sources */,

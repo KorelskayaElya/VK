@@ -8,8 +8,7 @@
 import UIKit
 
 protocol PostTableViewCellDelegate: AnyObject {
-    func postTableViewCellDidTapLike(_ cell: PostTableViewCell)
-   
+    func postTableViewCellDidTapLikeSaveWith(_ model: Post)
 }
 protocol PostTableViewCellCommentDelegate: AnyObject {
     func postTableViewCellDidTapComment(_ cell: PostTableViewCell)
@@ -120,6 +119,9 @@ class PostTableViewCell: UITableViewCell {
     // MARK: - Properties
     weak var delegate: PostTableViewCellDelegate?
     weak var commentDelegate: PostTableViewCellCommentDelegate?
+    private var post: Post?
+    
+    private var isLikeTapped = true
     
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -129,6 +131,22 @@ class PostTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    // MARK: - Interface
+    func configure(with post: Post, textFont: UIFont, contentWidth: CGFloat) {
+        avatarImageView.image = post.user.profilePicture
+        descriptionLabel.text = post.user.status
+        nameLabel.text = post.user.username
+        
+        textPostLabel.text = post.textPost
+        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+        textPostLabelHeightConstraint.constant = textHeight + 30
+        
+        postImageView.image = post.imagePost
+        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
+        postImageViewHeightConstraint.constant = imageHeight
+        
+        self.post = post
     }
     // MARK: - Private
     private func setupView() {
@@ -210,37 +228,23 @@ class PostTableViewCell: UITableViewCell {
             
         ])
     }
-//    init(model: Post) {
-//        self.model = model
-//        super.init(nibName: nil, bundle: nil)
-//    }
-
     @objc private func didTapLike() {
-//        model.isLikedByCurrentUser = !model.isLikedByCurrentUser
-//
-//        likeIcon.tintColor = model.isLikedByCurrentUser ? .systemRed : .orange
-        delegate?.postTableViewCellDidTapLike(self)
+        isLikeTapped.toggle()
+        updateStateLikeButton()
         
+        if let post = post {
+            delegate?.postTableViewCellDidTapLikeSaveWith(post)
+        }
     }
+    
+    private func updateStateLikeButton() {
+        likeIcon.tintColor = isLikeTapped ? .systemOrange : .systemRed
+    }
+    
     @objc private func didTapComment() {
         commentDelegate?.postTableViewCellDidTapComment(self)
     }
-    
-    func configure(with post: Post, textFont: UIFont, contentWidth: CGFloat) {
-        avatarImageView.image = post.user.profilePicture
-        descriptionLabel.text = post.user.status
-        nameLabel.text = post.user.username
-        
 
-        textPostLabel.text = post.textPost
-        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
-        textPostLabelHeightConstraint.constant = textHeight + 30
-        
-
-        postImageView.image = post.imagePost
-        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
-        postImageViewHeightConstraint.constant = imageHeight
-    }
     /// рассчет высоты текста
     func calculateTextHeight(text: String, font: UIFont, width: CGFloat) -> CGFloat {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)

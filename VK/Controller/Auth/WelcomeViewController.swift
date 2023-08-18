@@ -23,7 +23,7 @@ class WelcomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(named: "SignIn")
+        imageView.image = UIImage(named: "Sign")
         return imageView
     }()
     /// кнопка регистрации
@@ -36,6 +36,7 @@ class WelcomeViewController: UIViewController {
     private let alreadySignUp: AuthButton = {
         let button = AuthButton(type: .alreadySignUp, title: "Already sign up".localized)
         button.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        button.backgroundColor = UIColor.createColor(lightMode: .white, darkMode: .black)
         return button
     }()
     

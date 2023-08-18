@@ -73,11 +73,11 @@ class DetailsProfilePresentationController: UIPresentationController {
         /// линия разделения
         let lineView1 = LineView()
         /// иконка лейбла закладки
-        let starIconView = UIImageView(image: IconImageUtility.iconImage(named: "star.fill", tintColor: .black))
+        let starIconView = UIImageView(image: IconImageUtility.iconImage(named: "star.fill", tintColor:.black))
         starIconView.tintColor = .black
         starIconView.translatesAutoresizingMaskIntoConstraints = false
         /// икнока лейбла файлы
-        let squareIconView = UIImageView(image: IconImageUtility.iconImage(named: "square.and.arrow.up", tintColor: .black))
+        let squareIconView = UIImageView(image: IconImageUtility.iconImage(named: "square.and.arrow.up", tintColor:.black))
         squareIconView.tintColor = .black
         squareIconView.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл закладки

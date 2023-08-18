@@ -78,6 +78,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var isFiltering: Bool = false
     var allPosts: [Post] = []
     var filteredPosts: [Post] = []
+    var likedPosts: [Post] = []
     /// получение данных для подробной информации
     var receivedUsername: String = ""
     var receivedGender: String = ""
@@ -107,10 +108,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         let profileId = UILabel()
         profileId.text = user.identifier
         profileId.font = UIFont.boldSystemFont(ofSize: 17.0)
-        profileId.textColor = UIColor.black
+        profileId.textColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         let outIcon = UIBarButtonItem(image: UIImage(systemName: "rectangle.portrait.and.arrow.right"),
                                       style: .done, target: self, action: #selector(didOut))
-        outIcon.tintColor = UIColor.black
+        outIcon.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         navigationItem.leftBarButtonItems = [UIBarButtonItem(customView: profileId),outIcon]
 
         let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
@@ -281,6 +282,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
             let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
             cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 100)
+            cell.delegate = self
             /// удаление поста
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
                 self?.deletePost(at: indexPath)
@@ -528,3 +530,11 @@ extension ProfileViewController: PostAddViewControllerDelegate {
     }
     
 }
+// MARK: - PostTableViewCellDelegate
+extension ProfileViewController: PostTableViewCellDelegate {
+    func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
+        likedPosts.append(model)
+        print(likedPosts)
+    }
+}
+

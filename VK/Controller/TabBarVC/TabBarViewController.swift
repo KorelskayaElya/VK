@@ -9,7 +9,9 @@ import UIKit
 import KeychainAccess
 
 class TabBarViewController: UITabBarController {
-
+    // MARK: - Properties
+    var profile: ProfileViewController?
+    var like: LikeViewController?
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -37,21 +39,21 @@ class TabBarViewController: UITabBarController {
 
     private func setUpControllers() {
         let home = HomeViewController()
-        let profile = ProfileViewController(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"))
+        profile = ProfileViewController(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"))
         /// переход обратно на экран приветствия при выходе на экране профиля
         let scene = UIApplication.shared.connectedScenes.first
         if let sceneDelegate : SceneDelegate = (scene?.delegate as? SceneDelegate) {
             if let router = sceneDelegate.router {
-                profile.delegate = router
+                profile?.delegate = router
             }
         }
-        let saved = LikeViewController()
+        like = LikeViewController()
         
-        saved.title = "Liked Post".localized
+        like?.title = "Liked Post".localized
 
         let nav1 = UINavigationController(rootViewController: home)
-        let nav2 = UINavigationController(rootViewController: profile)
-        let nav3 = UINavigationController(rootViewController: saved)
+        let nav2 = UINavigationController(rootViewController: profile!)
+        let nav3 = UINavigationController(rootViewController: like!)
 
         let tabBarItem1 = UITabBarItem(title: "Home".localized, image: UIImage(systemName: "house"), tag: 1)
         let tabBarItem2 = UITabBarItem(title: "Profile".localized, image: UIImage(systemName: "person.crop.circle"), tag: 2)
@@ -66,5 +68,14 @@ class TabBarViewController: UITabBarController {
         nav3.tabBarItem = tabBarItem3
 
         setViewControllers([nav1, nav2, nav3], animated: false)
+        delegate = self
     }
 }
+// MARK: - UITabBarControllerDelegate
+extension TabBarViewController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        like?.savedPosts = profile!.likedPosts
+        print(profile!.likedPosts)
+    }
+}
+
