@@ -13,6 +13,9 @@ struct Post {
     var imagePost: UIImage? = nil
 
     var isLikedByCurrentUser = false
+    mutating func toggleLike() {
+        isLikedByCurrentUser.toggle()
+    }
     var isSavedByCurrentUser = false
     var isShowingComments: Bool = false
     

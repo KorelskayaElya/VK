@@ -121,7 +121,6 @@ class PostTableViewCell: UITableViewCell {
     weak var commentDelegate: PostTableViewCellCommentDelegate?
     private var post: Post?
     
-    private var isLikeTapped = true
     
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -229,16 +228,12 @@ class PostTableViewCell: UITableViewCell {
         ])
     }
     @objc private func didTapLike() {
-        isLikeTapped.toggle()
-        updateStateLikeButton()
+        post?.toggleLike()
+        likeIcon.tintColor = post!.isLikedByCurrentUser ? .systemOrange : .systemRed
         
         if let post = post {
             delegate?.postTableViewCellDidTapLikeSaveWith(post)
         }
-    }
-    
-    private func updateStateLikeButton() {
-        likeIcon.tintColor = isLikeTapped ? .systemOrange : .systemRed
     }
     
     @objc private func didTapComment() {

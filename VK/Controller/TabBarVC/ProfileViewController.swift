@@ -43,7 +43,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         headerView.editProfileDelegate = self
         headerView.furtherInformation = self
         let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: allPosts.count)
-        headerView.updatePhotosPublished(count: profileViewModel.publishedPhotos)
+        //headerView.updatePhotosPublished(count: profileViewModel.publishedPhotos)
         let containerView = UIView()
         containerView.addSubview(headerView)
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,6 +70,11 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var isOpenEdit = false
     var isOpenDetails = false
     var isAnotherUser = false
+    
+    private var posts = [Post]()
+    private var followers = [String]()
+    private var following = [String]()
+    private var isFollower: Bool = false
     
     
     

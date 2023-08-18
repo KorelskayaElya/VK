@@ -50,10 +50,11 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError("Could not dequeue a LikePostTableViewCell")
         }
         
-        let post = savedPosts[indexPath.row]
+        var post = savedPosts[indexPath.row]
         cell.configure(with: post,
                        textFont: UIFont(name: "Arial", size: 14)!,
                        contentWidth: tableView.frame.width - 100)
+        post.toggleLike()
         
         return cell
     }

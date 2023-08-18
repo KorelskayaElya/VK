@@ -62,7 +62,6 @@ class ProfileTableHeaderView: UIView {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 15
         button.isHidden = true
@@ -113,10 +112,10 @@ class ProfileTableHeaderView: UIView {
     /// количество подписчиков
     private lazy var followers: UILabel = {
         let label = UILabel()
-        label.text = "161 тыс. подписчиков"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.textAlignment = .center
+        label.text = "0\nFollowers"
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -124,10 +123,10 @@ class ProfileTableHeaderView: UIView {
     /// количество подписок
     private lazy var following: UILabel = {
         let label = UILabel()
-        label.text = "477 подписок"
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.textAlignment = .center
+        label.text = "0\nFollowing"
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -138,6 +137,7 @@ class ProfileTableHeaderView: UIView {
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
         label.numberOfLines = 0
+        label.text = "0\nPosts"
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -219,18 +219,13 @@ class ProfileTableHeaderView: UIView {
     weak var editProfileDelegate: ProfileEditDelegate?
     weak var addPhotoDelegate: ProfileAddPhotoDelegate?
     weak var furtherInformation: ProfileFurtherInformationDelegate?
+    var viewModel: ProfileHeaderViewModel?
     var isAnotherUser = false
-    var isButtonFollowTapped = false {
-        didSet {
-            if isButtonFollowTapped {
-                followButton.setTitle("Follow".localized, for: .normal)
-                followButton.backgroundColor = UIColor(named: "Orange")
-            } else {
-                followButton.setTitle("Unfollow".localized, for: .normal)
-                followButton.backgroundColor = UIColor(named: "Gray")
-            }
-        }
-    }
+//    var isButtonFollowTapped = false {
+//        didSet {
+//
+//        }
+//    }
     
     // MARK:  - Init
     override init(frame: CGRect) {
@@ -388,12 +383,29 @@ class ProfileTableHeaderView: UIView {
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
     }
-    /// количество публикаций
-    func updatePhotosPublished(count: Int) {
-        photosPublished.text = "\(count) публикаций"
+   
+    func configure(with viewModel: ProfileHeaderViewModel) {
+        self.viewModel = viewModel
+        followers.text = "\(viewModel.followerCount)\nFollowers"
+        following.text = "\(viewModel.followingCount)\nFollowing"
+        photosPublished.text = "\(viewModel.publishedPhotos)\nPosts"
+//        followButton.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
+        if var isFollowing = viewModel.isFollowing {
+            followButton.setTitle("Follow".localized, for: .normal)
+            followButton.backgroundColor = UIColor(named: "Orange")
+//            isFollowing.toggle()
+        } else {
+            followButton.setTitle("Unfollow".localized, for: .normal)
+            followButton.backgroundColor = UIColor(named: "Gray")
+        }
+        
     }
     ///  подписаться
     @objc private func buttonFollow() {
-        isButtonFollowTapped.toggle()
+        guard let viewModel = self.viewModel else {
+            return
+        }
+        //delegate?.profileHeaderCollectionReusableView(self,
+                                                     // didTapFolllowButtonWith: viewModel)
     }
 }
