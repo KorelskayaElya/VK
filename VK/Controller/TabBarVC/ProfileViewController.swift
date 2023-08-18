@@ -284,6 +284,12 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             cell.delegate = self
             /// для сохранения поста
             cell.saveDelegate = self
+            return cell
+        }
+    }
+    /// удаление только для секции с постами
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 3 {
             /// удаление поста
             let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
                 self?.deletePost(at: indexPath)
@@ -293,8 +299,9 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             deleteAction.image = UIImage(systemName: "trash.fill")
             
             let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
-            return cell
+            return true
         }
+        return false
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -325,11 +332,13 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return totalHeight
         }
     }
-    /// удаление поста
+    /// удаление поста только для секции с постами
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            deletePost(at: indexPath)
-        }
+               if indexPath.section == 3 {
+                   deletePost(at: indexPath)
+               }
+           }
     }
     /// удаление поста
     func deletePost(at indexPath: IndexPath) {
