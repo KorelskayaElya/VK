@@ -7,8 +7,8 @@
 
 import UIKit
 
-class LikeViewController: UIViewController {
-    
+class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
+
     // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -43,6 +43,15 @@ class LikeViewController: UIViewController {
             }
         }
     }
+    func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
+        if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
+            var updatedModel = model
+            updatedModel.toggleSave()
+            likedPosts[index] = updatedModel
+            likedPosts.remove(at: index)
+            tableView.reloadData()
+        }
+    }
 
 }
 extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
@@ -61,6 +70,7 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: post,
                        textFont: UIFont(name: "Arial", size: 14)!,
                        contentWidth: tableView.frame.width - 100)
+        cell.delegate = self 
         post.toggleLike()
         
         return cell

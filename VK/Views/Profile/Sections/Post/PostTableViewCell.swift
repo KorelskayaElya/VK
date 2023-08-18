@@ -243,7 +243,7 @@ class PostTableViewCell: UITableViewCell {
     
     @objc private func didTapSave() {
         post?.toggleSave()
-        bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemOrange : .systemGray
+        bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemGray : .systemOrange
         
         if let post = post {
             saveDelegate?.postTableViewCellDidTapSavePostWith(post)

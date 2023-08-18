@@ -7,7 +7,9 @@
 
 import UIKit
 // закладки
-class SavedViewController: UIViewController {
+class SavedViewController: UIViewController, PostTableViewCellSaveDelegate {
+    
+    
     // MARK: - UI
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -53,6 +55,15 @@ class SavedViewController: UIViewController {
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+    func postTableViewCellDidTapSavePostWith(_ model: Post) {
+        if let index = savedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
+            var updatedModel = model
+            updatedModel.toggleSave()
+            savedPosts[index] = updatedModel
+            savedPosts.remove(at: index)
+            tableView.reloadData()
+        }
+    }
 }
 extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
     
@@ -66,10 +77,12 @@ extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         var post = savedPosts[indexPath.row]
+        cell.saveDelegate = self 
         cell.configure(with: post,
                        textFont: UIFont(name: "Arial", size: 14)!,
                        contentWidth: tableView.frame.width - 100)
         post.toggleSave()
+       
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

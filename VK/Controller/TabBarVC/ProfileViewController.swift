@@ -542,11 +542,21 @@ extension ProfileViewController: PostTableViewCellLikeDelegate {
         likedPosts.append(model)
         print(likedPosts)
     }
+    func postTableViewCellDidTapLikeWith(_ model: Post) {
+        if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
+            likedPosts.remove(at: index)
+        }
+    }
 }
 // MARK: - PostTableViewCellSaveDelegate
 extension ProfileViewController: PostTableViewCellSaveDelegate {
     func postTableViewCellDidTapSavePostWith(_ model: Post) {
         savedPosts.append(model)
         print(savedPosts)
+    }
+    func postTableViewCellDidTapSaveWith(_ model: Post) {
+        if let index = savedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
+            savedPosts.remove(at: index)
+        }
     }
 }
