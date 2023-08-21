@@ -75,16 +75,16 @@ class PostTableViewCell: UITableViewCell {
         label.clipsToBounds = true
         return label
     }()
-    /// иконка комментария
-    private lazy var сommentIconButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "text.bubble.fill")
-        button.setImage(image, for: .normal)
-        button.tintColor = UIColor(named: "Orange")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(didTapComment), for: .touchUpInside)
-        return button
-    }()
+//    /// иконка комментария
+//    private lazy var сommentIconButton: UIButton = {
+//        let button = UIButton()
+//        let image = UIImage(systemName: "text.bubble.fill")
+//        button.setImage(image, for: .normal)
+//        button.tintColor = UIColor(named: "Orange")
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.addTarget(self, action: #selector(didTapComment), for: .touchUpInside)
+//        return button
+//    }()
     /// иконка закладки
     private lazy var bookmarkIconButton: UIButton = {
         let button = UIButton()
@@ -165,7 +165,7 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
         contentView.addSubview(likeIconButton)
-        contentView.addSubview(сommentIconButton)
+       // contentView.addSubview(сommentIconButton)
         contentView.addSubview(bookmarkIconButton)
         contentView.addSubview(timeLabel)
         contentView.addSubview(lineView2)
@@ -217,10 +217,10 @@ class PostTableViewCell: UITableViewCell {
             likeIconButton.widthAnchor.constraint(equalToConstant: 55),
             likeIconButton.heightAnchor.constraint(equalToConstant: 55),
             
-            сommentIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
-            сommentIconButton.leadingAnchor.constraint(equalTo: likeIconButton.trailingAnchor, constant: 30),
-            сommentIconButton.widthAnchor.constraint(equalToConstant: 40),
-            сommentIconButton.heightAnchor.constraint(equalToConstant: 40),
+//            сommentIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
+//            сommentIconButton.leadingAnchor.constraint(equalTo: likeIconButton.trailingAnchor, constant: 30),
+//            сommentIconButton.widthAnchor.constraint(equalToConstant: 40),
+//            сommentIconButton.heightAnchor.constraint(equalToConstant: 40),
             
             bookmarkIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             bookmarkIconButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),

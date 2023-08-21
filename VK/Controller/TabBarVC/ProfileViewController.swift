@@ -579,12 +579,40 @@ extension ProfileViewController: LikeViewControllerDelegate {
 // MARK: - PostTableViewCellSaveDelegate
 extension ProfileViewController: PostTableViewCellSaveDelegate {
     func postTableViewCellDidTapSavePostWith(_ model: Post) {
-        savedPosts.append(model)
+        updateSavePosts(for: model)
+        updateSavedPosts(for: model)
         print(savedPosts)
     }
-    func postTableViewCellDidTapSaveWith(_ model: Post) {
-        if let index = savedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
-            savedPosts.remove(at: index)
+    private func updateSavePosts(for modyfiedPost: Post) {
+        for index in 0..<allPosts.count {
+            if allPosts[index].uuid == modyfiedPost.uuid {
+                allPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
+            }
+        }
+        for index in 0..<filteredPosts.count {
+            if filteredPosts[index].uuid == modyfiedPost.uuid {
+                filteredPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
+            }
         }
     }
+        
+    private func updateSavedPosts(for modyfiedPost: Post) {
+        if modyfiedPost.isSavedByCurrentUser {
+            savedPosts.append(modyfiedPost)
+        }
+        else {
+            if let index = savedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
+                savedPosts.remove(at: index)
+            }
+        }
+    }
+}
+// MARK: - SaveViewControllerDelegate
+extension ProfileViewController: SaveViewControllerDelegate {
+    func saveViewControllerDidTapSaveWith(post: Post) {
+        updatePosts(for: post)
+        updateSavedPosts(for: post)
+        tableView.reloadData()
+    }
+    
 }

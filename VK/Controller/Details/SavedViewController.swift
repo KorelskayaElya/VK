@@ -6,6 +6,9 @@
 //
 
 import UIKit
+protocol SaveViewControllerDelegate: AnyObject {
+    func saveViewControllerDidTapSaveWith(post: Post)
+}
 // закладки
 class SavedViewController: UIViewController, PostTableViewCellSaveDelegate {
     
@@ -21,6 +24,7 @@ class SavedViewController: UIViewController, PostTableViewCellSaveDelegate {
     }()
     // MARK: - Properties
     var savedPosts: [Post] = []
+    weak var delegate: SaveViewControllerDelegate?
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,13 +49,8 @@ class SavedViewController: UIViewController, PostTableViewCellSaveDelegate {
         ])
     }
     func updateSavedPosts(savePosts: [Post]) {
-        for post in savePosts {
-            if !savedPosts.contains(where: { $0.textPost == post.textPost && $0.imagePost == post.imagePost }) {
-                savedPosts.append(post)
-            }
-        }
+       savedPosts = savePosts
     }
-
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
@@ -62,6 +61,7 @@ class SavedViewController: UIViewController, PostTableViewCellSaveDelegate {
             savedPosts[index] = updatedModel
             savedPosts.remove(at: index)
             tableView.reloadData()
+            delegate?.saveViewControllerDidTapSaveWith(post: model)
         }
     }
 }
@@ -77,12 +77,12 @@ extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         var post = savedPosts[indexPath.row]
-        cell.saveDelegate = self 
+        cell.saveDelegate = self
         cell.configure(with: post,
                        textFont: UIFont(name: "Arial", size: 14)!,
                        contentWidth: tableView.frame.width - 100)
         post.toggleSave()
-       
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -105,19 +105,4 @@ extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
         
         return totalHeight
     }
-    
-//    func postTableViewCellDidTapSave(_ cell: PostTableViewCell) {
-//        guard let indexPath = tableView.indexPath(for: cell) else { return }
-//        var post = likedPosts[indexPath.row]
-//        post.isLikedByCurrentUser.toggle()
-//        likedPosts[indexPath.row] = post
-//
-//        if post.isLikedByCurrentUser {
-//            likedPosts.remove(at: indexPath.row)
-//            savedPosts.append(post)
-//
-//        }
-//        tableView.reloadData()
-//    }
 }
-
