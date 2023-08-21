@@ -8,6 +8,7 @@
 import UIKit
 
 struct Post {
+    let uuid = UUID().uuidString
     let user: User
     let textPost: String
     var imagePost: UIImage? = nil

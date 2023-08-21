@@ -6,6 +6,9 @@
 //
 
 import UIKit
+protocol LikeViewControllerDelegate: AnyObject {
+    func likeViewControllerDidTapLikeSaveWith(post: Post)
+}
 
 class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
 
@@ -21,6 +24,7 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
     // MARK: -  Properties
     var likedPosts: [Post] = []
     var updateDataClosure: (() -> Void)?
+    weak var delegate: LikeViewControllerDelegate?
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +45,7 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
         ])
     }
     func updateLikedPosts(likePosts: [Post]) {
-        for post in likePosts {
-            if !likedPosts.contains(where: { $0.textPost == post.textPost && $0.imagePost == post.imagePost }) {
-                likedPosts.append(post)
-            }
-            
-        }
-        /// непонятно куда положить замыкание чтобы посты убранные не возвращались
-        
+        likedPosts = likePosts
     }
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
         if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
@@ -57,6 +54,7 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
             likedPosts[index] = updatedModel
             likedPosts.remove(at: index)
             tableView.reloadData()
+            delegate?.likeViewControllerDidTapLikeSaveWith(post: model)
         }
     }
 
@@ -104,17 +102,3 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
     
-//    func postTableViewCellDidTapLike(_ cell: PostTableViewCell) {
-//        guard let indexPath = tableView.indexPath(for: cell) else { return }
-//        var post = self.likedPosts[indexPath.row]
-//        post.isLikedByCurrentUser.toggle()
-//        self.likedPosts[indexPath.row] = post
-//
-//        if post.isLikedByCurrentUser {
-//            self.likedPosts.remove(at: indexPath.row)
-//            self.savedPosts.append(post)
-//
-//        }
-//        tableView.reloadData()
-//    }
-

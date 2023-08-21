@@ -48,7 +48,7 @@ class TabBarViewController: UITabBarController {
             }
         }
         like = LikeViewController()
-        
+        like?.delegate = profile
         like?.title = "Liked Post".localized
 
         let nav1 = UINavigationController(rootViewController: home)
@@ -75,8 +75,8 @@ class TabBarViewController: UITabBarController {
 // MARK: - UITabBarControllerDelegate
 extension TabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        like?.updateDataClosure?()
         like?.updateLikedPosts(likePosts: profile!.likedPosts)
+        like?.updateDataClosure?()
         print(profile!.likedPosts)
     }
 }

@@ -149,6 +149,8 @@ class PostTableViewCell: UITableViewCell {
         postImageView.image = post.imagePost
         let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
         postImageViewHeightConstraint.constant = imageHeight
+        likeIconButton.tintColor = post.isLikedByCurrentUser ? .systemRed : .systemOrange
+        bookmarkIconButton.tintColor = post.isSavedByCurrentUser ? .systemGray : .systemOrange
         
         self.post = post
     }
@@ -234,8 +236,7 @@ class PostTableViewCell: UITableViewCell {
     }
     @objc private func didTapLike() {
         post?.toggleLike()
-        likeIconButton.tintColor = post!.isLikedByCurrentUser ? .systemOrange : .systemRed
-        
+        likeIconButton.tintColor = post!.isLikedByCurrentUser ? .systemRed : .systemOrange
         if let post = post {
             delegate?.postTableViewCellDidTapLikeSaveWith(post)
         }
@@ -244,7 +245,6 @@ class PostTableViewCell: UITableViewCell {
     @objc private func didTapSave() {
         post?.toggleSave()
         bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemGray : .systemOrange
-        
         if let post = post {
             saveDelegate?.postTableViewCellDidTapSavePostWith(post)
         }

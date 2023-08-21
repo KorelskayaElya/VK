@@ -539,15 +539,42 @@ extension ProfileViewController: PostAddViewControllerDelegate {
 // MARK: - PostTableViewCellLikeDelegate
 extension ProfileViewController: PostTableViewCellLikeDelegate {
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
-        likedPosts.append(model)
-       
+        updatePosts(for: model)
+        updateLikedPosts(for: model)
         print(likedPosts)
     }
-    func postTableViewCellDidTapLikeWith(_ model: Post) {
-        if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
-            likedPosts.remove(at: index)
+    private func updatePosts(for modyfiedPost: Post) {
+        for index in 0..<allPosts.count {
+            if allPosts[index].uuid == modyfiedPost.uuid {
+                allPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
+            }
+        }
+        for index in 0..<filteredPosts.count {
+            if filteredPosts[index].uuid == modyfiedPost.uuid {
+                filteredPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
+            }
         }
     }
+        
+    private func updateLikedPosts(for modyfiedPost: Post) {
+        if modyfiedPost.isLikedByCurrentUser {
+            likedPosts.append(modyfiedPost)
+        }
+        else {
+            if let index = likedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
+                likedPosts.remove(at: index)
+            }
+        }
+    }
+}
+// MARK: - LikeViewControllerDelegate
+extension ProfileViewController: LikeViewControllerDelegate {
+    func likeViewControllerDidTapLikeSaveWith(post: Post) {
+        updatePosts(for: post)
+        updateLikedPosts(for: post)
+        tableView.reloadData()
+    }
+    
 }
 // MARK: - PostTableViewCellSaveDelegate
 extension ProfileViewController: PostTableViewCellSaveDelegate {

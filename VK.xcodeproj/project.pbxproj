@@ -51,6 +51,7 @@
 		6DB099DB2A8EA1B400C42E5F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB099DD2A8EA1B400C42E5F /* Localizable.strings */; };
 		6DB099E02A8F720300C42E5F /* ColorExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099DF2A8F720300C42E5F /* ColorExtenstion.swift */; };
 		6DB099E32A8FD53A00C42E5F /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 6DB099E52A8FD53A00C42E5F /* Localizable.stringsdict */; };
+		6DB099E82A9007F100C42E5F /* LabelFutherInformationField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099E72A9007F100C42E5F /* LabelFutherInformationField.swift */; };
 		6DB6CE9C2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */; };
 		6DCAF37D2A6C759A00877579 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37C2A6C759A00877579 /* AppDelegate.swift */; };
 		6DCAF37F2A6C759A00877579 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCAF37E2A6C759A00877579 /* SceneDelegate.swift */; };
@@ -125,6 +126,7 @@
 		6DB099DF2A8F720300C42E5F /* ColorExtenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtenstion.swift; sourceTree = "<group>"; };
 		6DB099E42A8FD53A00C42E5F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		6DB099E62A8FD79400C42E5F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		6DB099E72A9007F100C42E5F /* LabelFutherInformationField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelFutherInformationField.swift; sourceTree = "<group>"; };
 		6DB6CE9B2A7ACCDF00ACD787 /* ProfileHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderViewModel.swift; sourceTree = "<group>"; };
 		6DCAF3792A6C759A00877579 /* VK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DCAF37C2A6C759A00877579 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				6DB0998F2A89184A00C42E5F /* ImagePicker.swift */,
 				6DB099A02A8A511700C42E5F /* SwiftyRecordButton.swift */,
 				6DB099B22A8D367100C42E5F /* TextPicker.swift */,
+				6DB099E72A9007F100C42E5F /* LabelFutherInformationField.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -587,6 +590,7 @@
 				6DB0998E2A88BB7900C42E5F /* RoundButtonWithDot.swift in Sources */,
 				6DB0999D2A8A4D6300C42E5F /* SavedViewController.swift in Sources */,
 				6DB099E02A8F720300C42E5F /* ColorExtenstion.swift in Sources */,
+				6DB099E82A9007F100C42E5F /* LabelFutherInformationField.swift in Sources */,
 				6DCAF3B22A6D4DD500877579 /* AuthField.swift in Sources */,
 				6DB099942A8A4B1D00C42E5F /* HobbyViewController.swift in Sources */,
 				6DCAF3972A6C767900877579 /* ProfileViewController.swift in Sources */,
