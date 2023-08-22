@@ -126,21 +126,9 @@ class PostAddViewController: UIViewController {
     /// кнопка опубликовать пост
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
-        let newPost = Post(user: User(identifier: "annaux_designer",
-                                      username: "Анна Мищенко",
-                                      profilePicture: UIImage(named:"header1"),
-                                      status: "дизайнер",
-                                      gender: "Женский",
-                                      birthday: "01.02.1997",
-                                      city: "Москва",
-                                      hobby: "футбол",
-                                      school:"Дизайнер",
-                                      university: "школа 134",
-                                      work: "Московский"),
-                           textPost: text,
-                           imagePost: selectedImage)
+        CoreDataService.shared.addPost(text: text, image: selectedImage?.pngData())
         
-        delegate?.postAddViewController(self, didCreatePost: newPost)
+        //delegate?.postAddViewController(self, didCreatePost: newPost)
 
         navigationController?.popViewController(animated: true)
     }

@@ -64,12 +64,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     /// открытие того или другого presentationcontroller
     var isOpenEdit = false
     var isOpenDetails = false
-    var isAnotherUser = false
     
-    private var posts = [Post]()
-    private var followers = [String]()
-    private var following = [String]()
-    private var isFollower: Bool = false
     var user: User
     /// для показа отфильрованных постов и всех постов
     var isFiltering: Bool = false
@@ -114,26 +109,14 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
 
         let menuIcon = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"),
                                        style: .done, target: self, action: #selector(openMenu))
-        if #available(iOS 16.0, *) {
-            menuIcon.isHidden = false
-            outIcon.isHidden = false
-        } else {
-           print("error hidden")
-        }
-        /// когда пользователь будет попадать на страницу к другому поьзователю
-        /// скрываются кнопки
-        if isAnotherUser == true {
-            if #available(iOS 16.0, *) {
-                menuIcon.isHidden = true
-                outIcon.isHidden = true
-            } else {
-               print("error hidden")
-            }
-        }
         menuIcon.tintColor = UIColor(named: "Orange")
         navigationItem.rightBarButtonItem = menuIcon
         setupView()
         allPosts = loadPostsFromStringsFile()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        /// отображаются посты при создании
+        tableView.reloadData()
     }
     
    
@@ -152,7 +135,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     func didTapButton(sender: UIButton) {
         let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
-        //photosViewController.viewModel = viewModel
         navigationController?.pushViewController(photosViewController, animated: true)
     }
     
@@ -241,7 +223,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
         } else if section == 2 {
             return 1
         } else {
-            return isFiltering ? filteredPosts.count : allPosts.count
+//            return isFiltering ? filteredPosts.count : allPosts.count
+            return CoreDataService.shared.posts.count
         }
     }
     /// header
@@ -278,7 +261,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
-            let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
+            //let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
+            let post = CoreDataService.shared.posts[indexPath.row]
             cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 100)
             /// для лайка
             cell.delegate = self
@@ -336,7 +320,9 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
                if indexPath.section == 3 {
-                   deletePost(at: indexPath)
+                   let post = CoreDataService.shared.posts[indexPath.row]
+                   CoreDataService.shared.deletePost(post: post)
+                   tableView.deleteRows(at: [indexPath], with: .fade)
                }
            }
     }

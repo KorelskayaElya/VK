@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CommentsViewController: UIViewController, PostTableViewCellCommentDelegate {
+class CommentsViewController: UIViewController {
     
     
     // MARK: - Properties

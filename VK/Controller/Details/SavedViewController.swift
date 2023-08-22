@@ -78,9 +78,9 @@ extension SavedViewController: UITableViewDataSource, UITableViewDelegate {
         
         var post = savedPosts[indexPath.row]
         cell.saveDelegate = self
-        cell.configure(with: post,
-                       textFont: UIFont(name: "Arial", size: 14)!,
-                       contentWidth: tableView.frame.width - 100)
+//        cell.configure(with: post,
+//                       textFont: UIFont(name: "Arial", size: 14)!,
+//                       contentWidth: tableView.frame.width - 100)
         post.toggleSave()
         
         return cell

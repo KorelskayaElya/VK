@@ -72,9 +72,9 @@ extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         var post = likedPosts[indexPath.row]
-        cell.configure(with: post,
-                       textFont: UIFont(name: "Arial", size: 14)!,
-                       contentWidth: tableView.frame.width - 100)
+//        cell.configure(with: post,
+//                       textFont: UIFont(name: "Arial", size: 14)!,
+//                       contentWidth: tableView.frame.width - 100)
         cell.delegate = self 
         post.toggleLike()
         

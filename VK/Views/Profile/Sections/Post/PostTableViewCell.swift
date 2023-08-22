@@ -13,9 +13,6 @@ protocol PostTableViewCellLikeDelegate: AnyObject {
 protocol PostTableViewCellSaveDelegate: AnyObject {
     func postTableViewCellDidTapSavePostWith(_ model: Post)
 }
-protocol PostTableViewCellCommentDelegate: AnyObject {
-    func postTableViewCellDidTapComment(_ cell: PostTableViewCell)
-}
 
 // структура поста
 class PostTableViewCell: UITableViewCell {
@@ -56,16 +53,13 @@ class PostTableViewCell: UITableViewCell {
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
+       // button.addTarget(self, action: #selector(didTapLike), for: .touchUpInside)
         return button
     }()
     /// отображение времени публикации поста
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
-        let currentDate = Date()
-        let formattedDate = String.date(with: currentDate)
-        label.text = formattedDate
         label.textAlignment = .center
         label.font = UIFont(name: "Arial", size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -75,16 +69,6 @@ class PostTableViewCell: UITableViewCell {
         label.clipsToBounds = true
         return label
     }()
-//    /// иконка комментария
-//    private lazy var сommentIconButton: UIButton = {
-//        let button = UIButton()
-//        let image = UIImage(systemName: "text.bubble.fill")
-//        button.setImage(image, for: .normal)
-//        button.tintColor = UIColor(named: "Orange")
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.addTarget(self, action: #selector(didTapComment), for: .touchUpInside)
-//        return button
-//    }()
     /// иконка закладки
     private lazy var bookmarkIconButton: UIButton = {
         let button = UIButton()
@@ -92,7 +76,7 @@ class PostTableViewCell: UITableViewCell {
         button.setImage(image, for: .normal)
         button.tintColor = UIColor(named: "Orange")
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(didTapSave), for: .touchUpInside)
+       // button.addTarget(self, action: #selector(didTapSave), for: .touchUpInside)
         return button
     }()
     /// изображение поста
@@ -123,8 +107,7 @@ class PostTableViewCell: UITableViewCell {
     // MARK: - Properties
     weak var delegate: PostTableViewCellLikeDelegate?
     weak var saveDelegate: PostTableViewCellSaveDelegate?
-    weak var commentDelegate: PostTableViewCellCommentDelegate?
-    private var post: Post?
+    //private var post: PostEntity?
     
     
     // MARK: - Init
@@ -137,23 +120,48 @@ class PostTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     // MARK: - Interface
-    func configure(with post: Post, textFont: UIFont, contentWidth: CGFloat) {
-        avatarImageView.image = post.user.profilePicture
-        descriptionLabel.text = post.user.status
-        nameLabel.text = post.user.username
+//    func configure(with post: Post, textFont: UIFont, contentWidth: CGFloat) {
+//        avatarImageView.image = post.user.profilePicture
+//        descriptionLabel.text = post.user.status
+//        nameLabel.text = post.user.username
+//
+//        textPostLabel.text = post.textPost
+//        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+//        textPostLabelHeightConstraint.constant = textHeight + 30
+//
+//        postImageView.image = post.imagePost
+//        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
+//        postImageViewHeightConstraint.constant = imageHeight
+//        likeIconButton.tintColor = post.isLikedByCurrentUser ? .systemRed : .systemOrange
+//        bookmarkIconButton.tintColor = post.isSavedByCurrentUser ? .systemGray : .systemOrange
+//
+//        self.post = post
+//    }
+    func configure(with post: Entity, textFont: UIFont, contentWidth: CGFloat) {
+        if let profilePictureData = post.profilePicture {
+            avatarImageView.image = UIImage(data: profilePictureData)
+        }
+        
+        descriptionLabel.text = post.status
+        nameLabel.text = post.username
+        timeLabel.text = post.dateCreated
         
         textPostLabel.text = post.textPost
-        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+        let textHeight = calculateTextHeight(text: post.textPost ?? "", font: textFont, width: contentWidth)
         textPostLabelHeightConstraint.constant = textHeight + 30
         
-        postImageView.image = post.imagePost
-        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
-        postImageViewHeightConstraint.constant = imageHeight
+        if let imagePostData = post.imagePost {
+            postImageView.image = UIImage(data: imagePostData)
+            let imageHeight = calculateImageHeight(image: postImageView.image, width: contentWidth)
+            postImageViewHeightConstraint.constant = imageHeight
+        }
+        
         likeIconButton.tintColor = post.isLikedByCurrentUser ? .systemRed : .systemOrange
         bookmarkIconButton.tintColor = post.isSavedByCurrentUser ? .systemGray : .systemOrange
         
-        self.post = post
+        //self.post = post
     }
+
     // MARK: - Private
     private func setupView() {
         lineView.tintColor = .lightGray
@@ -165,7 +173,6 @@ class PostTableViewCell: UITableViewCell {
         contentView.addSubview(lineView)
         contentView.addSubview(textPostLabel)
         contentView.addSubview(likeIconButton)
-       // contentView.addSubview(сommentIconButton)
         contentView.addSubview(bookmarkIconButton)
         contentView.addSubview(timeLabel)
         contentView.addSubview(lineView2)
@@ -217,11 +224,6 @@ class PostTableViewCell: UITableViewCell {
             likeIconButton.widthAnchor.constraint(equalToConstant: 55),
             likeIconButton.heightAnchor.constraint(equalToConstant: 55),
             
-//            сommentIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 13),
-//            сommentIconButton.leadingAnchor.constraint(equalTo: likeIconButton.trailingAnchor, constant: 30),
-//            сommentIconButton.widthAnchor.constraint(equalToConstant: 40),
-//            сommentIconButton.heightAnchor.constraint(equalToConstant: 40),
-            
             bookmarkIconButton.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 10),
             bookmarkIconButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             bookmarkIconButton.widthAnchor.constraint(equalToConstant: 45),
@@ -234,26 +236,21 @@ class PostTableViewCell: UITableViewCell {
             
         ])
     }
-    @objc private func didTapLike() {
-        post?.toggleLike()
-        likeIconButton.tintColor = post!.isLikedByCurrentUser ? .systemRed : .systemOrange
-        if let post = post {
-            delegate?.postTableViewCellDidTapLikeSaveWith(post)
-        }
-    }
-    
-    @objc private func didTapSave() {
-        post?.toggleSave()
-        bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemGray : .systemOrange
-        if let post = post {
-            saveDelegate?.postTableViewCellDidTapSavePostWith(post)
-        }
-    }
-    
-    
-    @objc private func didTapComment() {
-        commentDelegate?.postTableViewCellDidTapComment(self)
-    }
+//    @objc private func didTapLike() {
+//        post?.toggleLike()
+//        likeIconButton.tintColor = post!.isLikedByCurrentUser ? .systemRed : .systemOrange
+//        if let post = post {
+//            delegate?.postTableViewCellDidTapLikeSaveWith(post)
+//        }
+//    }
+//
+//    @objc private func didTapSave() {
+//        post?.toggleSave()
+//        bookmarkIconButton.tintColor = post!.isSavedByCurrentUser ? .systemGray : .systemOrange
+//        if let post = post {
+//            saveDelegate?.postTableViewCellDidTapSavePostWith(post)
+//        }
+//    }
 
     /// рассчет высоты текста
     func calculateTextHeight(text: String, font: UIFont, width: CGFloat) -> CGFloat {
