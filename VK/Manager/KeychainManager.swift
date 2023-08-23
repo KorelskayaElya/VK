@@ -14,7 +14,7 @@ class KeychainManager {
     private let keychain = Keychain(service: "Elya.VK")
     
     private init() {}
-    // сохранение ключа входа
+    /// сохранение ключа входа
     func saveSignInFlag(_ isSignedIn: Bool) {
         do {
             try keychain
@@ -24,7 +24,7 @@ class KeychainManager {
             print("Error saving sign-in flag to Keychain: \(error)")
         }
     }
-    // проверка ключа входа
+    /// проверка ключа входа
     func getSignInFlag() -> Bool? {
         do {
             if let value = try keychain

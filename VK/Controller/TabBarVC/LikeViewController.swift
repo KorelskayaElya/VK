@@ -7,7 +7,7 @@
 
 import UIKit
 protocol LikeViewControllerDelegate: AnyObject {
-    func likeViewControllerDidTapLikeSaveWith(post: Post)
+    func likeViewControllerDidTapLikeSaveWith(_ post: PostEntity)
 }
 
 class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
@@ -22,17 +22,17 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
         return tableView
     }()
     // MARK: -  Properties
-    var likedPosts: [Post] = []
-    var updateDataClosure: (() -> Void)?
+    var likedPosts: [PostEntity] = []
     weak var delegate: LikeViewControllerDelegate?
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupView()
-        updateDataClosure = { [weak self] in
-           self?.tableView.reloadData() 
-       }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        reload()
     }
    // MARK: - Private
     private func setupView() {
@@ -44,51 +44,63 @@ class LikeViewController: UIViewController, PostTableViewCellLikeDelegate {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
-    func updateLikedPosts(likePosts: [Post]) {
-        likedPosts = likePosts
+    /// обновить таблицу
+    private func reload() {
+        likedPosts = CoreDataService.shared.getLikedPosts()
+        tableView.reloadData()
     }
-    func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
-        if let index = likedPosts.firstIndex(where: { $0.textPost == model.textPost && $0.imagePost == model.imagePost }) {
-            var updatedModel = model
-            updatedModel.toggleSave()
-            likedPosts[index] = updatedModel
+    /// убрать пост
+    func postTableViewCellDidTapLikeSaveWith(_ post: PostEntity) {
+        post.isLikedByCurrentUser.toggle()
+        CoreDataService.shared.saveContext()
+        
+        if let index = likedPosts.firstIndex(of: post) {
             likedPosts.remove(at: index)
-            tableView.reloadData()
-            delegate?.likeViewControllerDidTapLikeSaveWith(post: model)
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         }
+        
+        CoreDataService.shared.reloadPosts()
+        tableView.reloadData()
+        
+        delegate?.likeViewControllerDidTapLikeSaveWith(post)
     }
+    
 
 }
 extension LikeViewController: UITableViewDataSource, UITableViewDelegate {
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return likedPosts.count
     }
-    
+    /// посты
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "LikePostCell", for: indexPath) as? PostTableViewCell else {
             fatalError("Could not dequeue a LikePostTableViewCell")
         }
         
         var post = likedPosts[indexPath.row]
-//        cell.configure(with: post,
-//                       textFont: UIFont(name: "Arial", size: 14)!,
-//                       contentWidth: tableView.frame.width - 100)
-        cell.delegate = self 
-        post.toggleLike()
+        cell.configure(with: post,
+                       textFont: UIFont(name: "Arial", size: 14)!,
+                       contentWidth: tableView.frame.width - 100)
+        cell.delegate = self
         
         return cell
     }
+    /// высота поста
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LikePostCell") as! PostTableViewCell
         let post = likedPosts[indexPath.row]
+        var image: UIImage?
+        if let imageData = post.imagePost {
+            image = UIImage(data: imageData)
+        }
+
         /// ширина  контента
         let contentWidth = tableView.frame.width - 100
         /// динамичное отображение высоты текста в посте
-        let textHeight = cell.calculateTextHeight(text: post.textPost, font: UIFont(name: "Arial", size: 14)!, width: contentWidth)
+        let textHeight = cell.calculateTextHeight(text: post.textPost ?? "", font: UIFont(name: "Arial", size: 14)!, width: contentWidth)
         /// динамичное отображение высоты изображения в посте
-        let imageHeight = cell.calculateImageHeight(image: post.imagePost, width: contentWidth)
+        let imageHeight = cell.calculateImageHeight(image: image, width: contentWidth)
         /// приблизительные размеры под элементы
         let timeHeight: CGFloat = 20
         let avatarHeight: CGFloat = 40

@@ -23,5 +23,4 @@ struct Post {
     }
     var isShowingComments: Bool = false
     
-    var comments: [PostComment] = []
 }

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-// коллекция изображений профиля
+/// коллекция изображений профиля
 class PhotosCollectionViewCell: UICollectionViewCell {
     // MARK: - UI
     private var photosItems: UIImageView = {
@@ -22,7 +22,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         self.setupView()
     }
-    // готовит ячейку к перееиспользованию
+    /// готовит ячейку к перееиспользованию
     override func prepareForReuse() {
         super.prepareForReuse()
         photosItems.image = nil
@@ -41,7 +41,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
             self.photosItems.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
-    
+    /// установить изображения во " все фотографии"
     func setupCell(with photoEntity: PhotoEntity) {
         if let imageData = photoEntity.photo {
             photosItems.image = UIImage(data: imageData)

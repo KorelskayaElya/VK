@@ -60,7 +60,7 @@ class EditProfilePresentationController: UIPresentationController {
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
         /// цвет бокового окна
-        presentedViewController.view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
+        presentedViewController.view.backgroundColor =  UIColor(named: "Bege")
         presentedViewController.view.clipsToBounds = true
         /// контейнер
         guard let containerView = containerView else { return }
@@ -70,7 +70,7 @@ class EditProfilePresentationController: UIPresentationController {
         arrowButton.contentHorizontalAlignment = .fill
         /// лейбл профиль
         let customLabel1 = LabelField()
-        customLabel1.text = "Профиль".localized
+        customLabel1.text = "Profile".localized
         customLabel1.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         customLabel1.translatesAutoresizingMaskIntoConstraints = false
         /// линия разделения
@@ -162,6 +162,13 @@ class EditProfilePresentationController: UIPresentationController {
         }
             
     }
+    /// показать вью на 3/4 экрана
+    override var frameOfPresentedViewInContainerView: CGRect {
+        guard let containerView = containerView else {
+            return CGRect.zero
+        }
+        return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
+    }
     // MARK: - Private
     /// переход на "основная информация"
     @objc private func didAddInformation() {
@@ -182,13 +189,6 @@ class EditProfilePresentationController: UIPresentationController {
     @objc private func didAddWork() {
         editWorkDelegate?.editWork()
         presentingViewController.dismiss(animated: true, completion: nil)
-    }
-    /// показать вью на 3/4 экрана
-    override var frameOfPresentedViewInContainerView: CGRect {
-        guard let containerView = containerView else {
-            return CGRect.zero
-        }
-        return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
     }
     /// выход назад
     @objc private func dismissModalController() {

@@ -11,7 +11,7 @@ protocol SearchBarDelegate: AnyObject {
     func searchBarSearchButtonTapped()
 }
 
-// поисковая строка
+/// поисковая строка
 class SearchBarTableViewCell: UITableViewCell, UISearchBarDelegate {
     // MARK: - Properties
     weak var searchBarDelegate: SearchBarDelegate?
@@ -46,20 +46,10 @@ class SearchBarTableViewCell: UITableViewCell, UISearchBarDelegate {
         searchBar.delegate = self
     }
     
-    @objc private func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        let location = gestureRecognizer.location(in: self)
-        
-        if searchBar.frame.contains(location) {
-            return
-        }
-        
-        searchBar.resignFirstResponder()
-    }
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBarDelegate?.searchBarDidChange(searchText)
     }
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBarDelegate?.searchBarSearchButtonTapped()
     }

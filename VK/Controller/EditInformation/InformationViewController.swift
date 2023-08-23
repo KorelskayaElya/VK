@@ -9,7 +9,7 @@ import UIKit
 protocol InformationViewControllerDelegate: AnyObject {
     func informationViewControllerDidFinishEnteringInfo(username: String, gender: String, birthday: String, city: String, status: String)
 }
-// основная информация 
+/// основная информация 
 class InformationViewController: UIViewController {
     
     // MARK: - UI

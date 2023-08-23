@@ -51,13 +51,11 @@ class DetailsProfilePresentationController: UIPresentationController {
         fatalError()
     }
     
-    
-    
     // MARK: - Lifecycle
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
         /// цвет бокового окна
-        presentedViewController.view.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 220/255, alpha: 1.0)
+        presentedViewController.view.backgroundColor = UIColor(named: "Bege")
         presentedViewController.view.clipsToBounds = true
         /// контейнер
         guard let containerView = containerView else { return }
@@ -74,11 +72,11 @@ class DetailsProfilePresentationController: UIPresentationController {
         let lineView1 = LineView()
         /// иконка лейбла закладки
         let starIconView = UIImageView(image: IconImageUtility.iconImage(named: "star.fill", tintColor:.black))
-        starIconView.tintColor = .black
+        starIconView.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         starIconView.translatesAutoresizingMaskIntoConstraints = false
         /// икнока лейбла файлы
         let squareIconView = UIImageView(image: IconImageUtility.iconImage(named: "square.and.arrow.up", tintColor:.black))
-        squareIconView.tintColor = .black
+        squareIconView.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         squareIconView.translatesAutoresizingMaskIntoConstraints = false
         /// лейбл закладки
         let customLabel2 = LabelField()
@@ -155,6 +153,13 @@ class DetailsProfilePresentationController: UIPresentationController {
         }
             
     }
+    /// расположение вью на 3/4 экрана
+    override var frameOfPresentedViewInContainerView: CGRect {
+        guard let containerView = containerView else {
+            return CGRect.zero
+        }
+        return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
+    }
     // MARK: - Private
     /// открыть заклыдки
     @objc private func didSave() {
@@ -165,13 +170,6 @@ class DetailsProfilePresentationController: UIPresentationController {
     @objc private func didFiles() {
         detailsProfileToFilesDelagate?.detailsProfileToFiles()
         presentingViewController.dismiss(animated: true, completion: nil)
-    }
-    /// расположение вью на 3/4 экрана
-    override var frameOfPresentedViewInContainerView: CGRect {
-        guard let containerView = containerView else {
-            return CGRect.zero
-        }
-        return CGRect(x: containerView.bounds.width / 4, y: 0, width: containerView.bounds.width * 3 / 4, height: containerView.bounds.height)
     }
     /// выход назад
     @objc private func dismissModalController() {

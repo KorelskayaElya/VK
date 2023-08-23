@@ -30,9 +30,7 @@ class PhotosViewController: UIViewController {
         return myCollectionView
     }()
     
-    // MARK: - properties
-   // private var recivedImages: [UIImage] = []
-
+    // MARK: - UI
     private lazy var allPhotosLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
@@ -45,11 +43,11 @@ class PhotosViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
         label.textColor = .lightGray
-        label.text = "\(CoreDataService.shared.photos.count ?? 0)"
+        label.text = "\(CoreDataService.shared.photos.count)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -137,12 +135,65 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            CoreDataService.shared.addPhoto(image: selectedImage.pngData())
+            let fixedImage = selectedImage.fixOrientation()
+            
+            CoreDataService.shared.addPhoto(image: fixedImage.pngData())
             updateCountPhotosLabel()
             collection.reloadData()
         }
         
         dismiss(animated: true, completion: nil)
+    }
+
+    
+
+}
+extension UIImage {
+    /// чтобы изображение не поворачивалось при добавлении
+    func fixOrientation() -> UIImage {
+        if self.imageOrientation == .up {
+            return self
+        }
+
+        var transform = CGAffineTransform.identity
+
+        switch self.imageOrientation {
+        case .down, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: .pi)
+        case .left, .leftMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: .pi / 2)
+        case .right, .rightMirrored:
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: -.pi / 2)
+        default:
+            break
+        }
+
+        switch self.imageOrientation {
+        case .upMirrored, .downMirrored:
+            transform.translatedBy(x: self.size.width, y: 0)
+            transform.scaledBy(x: -1, y: 1)
+        case .leftMirrored, .rightMirrored:
+            transform.translatedBy(x: self.size.height, y: 0)
+            transform.scaledBy(x: -1, y: 1)
+        default:
+            break
+        }
+
+        let ctx = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height), bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0, space: self.cgImage!.colorSpace!, bitmapInfo: self.cgImage!.bitmapInfo.rawValue)
+        ctx?.concatenate(transform)
+
+        switch self.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored:
+            ctx?.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
+        default:
+            ctx?.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        }
+
+        let cgImage = ctx!.makeImage()
+        return UIImage(cgImage: cgImage!)
     }
 }
 

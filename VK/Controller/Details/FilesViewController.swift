@@ -100,7 +100,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.present(alert, animated: true, completion: nil)
         
     }
-    // запускаем пикер изображения
+    /// запускаем пикер изображения
     @objc private func tapPicker() {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -108,7 +108,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         present(picker, animated: true)
     }
     
-    // запускаем пикер текста
+    /// запускаем пикер текста
     @objc private func tapBtn() {
         TextPicker.defaultPicker.getText(showPickerIn: self, title: "Create file".localized, message: "Filename".localized) {
             text1, text2 in
@@ -202,6 +202,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "rectangle.and.pencil.and.ellipsis"), for: .normal)
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        button.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         button.translatesAutoresizingMaskIntoConstraints = false
         cell.contentView.addSubview(button)
 
@@ -248,7 +249,7 @@ class FilesViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
         
-        tableView.deselectRow(at: indexPath, animated: true) // Deselect the row after transition
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     

@@ -8,7 +8,7 @@ import UIKit
 protocol EducationViewControllerDelegate: AnyObject {
     func educationViewControllerDidFinishEnteringInfo(school: String, university: String)
 }
-// образование
+/// образование
 class EducationViewController: UIViewController {
     // MARK: - UI
     private lazy var schoolLabel = LabelField()

@@ -41,7 +41,7 @@ class HobbyViewController: UIViewController {
     }
     
     
-    // MARK: - Lyfecycle
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground

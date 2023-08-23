@@ -8,7 +8,7 @@
 "Liked Post" = "Понравившиеся посты";
 "Home" = "Главная";
 "Profile" = "Профиль";
-"Liked" = "Сохраненные";
+"Liked" = "Лайк";
 "Sign Out" = "Выход из профиля" ;
 "Would you like to sign out?" = "Вы хотите выйти?";
 "Cancel" = "Отмена";
@@ -76,7 +76,7 @@
 "Create new folder" = "Создать новую папку";
 "Edit Profile" = "Редактировать";
 "Post" = "Запись";
-"Story" = "История";
+"Profile" = "Профиль";
 "Image" = "Фото";
 "Follow" = "Подписаться";
 "Unfollow" = "Убрать подписку";

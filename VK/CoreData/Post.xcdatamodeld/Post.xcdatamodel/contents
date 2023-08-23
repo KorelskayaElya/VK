@@ -6,7 +6,7 @@
         <relationship name="post" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostEntity" inverseName="photo" inverseEntity="PostEntity"/>
     </entity>
     <entity name="PostEntity" representedClassName="PostEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="dateCreated" optional="YES" attributeType="String"/>
+        <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="imagePost" optional="YES" attributeType="Binary"/>
         <attribute name="isLikedByCurrentUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isSavedByCurrentUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

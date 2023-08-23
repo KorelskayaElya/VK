@@ -10,10 +10,11 @@ import UIKit
 protocol ProfileTableViewCellDelegate {
     func didTapButton(sender: UIButton)
 }
-// структура изображений в профиле в коллекции
+/// структура изображений в профиле в коллекции
 class PhotosTableViewCell: UITableViewCell {
 
     // MARK: - UI
+    /// фотографии
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "Black")
@@ -22,6 +23,7 @@ class PhotosTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    /// количество изображений
     private lazy var countPhotosLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
@@ -30,6 +32,7 @@ class PhotosTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    /// кнопка перехода на все  изображения
     private lazy var button_photos: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "next"), for: .normal)
@@ -39,6 +42,7 @@ class PhotosTableViewCell: UITableViewCell {
         button.tintColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         return button
     }()
+    /// стек для изображений
     private lazy var stackWithPersons: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -49,6 +53,7 @@ class PhotosTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    /// 1 фото
     private lazy var Image1: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -57,6 +62,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
+    /// 2 фото
     private lazy var Image2: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -65,6 +71,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
+    /// 3 фото
     private lazy var Image3: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -73,6 +80,7 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
+    /// 4 фото
     private lazy var Image4: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -139,9 +147,11 @@ class PhotosTableViewCell: UITableViewCell {
 
         ])
     }
+    /// переход на все фотографии
     @objc private func didTapButton() {
         delegate?.didTapButton(sender: button_photos)
     }
+    /// установить изображения из всех фотографий в профиль
     func setup(with viewModel: ViewModel) {
         titleLabel.text = "Photos".localized
         countPhotosLabel.text = "\(CoreDataService.shared.photos.count)"

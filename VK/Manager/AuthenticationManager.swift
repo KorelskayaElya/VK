@@ -20,7 +20,7 @@ final class AuthManager {
     // + 16505551234/ + 16505551111 - 123456 есть в системе
     // + 16505552222/ +16505554321 - 123456 тестовые - их еще нет в базе
     
-    // капча
+    /// капча
     public func startAuth(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
         PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { [weak self] verificationID, error in
             if let error = error {
@@ -35,7 +35,7 @@ final class AuthManager {
             completion(true, nil)
         }
     }
-    // проверка кода
+    /// проверка кода
     public func verifyCode(phoneNumber: String, smsCode: String, completion: @escaping (Bool, String?) -> Void) {
         guard let verificationId = self.verificationId else {
             completion(false, "Verification ID not found.")
@@ -58,7 +58,7 @@ final class AuthManager {
             }
         }
     }
-    // регистрация
+    /// регистрация
     public func signUp(with phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
         DatabaseManager.shared.getPhone(for: phoneNumber) { result in
             switch result {
@@ -80,7 +80,7 @@ final class AuthManager {
             }
         }
     }
-    // вход
+    /// вход
     public func signIn(with phone: String, completion: @escaping (Result<String, Error>) -> Void) {
         DatabaseManager.shared.getPhone(for: phone) { result in
             switch result {
@@ -92,7 +92,7 @@ final class AuthManager {
             }
         }
     }
-    // выход из аккаунта
+    /// выход из аккаунта
     public func signOut(completion: (Bool) -> Void) {
         do {
             try Auth.auth().signOut()

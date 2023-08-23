@@ -36,26 +36,9 @@ class CoreDataService {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-       // container.viewContext.automaticallyMergesChangesFromParent = true
         return container
     }()
     func saveContext() {
-//        if postExists(postModel: post) == true {
-//           // AlertManager.showAlert(on: ProfileViewController, with: "Post already saved", message: "")
-//            print("post already save")
-//        } else {
-//            persistentContainer.performBackgroundTask { context in
-//                let post = PostEntity(context: context)
-//                post.textPost = post.textPost
-//                post.imagePost = post.imagePost
-//                guard context.hasChanges else { return }
-//                do {
-//                    try context.save()
-//                } catch let error as NSError {
-//                    print("Unresolved error \(error), \(error.userInfo)")
-//                }
-//           }
-//        }
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
@@ -65,27 +48,18 @@ class CoreDataService {
             }
         }
     }
-//    func postExists(postModel: Post) -> Bool {
-//        let postFetch: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
-//        postFetch.predicate = NSPredicate(format: "textPost contains[c] %@ AND imagePost contains[c]", postModel.textPost, postModel.imagePost ?? "")
-//        var isExist = false
-//        do {
-//            let results = try context.fetch(postFetch) as [NSManagedObject]
-//            if results.count > 0 {
-//                isExist = true
-//            } else {
-//                isExist = false
-//            }
-//        } catch {
-//            print("error \(error.localizedDescription)")
-//        }
-//        return isExist
-//    }
 
     /// перезагрузить
     func reloadPosts() {
-        let fetchRequest = PostEntity.fetchRequest()
-        posts = (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
+        let fetchRequest: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key:"dateCreated", ascending: false)]
+        do {
+            let filteredPosts = try persistentContainer.viewContext.fetch(fetchRequest)
+            posts = filteredPosts
+        } catch {
+            print("Error filtering posts: \(error.localizedDescription)")
+            posts = []
+        }
     }
     /// перезагрузить фотографии
     func reloadPhoto() {
@@ -107,9 +81,8 @@ class CoreDataService {
         post.profilePicture = user.profilePicture?.pngData()
         post.status = user.status
         post.imagePost = image
-        post.dateCreated = String.date(with: Date())
+        post.dateCreated = Date()
         saveContext()
-        posts.insert(post, at: 0)
         reloadPosts()
     }
     /// удалить пост
@@ -131,27 +104,30 @@ class CoreDataService {
             return []
         }
     }
-//    func getContextByText(textPost: String) -> [Post]{
-//        let postFetch: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
-//        postFetch.predicate = NSPredicate(format: "textPost contains[c] %@", textPost)
-//        var savedPostsData: [Post] = []
-//        do {
-//            let savedPosts = try context.fetch(postFetch)
-//            for data in savedPosts as [NSManagedObject] {
-//                savedPostsData.append(.init(
-//                    textPost: data.value(forKey: "textPost") as! String,
-//                    status: data.value(forKey: "status") as! String,
-//                    profilePicture: data.value(forKey: "profilePicture") as! String,
-//                    username: data.value(forKey: "username") as! String,
-//                    imagePost: data.value(forKey: "imagePost") as! String,
-//                    dateCreated: data.value(forKey: "dateCreated") as! String
-//                ))
-//            }
-//        } catch {
-//            print("error \(error.localizedDescription)")
-//        }
-//        return savedPostsData
-//    }
+    /// лайкать пост
+    func getLikedPosts() -> [PostEntity] {
+        let fetchRequest: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "isLikedByCurrentUser == true")
+        do {
+            let filteredPosts = try persistentContainer.viewContext.fetch(fetchRequest)
+            return filteredPosts
+        } catch {
+            print("Error filtering posts: \(error.localizedDescription)")
+            return []
+        }
+    }
+    /// добавлять закладки
+    func getSavedPosts() -> [PostEntity] {
+        let fetchRequest: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "isSavedByCurrentUser == true")
+        do {
+            let filteredPosts = try persistentContainer.viewContext.fetch(fetchRequest)
+            return filteredPosts
+        } catch {
+            print("Error filtering posts: \(error.localizedDescription)")
+            return []
+        }
+    }
     
     
     

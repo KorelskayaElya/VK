@@ -9,7 +9,7 @@ import UIKit
 protocol WorkViewControllerDelegate: AnyObject {
     func workViewControllerDidFinishEnteringInfo(work: String)
 }
-// текущее место работы
+/// текущее место работы
 class WorkViewController: UIViewController {
     
     // MARK: - UI

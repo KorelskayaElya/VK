@@ -26,7 +26,7 @@ class DataViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         
-        ///Добавить UIImageView на экран и отобразить на нем изображение.
+        let imageSize: CGSize = CGSize(width: 200, height: 200)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false

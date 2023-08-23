@@ -17,7 +17,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     
     
    // MARK: - UI
-    
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.dataSource = self
@@ -32,14 +31,14 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     private func createHeaderView() -> UIView {
         let headerView = ProfileTableHeaderView()
         headerView.nameLabel.text = user.username
-        headerView.descriptionLabel.text = "дизайнер"
+        headerView.descriptionLabel.text = user.status
         headerView.delegate = self
         headerView.cameraDelegate = self
         headerView.editProfileDelegate = self
         headerView.addPhotoDelegate = self
         headerView.editProfileDelegate = self
         headerView.furtherInformation = self
-        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: allPosts.count)
+        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: CoreDataService.shared.posts.count)
         headerView.configure(with: profileViewModel)
         let containerView = UIView()
         containerView.addSubview(headerView)
@@ -59,8 +58,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     // MARK: Properties
     /// делегат для выхода из аккаунта
     weak var delegate: ProfileViewControllerDelegate?
-    /// для сохранения выбора изображения
-    var selectedImage: UIImage = UIImage()
     /// открытие того или другого presentationcontroller
     var isOpenEdit = false
     var isOpenDetails = false
@@ -68,10 +65,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var user: User
     /// для показа отфильрованных постов и всех постов
     var isFiltering: Bool = false
-    var allPosts: [PostEntity] = []
     var filteredPosts: [PostEntity] = []
-    var likedPosts: [PostEntity] = []
-    var savedPosts: [PostEntity] = []
     /// получение данных для подробной информации
     var receivedUsername: String = ""
     var receivedGender: String = ""
@@ -121,18 +115,17 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
    
     // MARK: - Private
     private func setupView() {
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     // MARK: - Methods
     /// переход на фотографии
     func didTapButton(sender: UIButton) {
-        let viewModel = PhotoViewModel(model: Photo.photos)
         let photosViewController = PhotosViewController()
         navigationController?.pushViewController(photosViewController, animated: true)
     }
@@ -150,7 +143,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
                         UserDefaults.standard.setValue(nil, forKey: "phoneNumber")
                         KeychainManager.shared.saveSignInFlag(false)
                         self?.delegate?.welcomeViewControllerSignOutTapped()
-                        print("### You have to get out")
                     } else {
                         // failed
                         let alert = UIAlertController(title: "Woops".localized,
@@ -164,8 +156,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         }))
         present(actionSheet, animated: true)
     }
-
-
+    /// Скрытие статус-бара
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
     /// переход на редактирование профиля / должен открываться один из модальных экранов
     /// в соответствии с флагом - HalfScreenPresentationController
     @objc private func openMenu() {
@@ -196,7 +190,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
         } else {
             isFiltering = true
             filteredPosts = CoreDataService.shared.filterPostsBy(text: searchText)
-            tableView.reloadData()
         }
     }
     /// при окончании набора текста обновить таблицу
@@ -221,7 +214,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return isFiltering ? filteredPosts.count : CoreDataService.shared.posts.count
         }
     }
-    /// header
+    /// шапка профиля
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             return createHeaderView()
@@ -240,7 +233,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return 0
         }
     }
-
+    
+    /// отображение секций
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PhotosCell", for: indexPath) as! PhotosTableViewCell
@@ -264,23 +258,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return cell
         }
     }
-    /// удаление только для секции с постами
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 3 {
-            /// удаление поста
-            let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completionHandler) in
-                self?.deletePost(at: indexPath)
-                completionHandler(true)
-            }
-            deleteAction.backgroundColor = .red
-            deleteAction.image = UIImage(systemName: "trash.fill")
-            
-            let swipeActions = UISwipeActionsConfiguration(actions: [deleteAction])
-            return true
-        }
-        return false
-    }
-
+    /// высота поста
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 1 {
             return 120
@@ -313,25 +291,27 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
 
         }
     }
-    /// удаление поста только для секции с постами
+    /// удаление постов
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-               if indexPath.section == 3 {
-                   let post = CoreDataService.shared.posts[indexPath.row]
-                   CoreDataService.shared.deletePost(post: post)
-                   tableView.deleteRows(at: [indexPath], with: .fade)
-               }
-           }
-    }
-    /// удаление поста
-    func deletePost(at indexPath: IndexPath) {
-        if isFiltering {
-            filteredPosts.remove(at: indexPath.row)
-        } else {
-            allPosts.remove(at: indexPath.row)
+        if editingStyle == .delete && indexPath.section == 3 {
+            if isFiltering {
+                let post = filteredPosts[indexPath.row]
+                CoreDataService.shared.deletePost(post: post)
+                filteredPosts.remove(at: indexPath.row)
+            } else {
+                let post = CoreDataService.shared.posts[indexPath.row]
+                CoreDataService.shared.deletePost(post: post)
+            }
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
-        tableView.deleteRows(at: [indexPath], with: .fade)
     }
+    /// запрет на свайп удаления секций кроме постов
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section == 3
+    }
+
+
+
 
 }
 extension ProfileViewController: ProfileFurtherInformationDelegate {
@@ -440,7 +420,6 @@ extension ProfileViewController: DetailsProfileToSaveDelegate, DetailsProfileToF
     /// закладки
     func detailsProfileToSave() {
         let saveVC = SavedViewController()
-        //saveVC.updateSavedPosts(savePosts: savedPosts)
         navigationController?.pushViewController(saveVC, animated: true)
     }
 }
@@ -488,81 +467,41 @@ extension ProfileViewController: PostAddViewControllerDelegate {
 }
 // MARK: - PostTableViewCellLikeDelegate
 extension ProfileViewController: PostTableViewCellLikeDelegate {
-    func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
-        //updatePosts(for: model)
-        //updateLikedPosts(for: model)
-        print(likedPosts)
+    /// лайкнуть пост
+    func postTableViewCellDidTapLikeSaveWith(_ post: PostEntity) {
+        post.isLikedByCurrentUser.toggle()
+        CoreDataService.shared.saveContext()
+        CoreDataService.shared.reloadPosts()
+        tableView.reloadData()
     }
-//    private func updatePosts(for modyfiedPost: Post) {
-//        for index in 0..<allPosts.count {
-//            if allPosts[index].uuid == modyfiedPost.uuid {
-//                allPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
-//            }
-//        }
-//        for index in 0..<filteredPosts.count {
-//            if filteredPosts[index].uuid == modyfiedPost.uuid {
-//                filteredPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
-//            }
-//        }
-//    }
-        
-//    private func updateLikedPosts(for modyfiedPost: Post) {
-//        if modyfiedPost.isLikedByCurrentUser {
-//            //likedPosts.append(modyfiedPost)
-//        }
-//        else {
-////            if let index = likedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
-////                likedPosts.remove(at: index)
-////            }
-//        }
-//    }
 }
 // MARK: - LikeViewControllerDelegate
 extension ProfileViewController: LikeViewControllerDelegate {
-    func likeViewControllerDidTapLikeSaveWith(post: Post) {
-        //updatePosts(for: post)
-        //updateLikedPosts(for: post)
+    /// убрать из лайк постов лайк
+    func likeViewControllerDidTapLikeSaveWith(_ post: PostEntity) {
+        post.isLikedByCurrentUser.toggle()
+        CoreDataService.shared.saveContext()
+        CoreDataService.shared.reloadPosts()
         tableView.reloadData()
     }
-    
 }
 // MARK: - PostTableViewCellSaveDelegate
 extension ProfileViewController: PostTableViewCellSaveDelegate {
-    func postTableViewCellDidTapSavePostWith(_ model: Post) {
-        //updateSavePosts(for: model)
-        //updateSavedPosts(for: model)
-        print(savedPosts)
+    /// добавить пост в закладки
+    func postTableViewCellDidTapSavePostWith(_ post: PostEntity) {
+        post.isSavedByCurrentUser.toggle()
+        CoreDataService.shared.saveContext()
+        CoreDataService.shared.reloadPosts()
+        tableView.reloadData()
     }
-//    private func updateSavePosts(for modyfiedPost: Post) {
-//        for index in 0..<allPosts.count {
-//            if allPosts[index].uuid == modyfiedPost.uuid {
-//                allPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
-//            }
-//        }
-//        for index in 0..<filteredPosts.count {
-//            if filteredPosts[index].uuid == modyfiedPost.uuid {
-//                filteredPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
-//            }
-//        }
-//    }
-//
-//    private func updateSavedPosts(for modyfiedPost: Post) {
-//        if modyfiedPost.isSavedByCurrentUser {
-//            savedPosts.append(modyfiedPost)
-//        }
-//        else {
-//            if let index = savedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
-//                savedPosts.remove(at: index)
-//            }
-//        }
-//    }
 }
 // MARK: - SaveViewControllerDelegate
 extension ProfileViewController: SaveViewControllerDelegate {
-    func saveViewControllerDidTapSaveWith(post: Post) {
-        //updatePosts(for: post)
-        //updateSavedPosts(for: post)
+    /// убрать из закладок пост
+    func saveViewControllerDidTapSaveWith(_ post: PostEntity) {
+        post.isSavedByCurrentUser.toggle()
+        CoreDataService.shared.saveContext()
+        CoreDataService.shared.reloadPosts()
         tableView.reloadData()
     }
-    
 }

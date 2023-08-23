@@ -20,7 +20,7 @@ final class LabelField: UILabel {
     }
     // MARK: - Private
     private func commonInit() {
-        self.textColor = UIColor.createColor(lightMode: .black, darkMode: .black)
+        self.textColor = UIColor.createColor(lightMode: .black, darkMode: .white)
         self.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         self.numberOfLines = 0
     }

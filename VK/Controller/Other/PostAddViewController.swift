@@ -10,7 +10,7 @@ import UIKit
 protocol PostAddViewControllerDelegate: AnyObject {
     func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post)
 }
-// добавить пост в profilevc
+/// добавить пост в profilevc
 class PostAddViewController: UIViewController {
     
     // MARK: - UI
@@ -88,25 +88,25 @@ class PostAddViewController: UIViewController {
     }
     private func constraints() {
         NSLayoutConstraint.activate([
-            self.textLabel.topAnchor.constraint(equalTo:self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            self.textLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
-            self.textLabel.widthAnchor.constraint(equalToConstant: 200),
-            self.textLabel.heightAnchor.constraint(equalToConstant: 20),
+            textLabel.topAnchor.constraint(equalTo:view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            textLabel.widthAnchor.constraint(equalToConstant: 200),
+            textLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            self.textPostField.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: 16),
-            self.textPostField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            self.textPostField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            self.textPostField.heightAnchor.constraint(equalToConstant: 200),
+            textPostField.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 16),
+            textPostField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textPostField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textPostField.heightAnchor.constraint(equalToConstant: 200),
             
-            self.photoLabel.topAnchor.constraint(equalTo: self.textPostField.bottomAnchor, constant: 15),
-            self.photoLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.photoLabel.widthAnchor.constraint(equalToConstant: 220),
-            self.photoLabel.heightAnchor.constraint(equalToConstant: 30),
+            photoLabel.topAnchor.constraint(equalTo: textPostField.bottomAnchor, constant: 15),
+            photoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            photoLabel.widthAnchor.constraint(equalToConstant: 220),
+            photoLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            self.buttonSend.topAnchor.constraint(equalTo: self.photoLabel.bottomAnchor, constant: 20),
-            self.buttonSend.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
-            self.buttonSend.widthAnchor.constraint(equalToConstant: 120),
-            self.buttonSend.heightAnchor.constraint(equalToConstant: 50),
+            buttonSend.topAnchor.constraint(equalTo: photoLabel.bottomAnchor, constant: 20),
+            buttonSend.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            buttonSend.widthAnchor.constraint(equalToConstant: 120),
+            buttonSend.heightAnchor.constraint(equalToConstant: 50),
 
         ])
     }

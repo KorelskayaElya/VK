@@ -49,22 +49,9 @@ class ProfileTableHeaderView: UIView {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
         button.clipsToBounds = true
-        button.addTarget(self, action: #selector(self.buttonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 15
-        button.isHidden = false
-        button.layer.masksToBounds = false
-        return button
-    }()
-    /// кнопка подписаться
-    private lazy var followButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont(name: "SF Mono", size: 24)
-        button.clipsToBounds = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 15
-        button.isHidden = true
         button.layer.masksToBounds = false
         return button
     }()
@@ -88,7 +75,7 @@ class ProfileTableHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    /// иконка около подробной информации
+    /// иконка подробной информации
     private lazy var detailsIcon: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "exclamationmark.lock.fill")
@@ -148,16 +135,15 @@ class ProfileTableHeaderView: UIView {
     private lazy var buttonSquare: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
-        button.addTarget(self, action: #selector(self.buttonTapSquare), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonTapSquare), for: .touchUpInside)
         let image = UIImage(systemName: "square.and.pencil")
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
-        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    /// кнопка записать историю
+    /// кнопка поменять изображение
     private lazy var buttonCamera: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
@@ -166,7 +152,6 @@ class ProfileTableHeaderView: UIView {
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
-        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -174,12 +159,11 @@ class ProfileTableHeaderView: UIView {
     private lazy var buttonPhoto: UIButton = {
         let button = UIButton()
         button.tintColor = UIColor(named: "Black")
-        button.addTarget(self, action: #selector(self.buttonTapPhoto), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonTapPhoto), for: .touchUpInside)
         let image = UIImage(systemName: "photo")
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
-        button.isHidden = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -189,17 +173,15 @@ class ProfileTableHeaderView: UIView {
         label.text = "Post".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
-        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    /// лейбл история
+    /// лейбл поменять изображение
     private lazy var cameraLabel: UILabel = {
         let label = UILabel()
-        label.text = "Story".localized
+        label.text = "Profile".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
-        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -209,7 +191,6 @@ class ProfileTableHeaderView: UIView {
         label.text = "Photo".localized
         label.font = UIFont(name: "Arial", size: 15)
         label.textColor = UIColor(named: "Black")
-        label.isHidden = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -227,9 +208,6 @@ class ProfileTableHeaderView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         setupView()
         constraints()
-        followButton.setTitle("Follow".localized, for: .normal)
-        followButton.backgroundColor = UIColor(named: "Orange")
-        lineView.isHidden = false
     }
     
     required init?(coder: NSCoder) {
@@ -262,7 +240,6 @@ class ProfileTableHeaderView: UIView {
         addSubview(squareLabel)
         addSubview(cameraLabel)
         addSubview(photoLabel)
-        addSubview(followButton)
     }
     
     private func constraints() {
@@ -277,11 +254,6 @@ class ProfileTableHeaderView: UIView {
             editButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             editButton.heightAnchor.constraint(equalToConstant: 50),
             editButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
-            /// кнопка подписаться
-            followButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor,constant: 25),
-            followButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            followButton.heightAnchor.constraint(equalToConstant: 50),
-            followButton.trailingAnchor.constraint(equalTo: trailingAnchor,constant: -16),
             /// имя пользователя
             nameLabel.topAnchor.constraint(equalTo: topAnchor,constant: 35),
             nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 15),
@@ -326,7 +298,7 @@ class ProfileTableHeaderView: UIView {
             buttonSquare.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 52),
             buttonSquare.widthAnchor.constraint(equalToConstant: 35),
             buttonSquare.heightAnchor.constraint(equalToConstant: 35),
-            /// кнопка сделать историю
+            /// кнопка сделать фото профиля
             buttonCamera.topAnchor.constraint(equalTo: lineView.bottomAnchor, constant: 17),
             buttonCamera.centerXAnchor.constraint(equalTo: centerXAnchor),
             buttonCamera.widthAnchor.constraint(equalToConstant: 40),
@@ -341,10 +313,10 @@ class ProfileTableHeaderView: UIView {
             squareLabel.centerXAnchor.constraint(equalTo: buttonSquare.centerXAnchor, constant: 7),
             squareLabel.widthAnchor.constraint(equalToConstant: 60),
             squareLabel.heightAnchor.constraint(equalToConstant: 20),
-            /// лейбл истрия
+            /// лейбл  фото профиля
             cameraLabel.topAnchor.constraint(equalTo: buttonCamera.bottomAnchor, constant: 8),
             cameraLabel.centerXAnchor.constraint(equalTo: buttonCamera.centerXAnchor,constant: 5),
-            cameraLabel.widthAnchor.constraint(equalToConstant: 60),
+            cameraLabel.widthAnchor.constraint(equalToConstant: 70),
             cameraLabel.heightAnchor.constraint(equalToConstant: 20),
             /// лейбл фото
             photoLabel.topAnchor.constraint(equalTo: buttonPhoto.bottomAnchor, constant: 10),
@@ -372,13 +344,5 @@ class ProfileTableHeaderView: UIView {
     /// посмотреть подробную информацию
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
-    }
-    ///  подписаться
-    @objc private func buttonFollow() {
-        guard let viewModel = self.viewModel else {
-            return
-        }
-        //delegate?.profileHeaderCollectionReusableView(self,
-                                                     // didTapFolllowButtonWith: viewModel)
     }
 }
