@@ -42,10 +42,11 @@ class PhotosCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func setupCell(with imageName: UIImage) {
-        photosItems.image = imageName
+    func setupCell(with photoEntity: PhotoEntity) {
+        if let imageData = photoEntity.photo {
+            photosItems.image = UIImage(data: imageData)
+        }
     }
-        
    
     
 }

@@ -24,8 +24,10 @@ class CoreDataService {
     
     init() {
         reloadPosts()
+        reloadPhoto()
     }
     var posts: [Entity] = []
+    var photos: [PhotoEntity] = []
    // lazy var context: NSManagedObjectContext = self.persistentContainer.viewContext
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Post")
@@ -84,6 +86,18 @@ class CoreDataService {
     func reloadPosts() {
         let fetchRequest = Entity.fetchRequest()
         posts = (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
+    }
+    /// перезагрузить фотографии
+    func reloadPhoto() {
+        let fetchRequest = PhotoEntity.fetchRequest()
+        photos = (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
+    }
+    /// добвление изображения
+    func addPhoto(image: Data?) {
+        let photo = PhotoEntity(context: persistentContainer.viewContext)
+        photo.photo = image
+        saveContext()
+        reloadPhoto()
     }
     /// создание поста
     func addPost(text: String, image: Data?) {

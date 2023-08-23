@@ -10,5 +10,11 @@
         <attribute name="textPost" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="photo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PhotoEntity" inverseName="post" inverseEntity="PhotoEntity"/>
+    </entity>
+    <entity name="PhotoEntity" representedClassName="PhotoEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="photo" optional="YES" attributeType="Binary"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="post" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Entity" inverseName="photo" inverseEntity="Entity"/>
     </entity>
 </model>

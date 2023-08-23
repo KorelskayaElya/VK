@@ -31,7 +31,7 @@ class PhotosViewController: UIViewController {
     }()
     
     // MARK: - properties
-    private var recivedImages: [UIImage] = []
+   // private var recivedImages: [UIImage] = []
 
     private lazy var allPhotosLabel: UILabel = {
         let label = UILabel()
@@ -45,7 +45,7 @@ class PhotosViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont(name: "Comic Sans MS-Bold", size: 18)
         label.textColor = .lightGray
-        label.text = "\(recivedImages.count ?? 0)"
+        label.text = "\(CoreDataService.shared.photos.count ?? 0)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -112,14 +112,14 @@ class PhotosViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     private func updateCountPhotosLabel() {
-        countPhotosLabel.text = "\(recivedImages.count)"
+        countPhotosLabel.text = "\(CoreDataService.shared.photos.count)"
     }
 }
 
 extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return recivedImages.count
+        return CoreDataService.shared.photos.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -127,8 +127,8 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
             let mycell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
             return mycell
         }
-        let imageName = recivedImages[indexPath.row]
-        myCell.setupCell(with: imageName)
+        let photoEntity = CoreDataService.shared.photos[indexPath.row]
+        myCell.setupCell(with: photoEntity)
         return myCell
     }
     
@@ -137,7 +137,7 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            recivedImages.append(selectedImage)
+            CoreDataService.shared.addPhoto(image: selectedImage.pngData())
             updateCountPhotosLabel()
             collection.reloadData()
         }

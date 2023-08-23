@@ -81,14 +81,6 @@ class PhotosTableViewCell: UITableViewCell {
         imageView.layer.cornerRadius = 6
         return imageView
     }()
-    private lazy var Image5: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 6
-        return imageView
-    }()
     // MARK: - Properties
     var delegate: ProfileTableViewCellDelegate?
     
@@ -108,36 +100,40 @@ class PhotosTableViewCell: UITableViewCell {
     }
     // MARK: - Private
     private func setupView() {
-        self.contentView.addSubview(self.stackWithPersons)
-        self.addSubview(self.titleLabel)
-        self.addSubview(self.countPhotosLabel)
-        self.stackWithPersons.addArrangedSubview(self.Image1)
-        self.stackWithPersons.addArrangedSubview(self.Image2)
-        self.stackWithPersons.addArrangedSubview(self.Image3)
-        self.stackWithPersons.addArrangedSubview(self.Image4)
-        self.stackWithPersons.addArrangedSubview(self.Image5)
-        self.addSubview(self.button_photos)
+        contentView.addSubview(stackWithPersons)
+        addSubview(titleLabel)
+        addSubview(countPhotosLabel)
+        stackWithPersons.addArrangedSubview(Image1)
+        stackWithPersons.addArrangedSubview(Image2)
+        stackWithPersons.addArrangedSubview(Image3)
+        stackWithPersons.addArrangedSubview(Image4)
+        addSubview(button_photos)
         NSLayoutConstraint.activate([
             
-            self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
-            self.titleLabel.widthAnchor.constraint(equalToConstant: 110),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            titleLabel.widthAnchor.constraint(equalToConstant: 110),
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
             
-            self.countPhotosLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
-            self.countPhotosLabel.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 10),
-            self.countPhotosLabel.widthAnchor.constraint(equalToConstant: 60),
-            self.countPhotosLabel.heightAnchor.constraint(equalToConstant: 20),
+            countPhotosLabel.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            countPhotosLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 10),
+            countPhotosLabel.widthAnchor.constraint(equalToConstant: 60),
+            countPhotosLabel.heightAnchor.constraint(equalToConstant: 20),
 
-            self.stackWithPersons.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
-            self.stackWithPersons.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12),
-            self.stackWithPersons.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12),
-            self.stackWithPersons.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
+            stackWithPersons.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            stackWithPersons.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            stackWithPersons.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            stackWithPersons.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            
+            Image1.widthAnchor.constraint(equalTo: stackWithPersons.widthAnchor, multiplier: 0.234),
+            Image2.widthAnchor.constraint(equalTo: stackWithPersons.widthAnchor, multiplier: 0.234),
+            Image3.widthAnchor.constraint(equalTo: stackWithPersons.widthAnchor, multiplier: 0.234),
+            Image4.widthAnchor.constraint(equalTo: stackWithPersons.widthAnchor, multiplier: 0.234),
 
-            self.button_photos.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
-            self.button_photos.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
-            self.button_photos.widthAnchor.constraint(equalToConstant: 15),
-            self.button_photos.heightAnchor.constraint(equalToConstant: 15),
+            button_photos.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            button_photos.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            button_photos.widthAnchor.constraint(equalToConstant: 15),
+            button_photos.heightAnchor.constraint(equalToConstant: 15),
 
         
 
@@ -147,13 +143,20 @@ class PhotosTableViewCell: UITableViewCell {
         delegate?.didTapButton(sender: button_photos)
     }
     func setup(with viewModel: ViewModel) {
-        self.titleLabel.text = "Photos".localized
-        self.countPhotosLabel.text = "10"
-        self.Image1.image = UIImage(named: "picture1")
-        self.Image2.image = UIImage(named: "picture2")
-        self.Image3.image = UIImage(named: "picture3")
-        self.Image4.image = UIImage(named: "picture4")
-        self.Image5.image = UIImage(named: "picture5")
+        titleLabel.text = "Photos".localized
+        countPhotosLabel.text = "\(CoreDataService.shared.photos.count)"
+        let imageViews = [Image1, Image2, Image3, Image4]
+
+            for (index, imageView) in imageViews.enumerated() {
+                if index < CoreDataService.shared.photos.count {
+                    let photoEntity = CoreDataService.shared.photos[index]
+                    if let imageData = photoEntity.photo {
+                        imageView.image = UIImage(data: imageData)
+                    }
+                } else {
+                    imageView.image = UIImage(named:"camera")
+                }
+            }
     }
     
 }
