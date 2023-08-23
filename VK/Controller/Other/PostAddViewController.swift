@@ -127,9 +127,6 @@ class PostAddViewController: UIViewController {
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
         CoreDataService.shared.addPost(text: text, image: selectedImage?.pngData())
-        
-        //delegate?.postAddViewController(self, didCreatePost: newPost)
-
         navigationController?.popViewController(animated: true)
     }
 }

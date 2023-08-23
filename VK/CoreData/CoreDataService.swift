@@ -26,9 +26,9 @@ class CoreDataService {
         reloadPosts()
         reloadPhoto()
     }
-    var posts: [Entity] = []
+    var posts: [PostEntity] = []
     var photos: [PhotoEntity] = []
-   // lazy var context: NSManagedObjectContext = self.persistentContainer.viewContext
+    lazy var context: NSManagedObjectContext = self.persistentContainer.viewContext
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Post")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -84,7 +84,7 @@ class CoreDataService {
 
     /// перезагрузить
     func reloadPosts() {
-        let fetchRequest = Entity.fetchRequest()
+        let fetchRequest = PostEntity.fetchRequest()
         posts = (try? persistentContainer.viewContext.fetch(fetchRequest)) ?? []
     }
     /// перезагрузить фотографии
@@ -101,7 +101,7 @@ class CoreDataService {
     }
     /// создание поста
     func addPost(text: String, image: Data?) {
-        let post = Entity(context: persistentContainer.viewContext)
+        let post = PostEntity(context: persistentContainer.viewContext)
         post.textPost = text
         post.username = user.username
         post.profilePicture = user.profilePicture?.pngData()
@@ -109,13 +109,27 @@ class CoreDataService {
         post.imagePost = image
         post.dateCreated = String.date(with: Date())
         saveContext()
+        posts.insert(post, at: 0)
         reloadPosts()
     }
     /// удалить пост
-    func deletePost(post: Entity) {
+    func deletePost(post: PostEntity) {
         persistentContainer.viewContext.delete(post)
         saveContext()
         reloadPosts()
+    }
+    /// фильтрация по тексту
+    func filterPostsBy(text: String) -> [PostEntity] {
+        let fetchRequest: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "textPost contains[c] %@", text)
+        
+        do {
+            let filteredPosts = try persistentContainer.viewContext.fetch(fetchRequest)
+            return filteredPosts
+        } catch {
+            print("Error filtering posts: \(error.localizedDescription)")
+            return []
+        }
     }
 //    func getContextByText(textPost: String) -> [Post]{
 //        let postFetch: NSFetchRequest<PostEntity> = PostEntity.fetchRequest()

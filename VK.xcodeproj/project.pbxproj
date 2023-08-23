@@ -25,7 +25,6 @@
 		6DB099802A85984600C42E5F /* LineVerticalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0997F2A85984600C42E5F /* LineVerticalView.swift */; };
 		6DB099822A86C12B00C42E5F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099812A86C12B00C42E5F /* Post.swift */; };
 		6DB099842A86C28000C42E5F /* PostComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099832A86C28000C42E5F /* PostComment.swift */; };
-		6DB099882A87BC6E00C42E5F /* postfile.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6DB099872A87BC6E00C42E5F /* postfile.strings */; };
 		6DB0998A2A87E0C400C42E5F /* PostAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099892A87E0C400C42E5F /* PostAddViewController.swift */; };
 		6DB0998C2A88BACA00C42E5F /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */; };
 		6DB0998E2A88BB7900C42E5F /* RoundButtonWithDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998D2A88BB7900C42E5F /* RoundButtonWithDot.swift */; };
@@ -100,7 +99,6 @@
 		6DB0997F2A85984600C42E5F /* LineVerticalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineVerticalView.swift; sourceTree = "<group>"; };
 		6DB099812A86C12B00C42E5F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		6DB099832A86C28000C42E5F /* PostComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostComment.swift; sourceTree = "<group>"; };
-		6DB099872A87BC6E00C42E5F /* postfile.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = postfile.strings; sourceTree = "<group>"; };
 		6DB099892A87E0C400C42E5F /* PostAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAddViewController.swift; sourceTree = "<group>"; };
 		6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		6DB0998D2A88BB7900C42E5F /* RoundButtonWithDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButtonWithDot.swift; sourceTree = "<group>"; };
@@ -326,7 +324,6 @@
 				6DCAF37E2A6C759A00877579 /* SceneDelegate.swift */,
 				6DCAF37C2A6C759A00877579 /* AppDelegate.swift */,
 				6DCAF39C2A6C76DD00877579 /* Extensions.swift */,
-				6DB099872A87BC6E00C42E5F /* postfile.strings */,
 				6DB099A42A8A96A900C42E5F /* NavigationRouter.swift */,
 				6DB099BD2A8E52E000C42E5F /* StringExtension.swift */,
 				6DB099DD2A8EA1B400C42E5F /* Localizable.strings */,
@@ -541,7 +538,6 @@
 				6DB099DB2A8EA1B400C42E5F /* Localizable.strings in Resources */,
 				6DCAF3892A6C759B00877579 /* LaunchScreen.storyboard in Resources */,
 				6DCAF3862A6C759B00877579 /* Assets.xcassets in Resources */,
-				6DB099882A87BC6E00C42E5F /* postfile.strings in Resources */,
 				6DCAF3A42A6C7CE200877579 /* GoogleService-Info.plist in Resources */,
 				6DB099E32A8FD53A00C42E5F /* Localizable.stringsdict in Resources */,
 			);

@@ -75,7 +75,7 @@ class TabBarViewController: UITabBarController {
 // MARK: - UITabBarControllerDelegate
 extension TabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        like?.updateLikedPosts(likePosts: profile!.likedPosts)
+        //like?.updateLikedPosts(likePosts: profile!.likedPosts)
         like?.updateDataClosure?()
         print(profile!.likedPosts)
     }

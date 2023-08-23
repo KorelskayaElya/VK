@@ -137,7 +137,7 @@ class PostTableViewCell: UITableViewCell {
 //
 //        self.post = post
 //    }
-    func configure(with post: Entity, textFont: UIFont, contentWidth: CGFloat) {
+    func configure(with post: PostEntity, textFont: UIFont, contentWidth: CGFloat) {
         if let profilePictureData = post.profilePicture {
             avatarImageView.image = UIImage(data: profilePictureData)
         }

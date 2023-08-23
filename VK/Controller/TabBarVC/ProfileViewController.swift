@@ -68,10 +68,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var user: User
     /// для показа отфильрованных постов и всех постов
     var isFiltering: Bool = false
-    var allPosts: [Post] = []
-    var filteredPosts: [Post] = []
-    var likedPosts: [Post] = []
-    var savedPosts: [Post] = []
+    var allPosts: [PostEntity] = []
+    var filteredPosts: [PostEntity] = []
+    var likedPosts: [PostEntity] = []
+    var savedPosts: [PostEntity] = []
     /// получение данных для подробной информации
     var receivedUsername: String = ""
     var receivedGender: String = ""
@@ -112,7 +112,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         menuIcon.tintColor = UIColor(named: "Orange")
         navigationItem.rightBarButtonItem = menuIcon
         setupView()
-        allPosts = loadPostsFromStringsFile()
     }
     override func viewWillAppear(_ animated: Bool) {
         /// отображаются посты при создании
@@ -191,17 +190,13 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, SearchBarDelegate  {
     /// поиск по словам в посте
     func searchBarDidChange(_ searchText: String) {
-        /// если текста нет обновить обратно до полного списка
         if searchText.isEmpty {
             isFiltering = false
             tableView.reloadData()
         } else {
-            /// если текст есть то отфильровать по этому тексту и
-            /// обновить когда текст уже будет написан
             isFiltering = true
-            filteredPosts = allPosts.filter { post in
-                post.textPost.lowercased().contains(searchText.lowercased())
-            }
+            filteredPosts = CoreDataService.shared.filterPostsBy(text: searchText)
+            tableView.reloadData()
         }
     }
     /// при окончании набора текста обновить таблицу
@@ -223,8 +218,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
         } else if section == 2 {
             return 1
         } else {
-//            return isFiltering ? filteredPosts.count : allPosts.count
-            return CoreDataService.shared.posts.count
+            return isFiltering ? filteredPosts.count : CoreDataService.shared.posts.count
         }
     }
     /// header
@@ -261,8 +255,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
-            //let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
-            let post = CoreDataService.shared.posts[indexPath.row]
+            let post = isFiltering ? filteredPosts[indexPath.row] : CoreDataService.shared.posts[indexPath.row]
             cell.configure(with: post, textFont: UIFont(name: "Arial", size: 14)!, contentWidth: tableView.frame.width - 100)
             /// для лайка
             cell.delegate = self
@@ -295,25 +288,29 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate, Sea
             return 60
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as! PostTableViewCell
-            let post = isFiltering ? filteredPosts[indexPath.row] : allPosts[indexPath.row]
-            /// шрифт текста
+            let post = isFiltering ? filteredPosts[indexPath.row] : CoreDataService.shared.posts[indexPath.row]
+
             let textFont = UIFont(name: "Arial", size: 14)!
-            /// ширина  контента
             let contentWidth = tableView.frame.width - 100
-            /// динамичное отображение высоты текста в посте
-            let textHeight = cell.calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
-            /// динамичное отображение высоты изображения в посте
-            let imageHeight = cell.calculateImageHeight(image: post.imagePost, width: contentWidth)
-            /// приблизительные размеры под элементы
+            let textHeight = cell.calculateTextHeight(text: post.textPost ?? "", font: textFont, width: contentWidth)
+
+
+            var image: UIImage?
+            if let imageData = post.imagePost {
+                image = UIImage(data: imageData)
+            }
+
+            let imageHeight = cell.calculateImageHeight(image: image, width: contentWidth)
+
             let timeHeight: CGFloat = 20
             let avatarHeight: CGFloat = 40
             let nameLabelHeight: CGFloat = 20
             let descriptionLabelHeight: CGFloat = 20
             let otherViewHeights: CGFloat = 90
-            /// сколько всего занимает высоты пост
             let totalHeight = textHeight + imageHeight + timeHeight + avatarHeight + nameLabelHeight + descriptionLabelHeight + otherViewHeights
-            
+
             return totalHeight
+
         }
     }
     /// удаление поста только для секции с постами
@@ -443,7 +440,7 @@ extension ProfileViewController: DetailsProfileToSaveDelegate, DetailsProfileToF
     /// закладки
     func detailsProfileToSave() {
         let saveVC = SavedViewController()
-        saveVC.updateSavedPosts(savePosts: savedPosts)
+        //saveVC.updateSavedPosts(savePosts: savedPosts)
         navigationController?.pushViewController(saveVC, animated: true)
     }
 }
@@ -480,84 +477,51 @@ extension ProfileViewController: PostAddViewControllerDelegate {
     /// создать новый пост из postAddvc
     func didTapCreatePost() {
         let vc = PostAddViewController()
-        vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
 
     /// обновить таблицу после нового поста
     func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
         // добавление поста сверху
-        allPosts.insert(post, at: 0)
         tableView.reloadData()
     }
-    func didTapCreatePost(image: UIImage, text: String) {
-        let user = User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский")
-       let newPost = Post(user: user, textPost: text, imagePost: image)
-       allPosts.append(newPost)
-       tableView.reloadData()
-   }
-    /// локальные посты из postfile
-    func loadPostsFromStringsFile() -> [Post] {
-        guard let path = Bundle.main.path(forResource: "postfile", ofType: "strings"),
-          let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-          let dictionary = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
-          let postArray = dictionary["post"] as? [[String: Any]] else {
-        return []
-        }
-
-        var posts: [Post] = []
-
-        for postDict in postArray {
-            if let textPost = postDict["textPost"] as? String,
-               let imagePostName = postDict["imagePost"] as? String,
-               let imagePost = UIImage(named: imagePostName) {
-                let user = User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский")
-                let post = Post(user: user, textPost: textPost, imagePost: imagePost)
-                posts.append(post)
-            }
-        }
-        print(posts)
-
-        return posts
-    }
-    
 }
 // MARK: - PostTableViewCellLikeDelegate
 extension ProfileViewController: PostTableViewCellLikeDelegate {
     func postTableViewCellDidTapLikeSaveWith(_ model: Post) {
-        updatePosts(for: model)
-        updateLikedPosts(for: model)
+        //updatePosts(for: model)
+        //updateLikedPosts(for: model)
         print(likedPosts)
     }
-    private func updatePosts(for modyfiedPost: Post) {
-        for index in 0..<allPosts.count {
-            if allPosts[index].uuid == modyfiedPost.uuid {
-                allPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
-            }
-        }
-        for index in 0..<filteredPosts.count {
-            if filteredPosts[index].uuid == modyfiedPost.uuid {
-                filteredPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
-            }
-        }
-    }
+//    private func updatePosts(for modyfiedPost: Post) {
+//        for index in 0..<allPosts.count {
+//            if allPosts[index].uuid == modyfiedPost.uuid {
+//                allPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
+//            }
+//        }
+//        for index in 0..<filteredPosts.count {
+//            if filteredPosts[index].uuid == modyfiedPost.uuid {
+//                filteredPosts[index].isLikedByCurrentUser = modyfiedPost.isLikedByCurrentUser
+//            }
+//        }
+//    }
         
-    private func updateLikedPosts(for modyfiedPost: Post) {
-        if modyfiedPost.isLikedByCurrentUser {
-            likedPosts.append(modyfiedPost)
-        }
-        else {
-            if let index = likedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
-                likedPosts.remove(at: index)
-            }
-        }
-    }
+//    private func updateLikedPosts(for modyfiedPost: Post) {
+//        if modyfiedPost.isLikedByCurrentUser {
+//            //likedPosts.append(modyfiedPost)
+//        }
+//        else {
+////            if let index = likedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
+////                likedPosts.remove(at: index)
+////            }
+//        }
+//    }
 }
 // MARK: - LikeViewControllerDelegate
 extension ProfileViewController: LikeViewControllerDelegate {
     func likeViewControllerDidTapLikeSaveWith(post: Post) {
-        updatePosts(for: post)
-        updateLikedPosts(for: post)
+        //updatePosts(for: post)
+        //updateLikedPosts(for: post)
         tableView.reloadData()
     }
     
@@ -565,39 +529,39 @@ extension ProfileViewController: LikeViewControllerDelegate {
 // MARK: - PostTableViewCellSaveDelegate
 extension ProfileViewController: PostTableViewCellSaveDelegate {
     func postTableViewCellDidTapSavePostWith(_ model: Post) {
-        updateSavePosts(for: model)
-        updateSavedPosts(for: model)
+        //updateSavePosts(for: model)
+        //updateSavedPosts(for: model)
         print(savedPosts)
     }
-    private func updateSavePosts(for modyfiedPost: Post) {
-        for index in 0..<allPosts.count {
-            if allPosts[index].uuid == modyfiedPost.uuid {
-                allPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
-            }
-        }
-        for index in 0..<filteredPosts.count {
-            if filteredPosts[index].uuid == modyfiedPost.uuid {
-                filteredPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
-            }
-        }
-    }
-        
-    private func updateSavedPosts(for modyfiedPost: Post) {
-        if modyfiedPost.isSavedByCurrentUser {
-            savedPosts.append(modyfiedPost)
-        }
-        else {
-            if let index = savedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
-                savedPosts.remove(at: index)
-            }
-        }
-    }
+//    private func updateSavePosts(for modyfiedPost: Post) {
+//        for index in 0..<allPosts.count {
+//            if allPosts[index].uuid == modyfiedPost.uuid {
+//                allPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
+//            }
+//        }
+//        for index in 0..<filteredPosts.count {
+//            if filteredPosts[index].uuid == modyfiedPost.uuid {
+//                filteredPosts[index].isSavedByCurrentUser = modyfiedPost.isSavedByCurrentUser
+//            }
+//        }
+//    }
+//
+//    private func updateSavedPosts(for modyfiedPost: Post) {
+//        if modyfiedPost.isSavedByCurrentUser {
+//            savedPosts.append(modyfiedPost)
+//        }
+//        else {
+//            if let index = savedPosts.firstIndex(where: { $0.uuid == modyfiedPost.uuid }) {
+//                savedPosts.remove(at: index)
+//            }
+//        }
+//    }
 }
 // MARK: - SaveViewControllerDelegate
 extension ProfileViewController: SaveViewControllerDelegate {
     func saveViewControllerDidTapSaveWith(post: Post) {
-        updatePosts(for: post)
-        updateSavedPosts(for: post)
+        //updatePosts(for: post)
+        //updateSavedPosts(for: post)
         tableView.reloadData()
     }
     
