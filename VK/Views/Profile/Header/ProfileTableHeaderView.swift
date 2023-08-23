@@ -220,12 +220,6 @@ class ProfileTableHeaderView: UIView {
     weak var addPhotoDelegate: ProfileAddPhotoDelegate?
     weak var furtherInformation: ProfileFurtherInformationDelegate?
     var viewModel: ProfileHeaderViewModel?
-    var isAnotherUser = false
-//    var isButtonFollowTapped = false {
-//        didSet {
-//
-//        }
-//    }
     
     // MARK:  - Init
     override init(frame: CGRect) {
@@ -236,18 +230,6 @@ class ProfileTableHeaderView: UIView {
         followButton.setTitle("Follow".localized, for: .normal)
         followButton.backgroundColor = UIColor(named: "Orange")
         lineView.isHidden = false
-        if isAnotherUser == true {
-            editButton.isHidden = true
-            followButton.isHidden = false
-            lineView.isHidden = true
-            squareLabel.isHidden = true
-            photoLabel.isHidden = true
-            cameraLabel.isHidden = true
-            buttonCamera.isHidden = true
-            buttonSquare.isHidden = true
-            buttonPhoto.isHidden = true
-            
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -258,16 +240,7 @@ class ProfileTableHeaderView: UIView {
         self.viewModel = viewModel
         followers.text = "\(viewModel.followerCount)\nFollowers"
         following.text = "\(viewModel.followingCount)\nFollowing"
-        photosPublished.text = "\(viewModel.publishedPhotos)\nPosts"
-//        followButton.addTarget(self, action: #selector(self.buttonFollow), for: .touchUpInside)
-        if var isFollowing = viewModel.isFollowing {
-            followButton.setTitle("Follow".localized, for: .normal)
-            followButton.backgroundColor = UIColor(named: "Orange")
-//            isFollowing.toggle()
-        } else {
-            followButton.setTitle("Unfollow".localized, for: .normal)
-            followButton.backgroundColor = UIColor(named: "Gray")
-        }
+        photosPublished.text = "\(CoreDataService.shared.posts.count)\nPosts"
         
     }
     
