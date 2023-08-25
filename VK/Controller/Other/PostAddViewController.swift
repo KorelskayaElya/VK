@@ -66,6 +66,10 @@ class PostAddViewController: UIViewController {
     }()
     // MARK: - Properties
     private var selectedImage: UIImage?
+    var receivedUsername = ""
+    var recievedStatus = ""
+    lazy var path = ""
+    var isProfileImageChanged = false
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,17 +127,38 @@ class PostAddViewController: UIViewController {
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
         
-        DispatchQueue.global(qos:.userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
             var imageJpeg: Data?
             if let image = self.selectedImage {
                 imageJpeg = image.jpegData(compressionQuality: 0.5)
             }
-            CoreDataService.shared.addPost(text: text, image: imageJpeg)
+            let defaultUsername = self.receivedUsername.isEmpty ? "Анна Мищенко" : self.receivedUsername
+            let defaultStatus = self.recievedStatus.isEmpty ? "Дизайнер" : self.recievedStatus
+            
+            var profilePictureData: Data?
+            if !self.path.isEmpty  {
+                profilePictureData = UIImage(named: "header1")?.pngData()
+            }
+            if !self.path.isEmpty && self.isProfileImageChanged == true {
+                let profileImage = UIImage(contentsOfFile: self.path)
+                profilePictureData = profileImage?.pngData()
+            }
+            
+            CoreDataService.shared.addPost(
+                username: defaultUsername,
+                status: defaultStatus,
+                profilePicture: profilePictureData,
+                text: text,
+                image: imageJpeg
+            )
+            
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
             }
         }
     }
+
+
 }
 
 extension PostAddViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {

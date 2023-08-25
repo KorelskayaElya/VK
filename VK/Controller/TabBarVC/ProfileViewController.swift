@@ -35,7 +35,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         headerView.cameraDelegate = self
         headerView.editProfileDelegate = self
         headerView.addPhotoDelegate = self
-        headerView.editProfileDelegate = self
         headerView.furtherInformation = self
         let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(contentsOfFile: path!.path), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: CoreDataService.shared.posts.count)
         headerView.configure(with: profileViewModel)
@@ -77,6 +76,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var receivedWork: String = ""
     var receivedStatus: String = ""
     let headerView = ProfileTableHeaderView()
+    var isProfileImageChanged: Bool = false
 
     
     
@@ -132,6 +132,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    
     /// переход на редактирование профиля / должен открываться один из модальных экранов
     /// в соответствии с флагом - HalfScreenPresentationController
     @objc private func openMenu() {
@@ -153,7 +154,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         let photosViewController = PhotosViewController()
         navigationController?.pushViewController(photosViewController, animated: true)
     }
-    
     /// кнопка выхода
     @objc func didOut() {
         let actionSheet = UIAlertController(title: "Sign Out".localized,
@@ -183,6 +183,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     /// создать новый пост из postAddvc
     func didTapCreatePost() {
         let vc = PostAddViewController()
+        vc.recievedStatus = receivedStatus
+        vc.receivedUsername = receivedUsername
+        vc.isProfileImageChanged = isProfileImageChanged
+        vc.path = documentDirectoryPath()?.appendingPathComponent("profileImage.jpg").path ?? "header1"
         navigationController?.pushViewController(vc, animated: true)
     }
 
@@ -517,6 +521,7 @@ extension ProfileViewController: CameraPhotoSaveDelegate {
         if let data = image.jpegData(compressionQuality: 0.8) {
             let path = documentDirectoryPath()?.appendingPathComponent("profileImage.jpg")
             try? data.write(to: path!)
+            isProfileImageChanged = true
         }
     }
     

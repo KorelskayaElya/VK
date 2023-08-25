@@ -10,17 +10,6 @@ import UIKit
 
 class CoreDataService {
     static let shared = CoreDataService()
-    var user = User(identifier: "annaux_designer",
-               username: "Анна Мищенко",
-               profilePicture: UIImage(named:"header1"),
-               status: "дизайнер",
-               gender: "Женский",
-               birthday: "01.02.1997",
-               city: "Москва",
-               hobby: "футбол",
-               school:"Дизайнер",
-               university: "школа 134",
-               work: "Московский")
     
     init() {
         reloadPosts()
@@ -74,15 +63,14 @@ class CoreDataService {
         reloadPhoto()
     }
     /// создание поста
-    func addPost(text: String, image: Data?) {
+    func addPost(username: String, status: String, profilePicture: Data?,text: String, image: Data?) {
         let post = PostEntity(context: persistentContainer.viewContext)
         post.textPost = text
-        post.username = user.username
-        if var profilePicture = user.profilePicture {
-            let profilePictureJPEG = profilePicture.jpegData(compressionQuality: 0.1)
-            post.profilePicture = profilePictureJPEG
+        post.username = username
+        if var profilePicture = profilePicture {
+            post.profilePicture = profilePicture
         }
-        post.status = user.status
+        post.status = status
         post.imagePost = image
         post.dateCreated = Date()
         saveContext()
