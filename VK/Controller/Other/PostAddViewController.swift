@@ -130,7 +130,7 @@ class PostAddViewController: UIViewController {
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             var imageJpeg: Data?
             if let image = self.selectedImage {
-                imageJpeg = image.jpegData(compressionQuality: 0.5)
+                imageJpeg = image.jpegData(compressionQuality: 0.7)
             }
             let defaultUsername = self.receivedUsername.isEmpty ? "Анна Мищенко" : self.receivedUsername
             let defaultStatus = self.recievedStatus.isEmpty ? "Дизайнер" : self.recievedStatus
