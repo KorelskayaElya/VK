@@ -3,7 +3,6 @@
     <entity name="PhotoEntity" representedClassName="PhotoEntity" syncable="YES" codeGenerationType="class">
         <attribute name="photo" optional="YES" attributeType="Binary"/>
         <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="post" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PostEntity" inverseName="photo" inverseEntity="PostEntity"/>
     </entity>
     <entity name="PostEntity" representedClassName="PostEntity" syncable="YES" codeGenerationType="class">
         <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -15,6 +14,5 @@
         <attribute name="textPost" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <relationship name="photo" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PhotoEntity" inverseName="post" inverseEntity="PhotoEntity"/>
     </entity>
 </model>
