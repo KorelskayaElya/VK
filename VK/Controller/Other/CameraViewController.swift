@@ -6,8 +6,9 @@
 //
 
 import UIKit
-import AVFoundation
+//import AVFoundation
 import SwiftyCam
+
 
 class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDelegate {
     
@@ -33,6 +34,8 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         flashButton.addTarget(self, action: #selector(toggleFlashTapped), for: .touchUpInside)
         return flashButton
     }()
+    // MARK: - Properties
+    weak var delegate: CameraPhotoSaveDelegate?
     
     
     // MARK: - Lifecycle
@@ -56,11 +59,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
         captureButton.buttonEnabled = false
         cameraView.addSubview(flashButton)
         constraints()
-       
-    }
-    /// Скрытие статус-бара
-    override var prefersStatusBarHidden: Bool {
-        return true
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -144,6 +143,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
     /// сохранение изображения
     func swiftyCam(_ swiftyCam: SwiftyCamViewController, didTake photo: UIImage) {
         let newVC = CameraPhotoSaveViewController(image: photo)
+        newVC.delegate = delegate
         self.present(newVC, animated: true, completion: nil)
     }
     /// Обработка нажатия на кнопку управления вспышкой
@@ -154,7 +154,7 @@ class CameraViewController: SwiftyCamViewController, SwiftyCamViewControllerDele
 }
 
 
-// UI Animations
+/// UI Animations
 extension CameraViewController {
     /// Скрытие кнопок
     fileprivate func hideButtons() {

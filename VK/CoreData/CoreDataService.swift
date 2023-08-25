@@ -78,7 +78,10 @@ class CoreDataService {
         let post = PostEntity(context: persistentContainer.viewContext)
         post.textPost = text
         post.username = user.username
-        post.profilePicture = user.profilePicture?.pngData()
+        if var profilePicture = user.profilePicture {
+            let profilePictureJPEG = profilePicture.jpegData(compressionQuality: 0.1)
+            post.profilePicture = profilePictureJPEG
+        }
         post.status = user.status
         post.imagePost = image
         post.dateCreated = Date()

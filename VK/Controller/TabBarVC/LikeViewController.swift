@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 protocol LikeViewControllerDelegate: AnyObject {
     func likeViewControllerDidTapLikeSaveWith(_ post: PostEntity)
 }

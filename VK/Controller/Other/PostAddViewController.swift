@@ -126,8 +126,17 @@ class PostAddViewController: UIViewController {
     /// кнопка опубликовать пост
     @objc private func sendPost() {
         guard let text = textPostField.text else { return }
-        CoreDataService.shared.addPost(text: text, image: selectedImage?.pngData())
-        navigationController?.popViewController(animated: true)
+        
+        DispatchQueue.global(qos:.userInitiated).async {
+            var imageJpeg: Data?
+            if let image = self.selectedImage {
+                imageJpeg = image.jpegData(compressionQuality: 0.5)
+            }
+            CoreDataService.shared.addPost(text: text, image: imageJpeg)
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
     }
 }
 

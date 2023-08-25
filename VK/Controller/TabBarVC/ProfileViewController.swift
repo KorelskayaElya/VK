@@ -29,7 +29,6 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     }()
     /// создать шапку профиля
     private func createHeaderView() -> UIView {
-        let headerView = ProfileTableHeaderView()
         headerView.nameLabel.text = user.username
         headerView.descriptionLabel.text = user.status
         headerView.delegate = self
@@ -38,7 +37,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         headerView.addPhotoDelegate = self
         headerView.editProfileDelegate = self
         headerView.furtherInformation = self
-        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(named:"header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: CoreDataService.shared.posts.count)
+        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(contentsOfFile: path!.path), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: CoreDataService.shared.posts.count)
         headerView.configure(with: profileViewModel)
         let containerView = UIView()
         containerView.addSubview(headerView)
@@ -61,6 +60,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     /// открытие того или другого presentationcontroller
     var isOpenEdit = false
     var isOpenDetails = false
+    lazy var path = documentDirectoryPath()?.appendingPathComponent("profileImage.jpg")
     
     var user: User
     /// для показа отфильрованных постов и всех постов
@@ -76,6 +76,8 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     var receivedUniversity: String = ""
     var receivedWork: String = ""
     var receivedStatus: String = ""
+    let headerView = ProfileTableHeaderView()
+
     
     
     // MARK: - Init
@@ -110,6 +112,13 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
     override func viewWillAppear(_ animated: Bool) {
         /// отображаются посты при создании
         tableView.reloadData()
+        /// после выхода из камеры отобразить
+        tabBarController?.tabBar.isHidden = false
+    }
+    /// появляется изображение после его смены
+    override func viewDidAppear(_ animated: Bool) {
+        let profileViewModel = ProfileHeaderViewModel(user: User(identifier: "annaux_designer", username: "Анна Мищенко", profilePicture: UIImage(contentsOfFile: path!.path) ?? UIImage(named: "header1"), status: "дизайнер",gender: "Женский", birthday: "01.02.1997", city: "Москва",hobby: "футбол",school:"Дизайнер", university: "школа 134", work: "Московский"), followerCount: 4, followingCount: 5, isFollowing: false, publishedPhotos: CoreDataService.shared.posts.count)
+        headerView.configure(with: profileViewModel)
     }
     
    
@@ -123,6 +132,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    
     // MARK: - Methods
     /// переход на фотографии
     func didTapButton(sender: UIButton) {
@@ -156,10 +166,7 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         }))
         present(actionSheet, animated: true)
     }
-    /// Скрытие статус-бара
-    override var prefersStatusBarHidden: Bool {
-        return false
-    }
+   
     /// переход на редактирование профиля / должен открываться один из модальных экранов
     /// в соответствии с флагом - HalfScreenPresentationController
     @objc private func openMenu() {
@@ -427,6 +434,7 @@ extension ProfileViewController: ProfileCameraDelegate {
     /// включить камеру для истории
     func didTapCamera() {
         let vc = CameraViewController()
+        vc.delegate = self
         tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -503,5 +511,26 @@ extension ProfileViewController: SaveViewControllerDelegate {
         CoreDataService.shared.saveContext()
         CoreDataService.shared.reloadPosts()
         tableView.reloadData()
+    }
+}
+// MARK: - CameraPhotoSaveDelegate
+extension ProfileViewController: CameraPhotoSaveDelegate {
+    
+    func cameraPhototSave(_ image: UIImage) {
+        savePng(image)
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func savePng(_ image: UIImage) {
+        if let data = image.jpegData(compressionQuality: 0.8) {
+            let path = documentDirectoryPath()?.appendingPathComponent("profileImage.jpg")
+            try? data.write(to: path!)
+        }
+    }
+    
+    func documentDirectoryPath() -> URL? {
+        let path = FileManager.default.urls(for: .documentDirectory,
+                                            in: .userDomainMask)
+        return path.first
     }
 }

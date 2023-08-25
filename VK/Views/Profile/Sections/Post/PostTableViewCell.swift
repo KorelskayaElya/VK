@@ -132,7 +132,7 @@ class PostTableViewCell: UITableViewCell {
         textPostLabel.text = post.textPost
         let textHeight = calculateTextHeight(text: post.textPost ?? "", font: textFont, width: contentWidth)
         textPostLabelHeightConstraint.constant = textHeight + 30
-        
+        postImageView.image = nil
         if let imagePostData = post.imagePost {
             postImageView.image = UIImage(data: imagePostData)
             let imageHeight = calculateImageHeight(image: postImageView.image, width: contentWidth)

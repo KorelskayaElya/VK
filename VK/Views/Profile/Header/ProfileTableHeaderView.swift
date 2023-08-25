@@ -34,9 +34,6 @@ class ProfileTableHeaderView: UIView {
     /// изображение - аватар
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.image = UIImage(named: "header1")
-        imageView.layer.cornerRadius = 55
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -216,11 +213,17 @@ class ProfileTableHeaderView: UIView {
     // MARK: - Interface
     func configure(with viewModel: ProfileHeaderViewModel) {
         self.viewModel = viewModel
+
+        if let profilePicture = viewModel.user.profilePicture {
+            let circularImage = profilePicture.circularImageWithBorder(borderColor: UIColor.createColor(lightMode: .black, darkMode: .white), borderWidth: 5)
+            avatarImageView.image = circularImage
+        }
+
         followers.text = "\(viewModel.followerCount)\nFollowers"
         following.text = "\(viewModel.followingCount)\nFollowing"
         photosPublished.text = "\(CoreDataService.shared.posts.count)\nPosts"
-        
     }
+
     
     // MARK: - Private
     private func setupView() {
@@ -344,5 +347,27 @@ class ProfileTableHeaderView: UIView {
     /// посмотреть подробную информацию
     @objc private func addFurtherInformation() {
         furtherInformation?.didFurtherInformation()
+    }
+}
+extension UIImage {
+    func circularImageWithBorder(borderColor: UIColor, borderWidth: CGFloat) -> UIImage? {
+        let circleRect = CGRect(origin: .zero, size: self.size)
+        UIGraphicsBeginImageContextWithOptions(circleRect.size, false, self.scale)
+        let context = UIGraphicsGetCurrentContext()!
+
+        context.addEllipse(in: circleRect)
+        context.clip()
+
+        self.draw(in: circleRect)
+
+        let circlePath = UIBezierPath(roundedRect: circleRect, cornerRadius: circleRect.width/2)
+        borderColor.setStroke()
+        circlePath.lineWidth = borderWidth
+        circlePath.stroke()
+
+        let circularImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return circularImage
     }
 }

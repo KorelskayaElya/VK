@@ -9,7 +9,7 @@ import UIKit
 protocol HobbyViewControllerDelegate: AnyObject {
     func hobbyViewControllerDidFinishEnteringInfo(hobby: String)
 }
-// интересы
+/// интересы
 class HobbyViewController: UIViewController {
     // MARK: - UI
     private lazy var hobbyLabel = LabelField()
