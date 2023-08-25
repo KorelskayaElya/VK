@@ -14,7 +14,7 @@
 
 ![auth](images/auth.png)
 
-![profile](images/profile.png)
+![profileApp](images/profileApp.png)
 
 
 
