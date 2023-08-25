@@ -19,7 +19,6 @@
 		6DB099522A80615A00C42E5F /* SearchBarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099512A80615A00C42E5F /* SearchBarTableViewCell.swift */; };
 		6DB0997B2A814E7A00C42E5F /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0997A2A814E7A00C42E5F /* KeychainManager.swift */; };
 		6DB0997E2A814EEE00C42E5F /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6DB0997D2A814EEE00C42E5F /* KeychainAccess */; };
-		6DB099822A86C12B00C42E5F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099812A86C12B00C42E5F /* Post.swift */; };
 		6DB0998A2A87E0C400C42E5F /* PostAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB099892A87E0C400C42E5F /* PostAddViewController.swift */; };
 		6DB0998C2A88BACA00C42E5F /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */; };
 		6DB0998E2A88BB7900C42E5F /* RoundButtonWithDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0998D2A88BB7900C42E5F /* RoundButtonWithDot.swift */; };
@@ -83,7 +82,6 @@
 		6DB0994F2A80611000C42E5F /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		6DB099512A80615A00C42E5F /* SearchBarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarTableViewCell.swift; sourceTree = "<group>"; };
 		6DB0997A2A814E7A00C42E5F /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
-		6DB099812A86C12B00C42E5F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		6DB099892A87E0C400C42E5F /* PostAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostAddViewController.swift; sourceTree = "<group>"; };
 		6DB0998B2A88BACA00C42E5F /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		6DB0998D2A88BB7900C42E5F /* RoundButtonWithDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundButtonWithDot.swift; sourceTree = "<group>"; };
@@ -380,7 +378,6 @@
 			children = (
 				6DCAF3BE2A6F010C00877579 /* User.swift */,
 				6DB0994F2A80611000C42E5F /* SearchBar.swift */,
-				6DB099812A86C12B00C42E5F /* Post.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -598,7 +595,6 @@
 				6DCAF3A82A6C8B2300877579 /* WelcomeViewController.swift in Sources */,
 				6DB099A12A8A511700C42E5F /* SwiftyRecordButton.swift in Sources */,
 				6DCD2A2E2A754F53001CED59 /* LabelField.swift in Sources */,
-				6DB099822A86C12B00C42E5F /* Post.swift in Sources */,
 				6DCAF3952A6C765E00877579 /* TabBarViewController.swift in Sources */,
 				6D639C712A752CFD002EB654 /* ProfileTableHeaderView.swift in Sources */,
 				6DB0993E2A7C17DC00C42E5F /* PhotosTableViewCell.swift in Sources */,

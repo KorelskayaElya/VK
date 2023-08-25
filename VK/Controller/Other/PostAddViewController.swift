@@ -7,9 +7,6 @@
 
 import UIKit
 
-protocol PostAddViewControllerDelegate: AnyObject {
-    func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post)
-}
 /// добавить пост в profilevc
 class PostAddViewController: UIViewController {
     
@@ -68,7 +65,6 @@ class PostAddViewController: UIViewController {
         return button
     }()
     // MARK: - Properties
-    weak var delegate: PostAddViewControllerDelegate?
     private var selectedImage: UIImage?
     // MARK: - Lifecycle
     override func viewDidLoad() {

@@ -132,6 +132,20 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+    /// переход на редактирование профиля / должен открываться один из модальных экранов
+    /// в соответствии с флагом - HalfScreenPresentationController
+    @objc private func openMenu() {
+        isOpenEdit = false
+        isOpenDetails = true
+        let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4
+        let halfScreenViewController = UIViewController()
+        halfScreenViewController.view.backgroundColor = .white
+        halfScreenViewController.modalPresentationStyle = .custom
+        halfScreenViewController.transitioningDelegate = self
+        halfScreenViewController.preferredContentSize = CGSize(width: halfScreenWidth, height: UIScreen.main.bounds.height)
+        
+        present(halfScreenViewController, animated: true, completion: nil)
+    }
     
     // MARK: - Methods
     /// переход на фотографии
@@ -166,20 +180,10 @@ class ProfileViewController: UIViewController, ProfileTableViewCellDelegate, Pro
         }))
         present(actionSheet, animated: true)
     }
-   
-    /// переход на редактирование профиля / должен открываться один из модальных экранов
-    /// в соответствии с флагом - HalfScreenPresentationController
-    @objc private func openMenu() {
-        isOpenEdit = false
-        isOpenDetails = true
-        let halfScreenWidth = UIScreen.main.bounds.width * 3 / 4
-        let halfScreenViewController = UIViewController()
-        halfScreenViewController.view.backgroundColor = .white
-        halfScreenViewController.modalPresentationStyle = .custom
-        halfScreenViewController.transitioningDelegate = self
-        halfScreenViewController.preferredContentSize = CGSize(width: halfScreenWidth, height: UIScreen.main.bounds.height)
-        
-        present(halfScreenViewController, animated: true, completion: nil)
+    /// создать новый пост из postAddvc
+    func didTapCreatePost() {
+        let vc = PostAddViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 
 }
@@ -460,19 +464,7 @@ extension ProfileViewController: ProfileEditDelegate {
         present(halfScreenViewController, animated: true, completion: nil)
     }
 }
-extension ProfileViewController: PostAddViewControllerDelegate {
-    /// создать новый пост из postAddvc
-    func didTapCreatePost() {
-        let vc = PostAddViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
 
-    /// обновить таблицу после нового поста
-    func postAddViewController(_ controller: PostAddViewController, didCreatePost post: Post) {
-        // добавление поста сверху
-        tableView.reloadData()
-    }
-}
 // MARK: - PostTableViewCellLikeDelegate
 extension ProfileViewController: PostTableViewCellLikeDelegate {
     /// лайкнуть пост

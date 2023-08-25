@@ -245,11 +245,15 @@ class PostTableViewCell: UITableViewCell {
         return width * aspectRatio
     }
     /// рассчет размеров текста и изображения
-    func updateConstraints(for post: Post, textFont: UIFont, contentWidth: CGFloat) {
-        let textHeight = calculateTextHeight(text: post.textPost, font: textFont, width: contentWidth)
+    func updateConstraints(for post: PostEntity, textFont: UIFont, contentWidth: CGFloat) {
+        var image: UIImage?
+        if let imageData = post.imagePost {
+            image = UIImage(data: imageData)
+        }
+        let textHeight = calculateTextHeight(text: post.textPost ?? "", font: textFont, width: contentWidth)
         textPostLabelHeightConstraint.constant = textHeight
         
-        let imageHeight = calculateImageHeight(image: post.imagePost, width: contentWidth)
+        let imageHeight = calculateImageHeight(image: image, width: contentWidth)
         postImageViewHeightConstraint.constant = imageHeight
         
         layoutIfNeeded()
