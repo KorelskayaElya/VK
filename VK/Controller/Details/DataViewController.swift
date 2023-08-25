@@ -25,18 +25,17 @@ class DataViewController: UIViewController {
         backButton.tintColor = UIColor(named: "Orange")
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        
-        let imageSize: CGSize = CGSize(width: 200, height: 200)
+
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageView.topAnchor.constraint(equalTo: view.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -200),
         ])
     }
     // MARK: - Private
