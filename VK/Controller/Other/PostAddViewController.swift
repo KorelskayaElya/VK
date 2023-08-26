@@ -125,7 +125,10 @@ class PostAddViewController: UIViewController {
     }
     /// кнопка опубликовать пост
     @objc private func sendPost() {
+        
         guard let text = textPostField.text else { return }
+        
+        view.endEditing(true)
         
         DispatchQueue.global(qos: .userInitiated).async { [self] in
             var imageJpeg: Data?
