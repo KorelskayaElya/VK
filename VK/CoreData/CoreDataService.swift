@@ -13,6 +13,7 @@ class CoreDataService {
     
     init() {
         reloadPosts()
+        addPostPhotoToImageCache()
         reloadPhoto()
     }
     var posts: [PostEntity] = []
@@ -117,6 +118,22 @@ class CoreDataService {
         } catch {
             print("Error filtering posts: \(error.localizedDescription)")
             return []
+        }
+    }
+    /// добавить пост в кэш
+    func addPostPhotoToImageCache() {
+        for post in posts {
+            if let imageData = post.imagePost {
+                if let image = UIImage(data: imageData) {
+                    let imageWidth = UIScreen.main.bounds.width - 100
+                    let imageHeight = imageWidth*(image.size.height/image.size.width)
+                    let imageSize = CGSize(width: imageWidth, height: imageHeight)
+                    ImagesManager.shared.cacheImage(imageData: imageData, imageSize: imageSize, completion: {
+                        (cachedImage) in
+                        // ...
+                    })
+                }
+            }
         }
     }
     

@@ -134,9 +134,17 @@ class PostTableViewCell: UITableViewCell {
         textPostLabelHeightConstraint.constant = textHeight + 30
         postImageView.image = nil
         if let imagePostData = post.imagePost {
-            postImageView.image = UIImage(data: imagePostData)
-            let imageHeight = calculateImageHeight(image: postImageView.image, width: contentWidth)
-            postImageViewHeightConstraint.constant = imageHeight
+            if let originalImage = UIImage(data: imagePostData){
+                let imageWidth = contentWidth
+                let imageHeight = calculateImageHeight(image: originalImage, width: contentWidth)
+                let imageSize = CGSize(width: imageWidth, height: imageHeight)
+                ImagesManager.shared.cacheImage(imageData: imagePostData,
+                                                imageSize: imageSize,
+                                                completion: {(cachedImage) in
+                    self.postImageView.image = cachedImage
+                })
+                postImageViewHeightConstraint.constant = imageHeight
+            }
         }
         
         likeIconButton.tintColor = post.isLikedByCurrentUser ? .systemRed : .systemOrange
