@@ -12,9 +12,9 @@
 
 ## Images
 
-![auth](images/auth.png)
+<img src="images/auth.png" width="400">
 
-![profileApp](images/profileApp.png)
+<img src="images/profileApp.png" width="400">
 
 
 
